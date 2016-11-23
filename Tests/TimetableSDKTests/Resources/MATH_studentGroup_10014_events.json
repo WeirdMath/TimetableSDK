@@ -1,0 +1,127 @@
+{
+  "Breadcrumb":
+  [],
+  "Days":
+  [
+    {
+      "Day":
+      "2016-11-21T00:00:00",
+      "DayString":
+      "понедельник, 21 ноября",
+      "DayStudyEvents":
+      [
+        {
+          "AllDay":
+          false,
+          "ContingentUnitCourse":
+          "",
+          "ContingentUnitDivision":
+          "",
+          "ContingentUnitName":
+          "",
+          "ContingentUnitsDisplayTest":
+          null,
+          "DateWithTimeIntervalString":
+          "21 ноября 9:30-11:05",
+          "DisplayDateAndTimeIntervalString":
+          "21 ноября 9:30-11:05",
+          "EducatorIds":
+          [
+            {
+              "Item1":
+              2643,
+              "Item2":
+              "Евард М. Е., доцент"
+            }
+          ],
+          "EducatorsDisplayText":
+          "Евард М. Е., доцент",
+          "EducatorsWereReassigned":
+          false,
+          "End":
+          "2016-11-21T11:05:00",
+          "EventLocations":
+          [
+            {
+              "DisplayName":
+              "Университетский просп., д. 28, 1510",
+              "EducatorIds":
+              [
+                {
+                  "Item1":
+                  2643,
+                  "Item2":
+                  "Евард М. Е., доцент"
+                }
+              ],
+              "EducatorsDisplayText":
+              "Евард М. Е., доцент",
+              "HasEducators":
+              true,
+              "HasGeographicCoordinates":
+              true,
+              "IsEmpty":
+              false,
+              "Latitude":
+              59.879785,
+              "LatitudeValue":
+              "59.879785",
+              "Longitude":
+              29.829026,
+              "LongitudeValue":
+              "29.829026"
+            }
+          ],
+          "HasEducators":
+          true,
+          "HasTheSameTimeAsPreviousItem":
+          false,
+          "IsAssigned":
+          false,
+          "IsCancelled":
+          false,
+          "IsStudy":
+          false,
+          "LocationsDisplayText":
+          "Университетский просп., д. 28, 1510",
+          "LocationsWereChanged":
+          false,
+          "Start":
+          "2016-11-21T09:30:00",
+          "StudyEventsTimeTableKindCode":
+          null,
+          "Subject":
+          "Механика деформируемого твердого тела, практическое занятие, факультатив",
+          "TimeIntervalString":
+          "9:30–11:05",
+          "TimeWasChanged":
+          false,
+          "WithinTheSameDay":
+          false
+        }
+      ]
+    }
+  ],
+  "IsCurrentWeekReferenceAvailable":
+  false,
+  "IsNextWeekReferenceAvailable":
+  true,
+  "IsPreviousWeekReferenceAvailable":
+  true,
+  "NextWeekMonday":
+  "2016-11-28",
+  "PreviousWeekMonday":
+  "2016-11-14",
+  "StudentGroupDisplayName":
+  "Группа 351 (14.Б10-мм)",
+  "StudentGroupId":
+  10014,
+  "TimeTableDisplayName":
+  "Все занятия",
+  "ViewName":
+  "Primary",
+  "WeekDisplayText":
+  "21 ноября – 27 ноября",
+  "WeekMonday":
+  "2016-11-21"
+}
