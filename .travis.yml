@@ -1,3 +1,4 @@
+language: generic
 os: osx
 osx_image: xcode8.1
 
@@ -21,16 +22,10 @@ script:
     fi
   - if [[ $NETWORKING_TESTS == "YES" ]] ; then
       swift build;
-      swift test -s TimetableSDK.WWWFetchingTests;
+      swift test -s TimetableSDKTests.WWWFetchingTests;
     fi
 
 after_success:
   - swift package generate-xcodeproj
-  - xcodebuild -project TimetableSDK.xcodeproj \
-    -scheme TimetableSDK \
-    -sdk macosx10.12 \
-    -destination arch=x86_64 \
-    -configuration Debug \
-    -enableCodeCoverage YES \
-    test | xcpretty
+  - xcodebuild -project TimetableSDK.xcodeproj -scheme TimetableSDK -sdk macosx10.12 -destination arch=x86_64 -configuration Debug -enableCodeCoverage YES test | xcpretty
   - bash <(curl -s https://codecov.io/bash)
