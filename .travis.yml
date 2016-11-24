@@ -8,7 +8,7 @@ env:
 
 matrix:
   allow_failures:
-    - env: LOCAL_TESTS="YES" NETWORKING_TESTS="YES" POD_LINT="NO"
+    - env: LOCAL_TESTS="NO" NETWORKING_TESTS="YES" POD_LINT="NO"
 
 
 script:
