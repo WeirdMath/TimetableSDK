@@ -6,6 +6,8 @@
 //
 //
 
+import SwiftyJSON
+
 public enum TimetableError: Error {
-    case incorrectJSONFormat
+    case incorrectJSONFormat(JSON)
 }

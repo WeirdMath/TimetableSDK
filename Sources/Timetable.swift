@@ -27,13 +27,11 @@ public final class Timetable {
     
     public func fetchDivisions(using jsonData: Data? = nil,
                                dispatchQueue: DispatchQueue? = nil,
-                               recursively: Bool = false,
                                completion: ((Error?) -> Void)?) {
         
         _fetch(using: jsonData,
                dispatchQueue: dispatchQueue,
                baseURL: baseURL,
-               recursively: recursively,
                completion: completion)
     }
     
@@ -46,33 +44,28 @@ public final class Timetable {
         division._fetch(using: jsonData,
                         dispatchQueue: dispatchQueue,
                         baseURL: baseURL,
-                        recursively: recursively,
                         completion: completion)
     }
     
     public func fetchStudentGroups(for admissionYear: AdmissionYear,
                                    using jsonData: Data? = nil,
                                    dispatchQueue: DispatchQueue? = nil,
-                                   recursively: Bool = false,
                                    completion: ((Error?) -> Void)?) {
         
         admissionYear._fetch(using: jsonData,
                              dispatchQueue: dispatchQueue,
                              baseURL: baseURL,
-                             recursively: recursively,
                              completion: completion)
     }
     
     public func fetchCurrentWeek(for studentGroup: StudentGroup,
                           using jsonData: Data? = nil,
                           dispatchQueue: DispatchQueue? = nil,
-                          recursively: Bool = false,
                           completion: ((Error?) -> Void)?) {
         
         studentGroup._fetch(using: jsonData,
                             dispatchQueue: dispatchQueue,
                             baseURL: baseURL,
-                            recursively: recursively,
                             completion: completion)
     }
 }
@@ -88,7 +81,7 @@ extension Timetable: _APIQueryable {
         if let divisions = json.array?.flatMap(Division.init), !divisions.isEmpty {
             self.divisions = divisions
         } else {
-            throw TimetableError.incorrectJSONFormat
+            throw TimetableError.incorrectJSONFormat(json)
         }
     }
 }

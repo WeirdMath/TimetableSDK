@@ -40,7 +40,8 @@ class WWWFetchingTests: XCTestCase {
             exp.fulfill()
         }
         
-        waitForExpectations(timeout: 10) { error in
+        // Then
+        waitForExpectations(timeout: 10) { _ in
             
             XCTAssertNotNil(self.sut.divisions)
             XCTAssertNil(returnedError)
@@ -64,7 +65,8 @@ class WWWFetchingTests: XCTestCase {
             exp.fulfill()
         }
         
-        waitForExpectations(timeout: 10) { error in
+        // Then
+        waitForExpectations(timeout: 10) { _ in
             
             XCTAssertNotNil(division.studyLevels)
             XCTAssertNil(returnedError)
@@ -90,7 +92,8 @@ class WWWFetchingTests: XCTestCase {
             exp.fulfill()
         }
         
-        waitForExpectations(timeout: 10) { error in
+        // Then
+        waitForExpectations(timeout: 10) { _ in
             
             XCTAssertNotNil(admissionYear.studentGroups)
             XCTAssertNil(returnedError)
@@ -116,7 +119,8 @@ class WWWFetchingTests: XCTestCase {
             exp.fulfill()
         }
         
-        waitForExpectations(timeout: 10) { error in
+        // Then
+        waitForExpectations(timeout: 10) { _ in
             
             XCTAssertNotNil(studentGroup.currentWeek)
             XCTAssertNil(returnedError)

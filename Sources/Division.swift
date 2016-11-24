@@ -40,7 +40,7 @@ extension Division: _APIQueryable {
         if let studyLevels = json.array?.flatMap(StudyLevel.init), !studyLevels.isEmpty {
             self.studyLevels = studyLevels
         } else {
-            throw TimetableError.incorrectJSONFormat
+            throw TimetableError.incorrectJSONFormat(json)
         }
     }
 }

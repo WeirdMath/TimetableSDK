@@ -53,7 +53,7 @@ extension AdmissionYear: _APIQueryable {
         if let studentGroups = json.array?.flatMap(StudentGroup.init), !studentGroups.isEmpty {
             self.studentGroups = studentGroups
         } else {
-            throw TimetableError.incorrectJSONFormat
+            throw TimetableError.incorrectJSONFormat(json)
         }
     }
 }

@@ -52,7 +52,7 @@ extension StudentGroup: _APIQueryable {
         if let currentWeek = Week(from: json) {
             self.currentWeek = currentWeek
         } else {
-            throw TimetableError.incorrectJSONFormat
+            throw TimetableError.incorrectJSONFormat(json)            
         }
     }
 }

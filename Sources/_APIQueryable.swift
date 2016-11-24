@@ -22,7 +22,6 @@ internal extension _APIQueryable {
     internal func _fetch(using jsonData: Data?,
                          dispatchQueue: DispatchQueue?,
                          baseURL: URL,
-                         recursively: Bool,
                          completion: ((Error?) -> Void)?) {
         
         if let jsonData = jsonData {

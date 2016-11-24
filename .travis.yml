@@ -1,11 +1,34 @@
-language: generic
 os: osx
 osx_image: xcode8.1
 
+matrix:
+  include:
+    # - env: LOCAL_TESTS="NO" NETWORKING_TESTS="NO" POD_LINT="YES"
+    - env: LOCAL_TESTS="YES" NETWORKING_TESTS="NO" POD_LINT="NO"
+  allow_failures:
+    - env: LOCAL_TESTS="YES" NETWORKING_TESTS="YES" POD_LINT="NO"
+
+
 script:
-  - swift build
-  - swift test
+  - if [[ $POD_LINT == "YES" ]] ; then
+      gem install cocoapods && pod repo update --silent && pod lib lint;
+    fi
+  - if [[ $LOCAL_TESTS == "YES" ]] ; then
+      swift build;
+      swift test -s TimetableSDKTests.JSONTests,TimetableSDKTests.LocalFetchingTests;
+    fi
+  - if [[ $NETWORKING_TESTS == "YES" ]] ; then
+      swift build;
+      swift test -s TimetableSDK.WWWFetchingTests;
+    fi
 
 after_success:
   - swift package generate-xcodeproj
-  - xcodebuild -project TimetableSDK -scheme TimetableSDK -sdk macosx10.12 -destination arch=x86_64 -configuration Debug -enableCodeCoverage YES test | xcpretty
+  - xcodebuild -project TimetableSDK.xcodeproj \
+    -scheme TimetableSDK \
+    -sdk macosx10.12 \
+    -destination arch=x86_64 \
+    -configuration Debug \
+    -enableCodeCoverage YES \
+    test | xcpretty
+  - bash <(curl -s https://codecov.io/bash)
