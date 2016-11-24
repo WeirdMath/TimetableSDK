@@ -11,7 +11,7 @@ import DefaultStringConvertible
 
 public struct Specialization {
     
-    public var name: String
+    public let name: String
     fileprivate static let _nameJSONKey = "Name"
     
     public var admissionYears: [AdmissionYear]

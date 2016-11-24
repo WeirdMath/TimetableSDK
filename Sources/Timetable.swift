@@ -7,14 +7,11 @@
 //
 
 import Foundation
-import Alamofire
 import SwiftyJSON
 
 public final class Timetable {
     
     public static let defaultBaseURL = URL(string: "http://timetable.spbu.ru/api/v1/")!
-    
-    private static let _getDivisions = "divisions"
     
     public let baseURL: URL
     
@@ -26,57 +23,70 @@ public final class Timetable {
         baseURL = Timetable.defaultBaseURL
     }
     
-    public private(set) var divisions: [Division]?
+    public fileprivate(set) var divisions: [Division]?
     
     public func fetchDivisions(using jsonData: Data? = nil,
                                dispatchQueue: DispatchQueue? = nil,
+                               recursively: Bool = false,
                                completion: ((Error?) -> Void)?) {
         
-        if let jsonData = jsonData {
-            do {
-                divisions = try _divisions(from: jsonData)
-            } catch {
-                completion?(error)
-                return
-            }
-            
-            completion?(nil)
-        } else {
-            _fetchDivisionsFromWWW(dispatchQueue: dispatchQueue, completion)
-        }
+        _fetch(using: jsonData,
+               dispatchQueue: dispatchQueue,
+               baseURL: baseURL,
+               recursively: recursively,
+               completion: completion)
     }
     
-    private func _fetchDivisionsFromWWW(dispatchQueue: DispatchQueue?,
-                                        _ completion: ((Error?) -> Void)?) {
+    public func fetchStudyLevels(for division: Division,
+                                 using jsonData: Data? = nil,
+                                 dispatchQueue: DispatchQueue? = nil,
+                                 recursively: Bool = false,
+                                 completion: ((Error?) -> Void)?) {
         
-        Alamofire
-            .request(baseURL.appendingPathComponent(Timetable._getDivisions))
-            .responseData(queue: dispatchQueue) { [weak self] response in
-                
-                switch response.result {
-                    
-                case .success(let data):
-                    do {
-                        self?.divisions = try self?._divisions(from: data)
-                    } catch {
-                        completion?(error)
-                        return
-                    }
-                    
-                    completion?(nil)
-                    
-                case .failure(let error):
-                    completion?(error)
-                }
-        }
+        division._fetch(using: jsonData,
+                        dispatchQueue: dispatchQueue,
+                        baseURL: baseURL,
+                        recursively: recursively,
+                        completion: completion)
     }
     
-    private func _divisions(from jsonData: Data) throws -> [Division] {
+    public func fetchStudentGroups(for admissionYear: AdmissionYear,
+                                   using jsonData: Data? = nil,
+                                   dispatchQueue: DispatchQueue? = nil,
+                                   recursively: Bool = false,
+                                   completion: ((Error?) -> Void)?) {
         
-        let json = JSON(data: jsonData)
+        admissionYear._fetch(using: jsonData,
+                             dispatchQueue: dispatchQueue,
+                             baseURL: baseURL,
+                             recursively: recursively,
+                             completion: completion)
+    }
+    
+    public func fetchCurrentWeek(for studentGroup: StudentGroup,
+                          using jsonData: Data? = nil,
+                          dispatchQueue: DispatchQueue? = nil,
+                          recursively: Bool = false,
+                          completion: ((Error?) -> Void)?) {
+        
+        studentGroup._fetch(using: jsonData,
+                            dispatchQueue: dispatchQueue,
+                            baseURL: baseURL,
+                            recursively: recursively,
+                            completion: completion)
+    }
+}
+
+extension Timetable: _APIQueryable {
+    
+    internal var _apiQuery: String {
+        return "divisions"
+    }
+    
+    internal func _saveFetchResult(_ json: JSON) throws {
         
         if let divisions = json.array?.flatMap(Division.init), !divisions.isEmpty {
-            return divisions
+            self.divisions = divisions
         } else {
             throw TimetableError.incorrectJSONFormat
         }

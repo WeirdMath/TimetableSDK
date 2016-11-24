@@ -14,40 +14,40 @@ public struct Week {
     
     fileprivate static let _dateFormat = "yyyy-MM-dd"
     
-    public var previousWeekMonday: Date
+    public let previousWeekMonday: Date
     fileprivate static let _previousWeekMondayJSONKey = "PreviousWeekMonday"
     
-    public var nextWeekMonday: Date
+    public let nextWeekMonday: Date
     fileprivate static let _nextWeekMondayJSONKey = "NextWeekMonday"
     
-    public var isPreviousWeekReferenceAvailable: Bool
+    public let isPreviousWeekReferenceAvailable: Bool
     fileprivate static let _isPreviousWeekReferenceAvailableJSONKey = "IsPreviousWeekReferenceAvailable"
     
-    public var isNextWeekReferenceAvailable: Bool
+    public let isNextWeekReferenceAvailable: Bool
     fileprivate static let _isNextWeekReferenceAvailableJSONKey = "IsNextWeekReferenceAvailable"
     
-    public var isCurrentWeekReferenceAvailable: Bool
+    public let isCurrentWeekReferenceAvailable: Bool
     fileprivate static let _isCurrentWeekReferenceAvailableJSONKey = "IsCurrentWeekReferenceAvailable"
     
-    public var weekDisplayText: String
+    public let weekDisplayText: String
     fileprivate static let _weekDisplayTextJSONKey = "WeekDisplayText"
     
-    public var days: [Day]
+    public let days: [Day]
     fileprivate static let _daysJSONKey = "Days"
     
-    public var viewName: String
+    public let viewName: String
     fileprivate static let _viewNameJSONKey = "ViewName"
     
-    public var monday: Date
+    public let monday: Date
     fileprivate static let _mondayJSONKey = "WeekMonday"
     
-    public var studentGroupID: Int
+    public let studentGroupID: Int
     fileprivate static let _studentGroupIDJSONKey = "StudentGroupId"
     
-    public var studentGroupDisplayName: String
+    public let studentGroupDisplayName: String
     fileprivate static let _studentGroupDisplayNameJSONKey = "StudentGroupDisplayName"
     
-    public var timetableDisplayName: String
+    public let timetableDisplayName: String
     fileprivate static let _timeTableDisplayNameJSONKey = "TimeTableDisplayName"
 }
 

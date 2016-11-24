@@ -9,42 +9,62 @@
 import SwiftyJSON
 import DefaultStringConvertible
 
-public struct Division {
+public final class Division {
     
-    public var name: String
+    public let name: String
     fileprivate static let _nameJSONKey = "Name"
     
-    public var alias: String
+    public let alias: String
     fileprivate static let _aliasJSONKey = "Alias"
     
-    public var oid: String
+    public let oid: String
     fileprivate static let _oidJSONKey = "Oid"
+    
+    public fileprivate(set) var studyLevels: [StudyLevel]?
+    
+    internal init(name: String, alias: String, oid: String) {
+        self.name = name
+        self.alias = alias
+        self.oid = oid
+    }
+}
+
+extension Division: _APIQueryable {
+    
+    internal var _apiQuery: String {
+        return "\(alias)/studyprograms"
+    }
+    
+    internal func _saveFetchResult(_ json: JSON) throws {
+        
+        if let studyLevels = json.array?.flatMap(StudyLevel.init), !studyLevels.isEmpty {
+            self.studyLevels = studyLevels
+        } else {
+            throw TimetableError.incorrectJSONFormat
+        }
+    }
 }
 
 extension Division: JSONRepresentable {
     
-    internal init?(from json: JSON) {
+    convenience init?(from json: JSON) {
         
-        if let name = json[Division._nameJSONKey].string {
-            self.name = name
-        } else {
+        guard let name = json[Division._nameJSONKey].string else {
             _jsonFailure(json: json, key: Division._nameJSONKey)
             return nil
         }
         
-        if let alias = json[Division._aliasJSONKey].string {
-            self.alias = alias
-        } else {
+        guard let alias = json[Division._aliasJSONKey].string else {
             _jsonFailure(json: json, key: Division._aliasJSONKey)
             return nil
         }
         
-        if let oid = json[Division._oidJSONKey].string {
-            self.oid = oid
-        } else {
+        guard let oid = json[Division._oidJSONKey].string else {
             _jsonFailure(json: json, key: Division._oidJSONKey)
             return nil
         }
+        
+        self.init(name: name, alias: alias, oid: oid)
     }
 }
 

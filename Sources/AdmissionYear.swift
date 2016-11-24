@@ -9,62 +9,89 @@
 import SwiftyJSON
 import DefaultStringConvertible
 
-public struct AdmissionYear {
+public final class AdmissionYear {
     
-    public var isEmpty: Bool
+    public let isEmpty: Bool
     fileprivate static let _isEmptyJSONKey = "IsEmpty"
     
-    public var divisionAlias: String
+    public let divisionAlias: String
     fileprivate static let _divisionAliasJSONKey = "PublicDivisionAlias"
     
-    public var studyProgramID: Int
+    public let studyProgramID: Int
     fileprivate static let _studyProgramIDJSONKey = "StudyProgramId"
     
-    public var name: String
+    public let name: String
     fileprivate static let _nameJSONKey = "YearName"
     
-    public var number: Int
+    public let number: Int
     fileprivate static let _numberJSONKey = "YearNumber"
+    
+    public fileprivate(set) var studentGroups: [StudentGroup]?
+    
+    internal init(isEmpty: Bool,
+                  divisionAlias: String,
+                  studyProgramID: Int,
+                  name: String,
+                  number: Int) {
+        
+        self.isEmpty = isEmpty
+        self.divisionAlias = divisionAlias
+        self.studyProgramID = studyProgramID
+        self.name = name
+        self.number = number
+    }
+}
+
+extension AdmissionYear: _APIQueryable {
+    
+    var _apiQuery: String {
+        return "\(divisionAlias)/studyprogram/\(studyProgramID)/studentgroups"
+    }
+    
+    func _saveFetchResult(_ json: JSON) throws {
+        
+        if let studentGroups = json.array?.flatMap(StudentGroup.init), !studentGroups.isEmpty {
+            self.studentGroups = studentGroups
+        } else {
+            throw TimetableError.incorrectJSONFormat
+        }
+    }
 }
 
 extension AdmissionYear: JSONRepresentable {
     
-    internal init?(from json: JSON) {
+    internal convenience init?(from json: JSON) {
         
-        if let isEmpty = json[AdmissionYear._isEmptyJSONKey].bool {
-            self.isEmpty = isEmpty
-        } else {
+        guard let isEmpty = json[AdmissionYear._isEmptyJSONKey].bool else {
             _jsonFailure(json: json, key: AdmissionYear._isEmptyJSONKey)
             return nil
         }
         
-        if let divisionAlias = json[AdmissionYear._divisionAliasJSONKey].string {
-            self.divisionAlias = divisionAlias
-        } else {
+        guard let divisionAlias = json[AdmissionYear._divisionAliasJSONKey].string else {
             _jsonFailure(json: json, key: AdmissionYear._divisionAliasJSONKey)
             return nil
         }
         
-        if let studyProgramID = json[AdmissionYear._studyProgramIDJSONKey].int {
-            self.studyProgramID = studyProgramID
-        } else {
+        guard let studyProgramID = json[AdmissionYear._studyProgramIDJSONKey].int else {
             _jsonFailure(json: json, key: AdmissionYear._studyProgramIDJSONKey)
             return nil
         }
         
-        if let name = json[AdmissionYear._nameJSONKey].string {
-            self.name = name
-        } else {
+        guard let name = json[AdmissionYear._nameJSONKey].string else {
             _jsonFailure(json: json, key: AdmissionYear._nameJSONKey)
             return nil
         }
         
-        if let number = json[AdmissionYear._numberJSONKey].int {
-            self.number = number
-        } else {
+        guard let number = json[AdmissionYear._numberJSONKey].int else {
             _jsonFailure(json: json, key: AdmissionYear._numberJSONKey)
             return nil
         }
+        
+        self.init(isEmpty: isEmpty,
+                  divisionAlias: divisionAlias,
+                  studyProgramID: studyProgramID,
+                  name: name,
+                  number: number)
     }
 }
 

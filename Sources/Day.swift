@@ -14,13 +14,13 @@ public struct Day {
     
     fileprivate static let _dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
     
-    public var date: Date
+    public let date: Date
     fileprivate static let _dateJSONKey = "Day"
     
-    public var name: String
+    public let name: String
     fileprivate static let _nameJSONKey = "DayString"
     
-    public var events: [Event]
+    public let events: [Event]
     fileprivate static let _eventsJSONKey = "DayStudyEvents"
 }
 

@@ -8,7 +8,7 @@
 
 import SwiftyJSON
 
-internal func _jsonFailure(json: JSON, key: String, file: StaticString = #file) {
-    print("Failed to initialize from JSON in \(file): \(key) has invalid value:")
+internal func _jsonFailure(json: JSON, key: String) {
+    print("Failed to initialize from JSON: \(key) has invalid value:")
     print(json[key])
 }

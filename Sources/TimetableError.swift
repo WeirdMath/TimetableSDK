@@ -6,8 +6,6 @@
 //
 //
 
-import Foundation
-
 public enum TimetableError: Error {
     case incorrectJSONFormat
 }

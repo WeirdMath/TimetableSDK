@@ -9,62 +9,88 @@
 import SwiftyJSON
 import DefaultStringConvertible
 
-public struct StudentGroup {
+public final class StudentGroup {
     
-    public var id: Int
+    public let id: Int
     fileprivate static let _idJSONKey = "StudentGroupId"
     
-    public var name: String
+    public let name: String
     fileprivate static let _nameJSONKey = "StudentGroupName"
     
-    public var studyForm: String
+    public let studyForm: String
     fileprivate static let _studyFormJSONKey = "StudentGroupStudyForm"
     
-    public var profiles: String
+    public let profiles: String
     fileprivate static let _profilesJSONKey = "StudentGroupProfiles"
     
-    public var divisionAlias: String
+    public let divisionAlias: String
     fileprivate static let _divisionAliasJSONKey = "PublicDivisionAlias"
+    
+    public fileprivate(set) var currentWeek: Week?
+    
+    internal init(id: Int,
+                  name: String,
+                  studyForm: String,
+                  profiles: String,
+                  divisionAlias: String) {
+        self.id = id
+        self.name = name
+        self.studyForm = studyForm
+        self.profiles = profiles
+        self.divisionAlias = divisionAlias
+    }
+}
+
+extension StudentGroup: _APIQueryable {
+    
+    var _apiQuery: String {
+        return "\(divisionAlias)/studentgroup/\(id)/events"
+    }
+    
+    func _saveFetchResult(_ json: JSON) throws {
+        
+        if let currentWeek = Week(from: json) {
+            self.currentWeek = currentWeek
+        } else {
+            throw TimetableError.incorrectJSONFormat
+        }
+    }
 }
 
 extension StudentGroup: JSONRepresentable {
     
-    internal init?(from json: JSON) {
+    internal convenience init?(from json: JSON) {
         
-        if let id = json[StudentGroup._idJSONKey].int {
-            self.id = id
-        } else {
+        guard let id = json[StudentGroup._idJSONKey].int else {
             _jsonFailure(json: json, key: StudentGroup._idJSONKey)
             return nil
         }
         
-        if let name = json[StudentGroup._nameJSONKey].string {
-            self.name = name
-        } else {
+        guard let name = json[StudentGroup._nameJSONKey].string else {
             _jsonFailure(json: json, key: StudentGroup._nameJSONKey)
             return nil
         }
         
-        if let studyForm = json[StudentGroup._studyFormJSONKey].string {
-            self.studyForm = studyForm
-        } else {
+        guard let studyForm = json[StudentGroup._studyFormJSONKey].string else {
             _jsonFailure(json: json, key: StudentGroup._studyFormJSONKey)
             return nil
         }
         
-        if let profiles = json[StudentGroup._profilesJSONKey].string {
-            self.profiles = profiles
-        } else {
+        guard let profiles = json[StudentGroup._profilesJSONKey].string else {
             _jsonFailure(json: json, key: StudentGroup._profilesJSONKey)
             return nil
         }
         
-        if let divisionAlias = json[StudentGroup._divisionAliasJSONKey].string {
-            self.divisionAlias = divisionAlias
-        } else {
+        guard let divisionAlias = json[StudentGroup._divisionAliasJSONKey].string  else {
             _jsonFailure(json: json, key: StudentGroup._divisionAliasJSONKey)
             return nil
         }
+        
+        self.init(id: id,
+                  name: name,
+                  studyForm: studyForm,
+                  profiles: profiles,
+                  divisionAlias: divisionAlias)
     }
 }
 

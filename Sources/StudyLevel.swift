@@ -6,18 +6,19 @@
 //
 //
 
+import Foundation
 import SwiftyJSON
 import DefaultStringConvertible
 
 public struct StudyLevel {
     
-    public var name: String
+    public let name: String
     fileprivate static let _nameJSONKey = "StudyLevelName"
     
     public var specializations: [Specialization]
     fileprivate static let _specializationsJSONKey = "StudyProgramCombinations"
     
-    public var hasCourse6: Bool
+    public let hasCourse6: Bool
     fileprivate static let _hasCourse6JSONKey = "HasCourse6"
 }
 

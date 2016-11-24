@@ -15,79 +15,79 @@ public struct Event {
     fileprivate static let _defaultDateFormat = "yyyy-MM-dd"
     fileprivate static let _fullDateFormat = "yyyy-MM-dd'T'HH:mm:ss"
     
-    public var kind: Kind?
+    public let kind: Kind?
     fileprivate static let _kindJSONKey = "StudyEventsTimeTableKindCode"
     
-    public var locations: [Location]
+    public let locations: [Location]
     fileprivate static let _locationsJSONKey = "EventLocations"
     
-    public var contingentUnitName: String
+    public let contingentUnitName: String
     fileprivate static let _contingentUnitNameJSONKey = "ContingentUnitName"
     
-    public var educatorIDs: [(Int, String)]
+    public let educatorIDs: [(Int, String)]
     fileprivate static let _educatorIDsJSONKey = "EducatorIds"
     
-    public var contingentUnitCourse: String
+    public let contingentUnitCourse: String
     fileprivate static let _contingentUnitCourseJSONKey = "ContingentUnitCourse"
     
-    public var contingentUnitDivision: String
+    public let contingentUnitDivision: String
     fileprivate static let _contingentUnitDivisionJSONKey = "ContingentUnitDivision"
     
-    public var isAssigned: Bool
+    public let isAssigned: Bool
     fileprivate static let _isAssignedJSONKey = "IsAssigned"
     
-    public var timeWasChanged: Bool
+    public let timeWasChanged: Bool
     fileprivate static let _timeWasChangedJSONKey = "TimeWasChanged"
     
-    public var locationsWereChanged: Bool
+    public let locationsWereChanged: Bool
     fileprivate static let _locationsWereChangedJSONKey = "LocationsWereChanged"
     
-    public var educatorsWereReassigned: Bool
+    public let educatorsWereReassigned: Bool
     fileprivate static let _educatorsWereReassignedJSONKey = "EducatorsWereReassigned"
     
-    public var start: Date
+    public let start: Date
     fileprivate static let _startJSONKey = "Start"
     
-    public var end: Date
+    public let end: Date
     fileprivate static let _endJSONKey = "End"
     
-    public var subject: String
+    public let subject: String
     fileprivate static let _subjectJSONKey = "Subject"
     
-    public var timeIntervalString: String
+    public let timeIntervalString: String
     fileprivate static let _timeIntervalStringJSONKey = "TimeIntervalString"
     
-    public var dateWithTimeIntervalString: String
+    public let dateWithTimeIntervalString: String
     fileprivate static let _dateWithTimeIntervalStringJSONKey = "DateWithTimeIntervalString"
     
-    public var locationsDisplayText: String
+    public let locationsDisplayText: String
     fileprivate static let _locationsDisplayTextJSONKey = "LocationsDisplayText"
     
-    public var educatorsDisplayText: String
+    public let educatorsDisplayText: String
     fileprivate static let _educatorsDisplayTextJSONKey = "EducatorsDisplayText"
     
-    public var hasEducators: Bool
+    public let hasEducators: Bool
     fileprivate static let _hasEducatorsJSONKey = "HasEducators"
     
-    public var isCancelled: Bool
+    public let isCancelled: Bool
     fileprivate static let _isCancelledJSONKey = "IsCancelled"
     
-    public var hasTheSameTimeAsPreviousItem: Bool
+    public let hasTheSameTimeAsPreviousItem: Bool
     fileprivate static let _hasTheSameTimeAsPreviousItemJSONKey = "HasTheSameTimeAsPreviousItem"
     
-    public var contingentUnitsDisplayText: String?
+    public let contingentUnitsDisplayText: String?
     fileprivate static let _contingentUnitsDisplayTextJSONKey = "ContingentUnitsDisplayTest"
     
-    public var isStudy: Bool
+    public let isStudy: Bool
     fileprivate static let _isStudyJSONKey = "IsStudy"
     
-    public var allDay: Bool
+    public let allDay: Bool
     fileprivate static let _allDayJSONKey = "AllDay"
     
-    public var withinTheSameDay: Bool
+    public let withinTheSameDay: Bool
     fileprivate static let _withinTheSameDayJSONKey = "WithinTheSameDay"
     
-    public var displayDateAndTimeIntervalString: String
+    public let displayDateAndTimeIntervalString: String
     fileprivate static let _displayDateAndTimeIntervalStringJSONKey = "DisplayDateAndTimeIntervalString"
 }
 

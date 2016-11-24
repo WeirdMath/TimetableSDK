@@ -12,34 +12,34 @@ import Foundation
 
 public struct Location {
     
-    public var educatorsDisplayText: String
+    public let educatorsDisplayText: String
     fileprivate static let _educatorsDisplayTextJSONKey = "EducatorsDisplayText"
     
-    public var hasEducators: Bool
+    public let hasEducators: Bool
     fileprivate static let _hasEducatorsJSONKey = "HasEducators"
     
-    public var educatorIDs: [(Int, String)]
+    public let educatorIDs: [(Int, String)]
     fileprivate static let _educatorIDsJSONKey = "EducatorIds"
     
-    public var isEmpty: Bool
+    public let isEmpty: Bool
     fileprivate static let _isEmptyJSONKey = "IsEmpty"
     
-    public var displayName: String
+    public let displayName: String
     fileprivate static let _displayNameJSONKey = "DisplayName"
     
-    public var hasGeographicCoordinates: Bool
+    public let hasGeographicCoordinates: Bool
     fileprivate static let _hasGeographicCoordinatesJSONKey = "HasGeographicCoordinates"
     
-    public var latitude: Double?
+    public let latitude: Double?
     fileprivate static let _latitudeJSONKey = "Latitude"
     
-    public var longitude: Double?
+    public let longitude: Double?
     fileprivate static let _longitudeJSONKey = "Longitude"
     
-    public var latitudeValue: String?
+    public let latitudeValue: String?
     fileprivate static let _latitudeValueJSONKey = "LatitudeValue"
     
-    public var longitudeValue: String?
+    public let longitudeValue: String?
     fileprivate static let _longitudeValueJSONKey = "LongitudeValue"
 }
 
