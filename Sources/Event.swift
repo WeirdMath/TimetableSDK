@@ -10,88 +10,89 @@ import Foundation
 import SwiftyJSON
 import DefaultStringConvertible
 
+/// A study event. May represent lectures, workshops, exams, etc.
 public struct Event {
     
-    fileprivate static let _defaultDateFormat = "yyyy-MM-dd"
-    fileprivate static let _fullDateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+    fileprivate static let defaultDateFormat = "yyyy-MM-dd"
+    fileprivate static let fullDateFormat = "yyyy-MM-dd'T'HH:mm:ss"
     
     public let kind: Kind?
-    fileprivate static let _kindJSONKey = "StudyEventsTimeTableKindCode"
+    fileprivate static let kindJSONKey = "StudyEventsTimeTableKindCode"
     
     public let locations: [Location]
-    fileprivate static let _locationsJSONKey = "EventLocations"
+    fileprivate static let locationsJSONKey = "EventLocations"
     
     public let contingentUnitName: String
-    fileprivate static let _contingentUnitNameJSONKey = "ContingentUnitName"
+    fileprivate static let contingentUnitNameJSONKey = "ContingentUnitName"
     
     public let educatorIDs: [(Int, String)]
-    fileprivate static let _educatorIDsJSONKey = "EducatorIds"
+    fileprivate static let educatorIDsJSONKey = "EducatorIds"
     
     public let contingentUnitCourse: String
-    fileprivate static let _contingentUnitCourseJSONKey = "ContingentUnitCourse"
+    fileprivate static let contingentUnitCourseJSONKey = "ContingentUnitCourse"
     
     public let contingentUnitDivision: String
-    fileprivate static let _contingentUnitDivisionJSONKey = "ContingentUnitDivision"
+    fileprivate static let contingentUnitDivisionJSONKey = "ContingentUnitDivision"
     
     public let isAssigned: Bool
-    fileprivate static let _isAssignedJSONKey = "IsAssigned"
+    fileprivate static let isAssignedJSONKey = "IsAssigned"
     
     public let timeWasChanged: Bool
-    fileprivate static let _timeWasChangedJSONKey = "TimeWasChanged"
+    fileprivate static let timeWasChangedJSONKey = "TimeWasChanged"
     
     public let locationsWereChanged: Bool
-    fileprivate static let _locationsWereChangedJSONKey = "LocationsWereChanged"
+    fileprivate static let locationsWereChangedJSONKey = "LocationsWereChanged"
     
     public let educatorsWereReassigned: Bool
-    fileprivate static let _educatorsWereReassignedJSONKey = "EducatorsWereReassigned"
+    fileprivate static let educatorsWereReassignedJSONKey = "EducatorsWereReassigned"
     
     public let start: Date
-    fileprivate static let _startJSONKey = "Start"
+    fileprivate static let startJSONKey = "Start"
     
     public let end: Date
-    fileprivate static let _endJSONKey = "End"
+    fileprivate static let endJSONKey = "End"
     
     public let subject: String
-    fileprivate static let _subjectJSONKey = "Subject"
+    fileprivate static let subjectJSONKey = "Subject"
     
     public let timeIntervalString: String
-    fileprivate static let _timeIntervalStringJSONKey = "TimeIntervalString"
+    fileprivate static let timeIntervalStringJSONKey = "TimeIntervalString"
     
     public let dateWithTimeIntervalString: String
-    fileprivate static let _dateWithTimeIntervalStringJSONKey = "DateWithTimeIntervalString"
+    fileprivate static let dateWithTimeIntervalStringJSONKey = "DateWithTimeIntervalString"
     
     public let locationsDisplayText: String
-    fileprivate static let _locationsDisplayTextJSONKey = "LocationsDisplayText"
+    fileprivate static let locationsDisplayTextJSONKey = "LocationsDisplayText"
     
     public let educatorsDisplayText: String
-    fileprivate static let _educatorsDisplayTextJSONKey = "EducatorsDisplayText"
+    fileprivate static let educatorsDisplayTextJSONKey = "EducatorsDisplayText"
     
     public let hasEducators: Bool
-    fileprivate static let _hasEducatorsJSONKey = "HasEducators"
+    fileprivate static let hasEducatorsJSONKey = "HasEducators"
     
     public let isCancelled: Bool
-    fileprivate static let _isCancelledJSONKey = "IsCancelled"
+    fileprivate static let isCancelledJSONKey = "IsCancelled"
     
     public let hasTheSameTimeAsPreviousItem: Bool
-    fileprivate static let _hasTheSameTimeAsPreviousItemJSONKey = "HasTheSameTimeAsPreviousItem"
+    fileprivate static let hasTheSameTimeAsPreviousItemJSONKey = "HasTheSameTimeAsPreviousItem"
     
     public let contingentUnitsDisplayText: String?
-    fileprivate static let _contingentUnitsDisplayTextJSONKey = "ContingentUnitsDisplayTest"
+    fileprivate static let contingentUnitsDisplayTextJSONKey = "ContingentUnitsDisplayTest"
     
     public let isStudy: Bool
-    fileprivate static let _isStudyJSONKey = "IsStudy"
+    fileprivate static let isStudyJSONKey = "IsStudy"
     
     public let allDay: Bool
-    fileprivate static let _allDayJSONKey = "AllDay"
+    fileprivate static let allDayJSONKey = "AllDay"
     
     public let withinTheSameDay: Bool
-    fileprivate static let _withinTheSameDayJSONKey = "WithinTheSameDay"
+    fileprivate static let withinTheSameDayJSONKey = "WithinTheSameDay"
     
     public let displayDateAndTimeIntervalString: String
-    fileprivate static let _displayDateAndTimeIntervalStringJSONKey = "DisplayDateAndTimeIntervalString"
+    fileprivate static let displayDateAndTimeIntervalStringJSONKey = "DisplayDateAndTimeIntervalString"
 }
 
-extension Event {
+public extension Event {
     
     public enum Kind: Int {
         case unknown = 0, primary, attestation, final
@@ -103,34 +104,34 @@ extension Event: JSONRepresentable {
     internal init?(from json: JSON) {
         
         let defaultDateFormatter = DateFormatter()
-        defaultDateFormatter.dateFormat = Event._defaultDateFormat
+        defaultDateFormatter.dateFormat = Event.defaultDateFormat
         let fullDateFormatter = DateFormatter()
-        fullDateFormatter.dateFormat = Event._fullDateFormat
+        fullDateFormatter.dateFormat = Event.fullDateFormat
         
-        if let kind = json[Event._kindJSONKey].int {
+        if let kind = json[Event.kindJSONKey].int {
             self.kind = Kind(rawValue: kind) ?? .unknown
-        } else if json[Event._kindJSONKey].null != nil {
+        } else if json[Event.kindJSONKey].null != nil {
             self.kind = nil
         } else {
-            _jsonFailure(json: json, key: Event._kindJSONKey)
+            jsonFailure(json: json, key: Event.kindJSONKey)
             return nil
         }
         
-        if let locations = json[Event._locationsJSONKey].array?.flatMap(Location.init) {
+        if let locations = json[Event.locationsJSONKey].array?.flatMap(Location.init) {
             self.locations = locations
         } else {
-            _jsonFailure(json: json, key: Event._locationsJSONKey)
+            jsonFailure(json: json, key: Event.locationsJSONKey)
             return nil
         }
         
-        if let contingentUnitName = json[Event._contingentUnitNameJSONKey].string {
+        if let contingentUnitName = json[Event.contingentUnitNameJSONKey].string {
             self.contingentUnitName = contingentUnitName
         } else {
-            _jsonFailure(json: json, key: Event._contingentUnitNameJSONKey)
+            jsonFailure(json: json, key: Event.contingentUnitNameJSONKey)
             return nil
         }
         
-        if let educatorIDs = json[Event._educatorIDsJSONKey]
+        if let educatorIDs = json[Event.educatorIDsJSONKey]
             .array?
             .flatMap({ (tuple: JSON) -> (Int, String)? in
                 if let id = tuple["Item1"].int,
@@ -143,158 +144,158 @@ extension Event: JSONRepresentable {
             
             self.educatorIDs = educatorIDs
         } else {
-            _jsonFailure(json: json, key: Event._educatorIDsJSONKey)
+            jsonFailure(json: json, key: Event.educatorIDsJSONKey)
             return nil
         }
         
-        if let contingentUnitCourse = json[Event._contingentUnitCourseJSONKey].string {
+        if let contingentUnitCourse = json[Event.contingentUnitCourseJSONKey].string {
             self.contingentUnitCourse = contingentUnitCourse
         } else {
-            _jsonFailure(json: json, key: Event._contingentUnitCourseJSONKey)
+            jsonFailure(json: json, key: Event.contingentUnitCourseJSONKey)
             return nil
         }
         
-        if let contingentUnitDivision = json[Event._contingentUnitDivisionJSONKey].string {
+        if let contingentUnitDivision = json[Event.contingentUnitDivisionJSONKey].string {
             self.contingentUnitDivision = contingentUnitDivision
         } else {
-            _jsonFailure(json: json, key: Event._contingentUnitDivisionJSONKey)
+            jsonFailure(json: json, key: Event.contingentUnitDivisionJSONKey)
             return nil
         }
         
-        if let isAssigned = json[Event._isAssignedJSONKey].bool {
+        if let isAssigned = json[Event.isAssignedJSONKey].bool {
             self.isAssigned = isAssigned
         } else {
-            _jsonFailure(json: json, key: Event._isAssignedJSONKey)
+            jsonFailure(json: json, key: Event.isAssignedJSONKey)
             return nil
         }
         
-        if let timeWasChanged = json[Event._timeWasChangedJSONKey].bool {
+        if let timeWasChanged = json[Event.timeWasChangedJSONKey].bool {
             self.timeWasChanged = timeWasChanged
         } else {
-            _jsonFailure(json: json, key: Event._timeWasChangedJSONKey)
+            jsonFailure(json: json, key: Event.timeWasChangedJSONKey)
             return nil
         }
         
-        if let locationsWereChanged = json[Event._locationsWereChangedJSONKey].bool {
+        if let locationsWereChanged = json[Event.locationsWereChangedJSONKey].bool {
             self.locationsWereChanged = locationsWereChanged
         } else {
-            _jsonFailure(json: json, key: Event._locationsWereChangedJSONKey)
+            jsonFailure(json: json, key: Event.locationsWereChangedJSONKey)
             return nil
         }
         
-        if let educatorsWereReassigned = json[Event._educatorsWereReassignedJSONKey].bool {
+        if let educatorsWereReassigned = json[Event.educatorsWereReassignedJSONKey].bool {
             self.educatorsWereReassigned = educatorsWereReassigned
         } else {
-            _jsonFailure(json: json, key: Event._educatorsWereReassignedJSONKey)
+            jsonFailure(json: json, key: Event.educatorsWereReassignedJSONKey)
             return nil
         }
         
-        if let startString = json[Event._startJSONKey].string,
+        if let startString = json[Event.startJSONKey].string,
             let start = fullDateFormatter.date(from: startString) {
             self.start = start
         } else {
-            _jsonFailure(json: json, key: Event._startJSONKey)
+            jsonFailure(json: json, key: Event.startJSONKey)
             return nil
         }
         
-        if let endString = json[Event._endJSONKey].string,
+        if let endString = json[Event.endJSONKey].string,
             let end = fullDateFormatter.date(from: endString) {
             self.end = end
         } else {
-            _jsonFailure(json: json, key: Event._endJSONKey)
+            jsonFailure(json: json, key: Event.endJSONKey)
             return nil
         }
         
-        if let subject = json[Event._subjectJSONKey].string {
+        if let subject = json[Event.subjectJSONKey].string {
             self.subject = subject
         } else {
-            _jsonFailure(json: json, key: Event._subjectJSONKey)
+            jsonFailure(json: json, key: Event.subjectJSONKey)
             return nil
         }
         
-        if let timeIntervalString = json[Event._timeIntervalStringJSONKey].string {
+        if let timeIntervalString = json[Event.timeIntervalStringJSONKey].string {
             self.timeIntervalString = timeIntervalString
         } else {
-            _jsonFailure(json: json, key: Event._timeIntervalStringJSONKey)
+            jsonFailure(json: json, key: Event.timeIntervalStringJSONKey)
             return nil
         }
         
-        if let dateWithTimeIntervalString = json[Event._dateWithTimeIntervalStringJSONKey].string {
+        if let dateWithTimeIntervalString = json[Event.dateWithTimeIntervalStringJSONKey].string {
             self.dateWithTimeIntervalString = dateWithTimeIntervalString
         } else {
-            _jsonFailure(json: json, key: Event._dateWithTimeIntervalStringJSONKey)
+            jsonFailure(json: json, key: Event.dateWithTimeIntervalStringJSONKey)
             return nil
         }
         
-        if let locationsDisplayText = json[Event._locationsDisplayTextJSONKey].string {
+        if let locationsDisplayText = json[Event.locationsDisplayTextJSONKey].string {
             self.locationsDisplayText = locationsDisplayText
         } else {
-            _jsonFailure(json: json, key: Event._locationsDisplayTextJSONKey)
+            jsonFailure(json: json, key: Event.locationsDisplayTextJSONKey)
             return nil
         }
         
-        if let educatorsDisplayText = json[Event._educatorsDisplayTextJSONKey].string {
+        if let educatorsDisplayText = json[Event.educatorsDisplayTextJSONKey].string {
             self.educatorsDisplayText = educatorsDisplayText
         } else {
-            _jsonFailure(json: json, key: Event._educatorsDisplayTextJSONKey)
+            jsonFailure(json: json, key: Event.educatorsDisplayTextJSONKey)
             return nil
         }
         
-        if let hasEducators = json[Event._hasEducatorsJSONKey].bool {
+        if let hasEducators = json[Event.hasEducatorsJSONKey].bool {
             self.hasEducators = hasEducators
         } else {
-            _jsonFailure(json: json, key: Event._hasEducatorsJSONKey)
+            jsonFailure(json: json, key: Event.hasEducatorsJSONKey)
             return nil
         }
         
-        if let isCancelled = json[Event._isCancelledJSONKey].bool {
+        if let isCancelled = json[Event.isCancelledJSONKey].bool {
             self.isCancelled = isCancelled
         } else {
-            _jsonFailure(json: json, key: Event._isCancelledJSONKey)
+            jsonFailure(json: json, key: Event.isCancelledJSONKey)
             return nil
         }
         
-        if let hasTheSameTimeAsPreviousItem = json[Event._hasTheSameTimeAsPreviousItemJSONKey].bool {
+        if let hasTheSameTimeAsPreviousItem = json[Event.hasTheSameTimeAsPreviousItemJSONKey].bool {
             self.hasTheSameTimeAsPreviousItem = hasTheSameTimeAsPreviousItem
         } else {
-            _jsonFailure(json: json, key: Event._hasTheSameTimeAsPreviousItemJSONKey)
+            jsonFailure(json: json, key: Event.hasTheSameTimeAsPreviousItemJSONKey)
             return nil
         }
         
-        if let contingentUnitsDisplayText = json[Event._contingentUnitsDisplayTextJSONKey].string {
+        if let contingentUnitsDisplayText = json[Event.contingentUnitsDisplayTextJSONKey].string {
             self.contingentUnitsDisplayText = contingentUnitsDisplayText
-        } else if json[Event._contingentUnitsDisplayTextJSONKey].null != nil {
+        } else if json[Event.contingentUnitsDisplayTextJSONKey].null != nil {
             self.contingentUnitsDisplayText = nil
         } else {
-            _jsonFailure(json: json, key: Event._contingentUnitsDisplayTextJSONKey)
+            jsonFailure(json: json, key: Event.contingentUnitsDisplayTextJSONKey)
             return nil
         }
         
-        if let isStudy = json[Event._isStudyJSONKey].bool {
+        if let isStudy = json[Event.isStudyJSONKey].bool {
             self.isStudy = isStudy
         } else {
-            _jsonFailure(json: json, key: Event._isStudyJSONKey)
+            jsonFailure(json: json, key: Event.isStudyJSONKey)
             return nil
         }
         
-        if let allDay = json[Event._allDayJSONKey].bool {
+        if let allDay = json[Event.allDayJSONKey].bool {
             self.allDay = allDay
         } else {
-            _jsonFailure(json: json, key: Event._allDayJSONKey)
+            jsonFailure(json: json, key: Event.allDayJSONKey)
             return nil
         }
         
-        if let withinTheSameDay = json[Event._withinTheSameDayJSONKey].bool {
+        if let withinTheSameDay = json[Event.withinTheSameDayJSONKey].bool {
             self.withinTheSameDay = withinTheSameDay
         } else {
-            _jsonFailure(json: json, key: Event._withinTheSameDayJSONKey)
+            jsonFailure(json: json, key: Event.withinTheSameDayJSONKey)
             return nil
         }
         
-        if let displayDateAndTimeIntervalString = json[Event._displayDateAndTimeIntervalStringJSONKey].string {
+        if let displayDateAndTimeIntervalString = json[Event.displayDateAndTimeIntervalStringJSONKey].string {
             self.displayDateAndTimeIntervalString = displayDateAndTimeIntervalString
         } else {
-            _jsonFailure(json: json, key: Event._displayDateAndTimeIntervalStringJSONKey)
+            jsonFailure(json: json, key: Event.displayDateAndTimeIntervalStringJSONKey)
             return nil
         }
     }

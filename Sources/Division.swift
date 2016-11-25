@@ -9,17 +9,21 @@
 import SwiftyJSON
 import DefaultStringConvertible
 
+/// The information about a division of the Univeristy.
 public final class Division {
     
     public let name: String
-    fileprivate static let _nameJSONKey = "Name"
+    fileprivate static let nameJSONKey = "Name"
     
     public let alias: String
-    fileprivate static let _aliasJSONKey = "Alias"
+    fileprivate static let aliasJSONKey = "Alias"
     
     public let oid: String
-    fileprivate static let _oidJSONKey = "Oid"
+    fileprivate static let oidJSONKey = "Oid"
     
+    /// The study levels available for this division. Initially is `nil`. Use
+    /// the `fetchStudyLevels(for:using:dispatchQueue:completion:)` method of a `Timetable` instance
+    /// in order to get study levels.
     public fileprivate(set) var studyLevels: [StudyLevel]?
     
     internal init(name: String, alias: String, oid: String) {
@@ -29,13 +33,19 @@ public final class Division {
     }
 }
 
-extension Division: _APIQueryable {
+extension Division: APIQueryable {
     
-    internal var _apiQuery: String {
+    /// Returnes an API method for fetching this entity.
+    internal var apiQuery: String {
         return "\(alias)/studyprograms"
     }
     
-    internal func _saveFetchResult(_ json: JSON) throws {
+    /// Converts an API response to an appropriate form.
+    ///
+    /// - Parameter json: An API response as JSON.
+    /// - Throws: A `TimetableError` that is caught in the `fetch(using:dispatchQueue:baseURL:completion)` method
+    ///           and retunred in a completion handler of thet method.
+    internal func saveFetchResult(_ json: JSON) throws {
         
         if let studyLevels = json.array?.flatMap(StudyLevel.init), !studyLevels.isEmpty {
             self.studyLevels = studyLevels
@@ -49,18 +59,18 @@ extension Division: JSONRepresentable {
     
     convenience init?(from json: JSON) {
         
-        guard let name = json[Division._nameJSONKey].string else {
-            _jsonFailure(json: json, key: Division._nameJSONKey)
+        guard let name = json[Division.nameJSONKey].string else {
+            jsonFailure(json: json, key: Division.nameJSONKey)
             return nil
         }
         
-        guard let alias = json[Division._aliasJSONKey].string else {
-            _jsonFailure(json: json, key: Division._aliasJSONKey)
+        guard let alias = json[Division.aliasJSONKey].string else {
+            jsonFailure(json: json, key: Division.aliasJSONKey)
             return nil
         }
         
-        guard let oid = json[Division._oidJSONKey].string else {
-            _jsonFailure(json: json, key: Division._oidJSONKey)
+        guard let oid = json[Division.oidJSONKey].string else {
+            jsonFailure(json: json, key: Division.oidJSONKey)
             return nil
         }
         

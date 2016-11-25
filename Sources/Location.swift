@@ -10,58 +10,59 @@ import SwiftyJSON
 import DefaultStringConvertible
 import Foundation
 
+/// The information about a location that an `Event` may take place in.
 public struct Location {
     
     public let educatorsDisplayText: String
-    fileprivate static let _educatorsDisplayTextJSONKey = "EducatorsDisplayText"
+    fileprivate static let educatorsDisplayTextJSONKey = "EducatorsDisplayText"
     
     public let hasEducators: Bool
-    fileprivate static let _hasEducatorsJSONKey = "HasEducators"
+    fileprivate static let hasEducatorsJSONKey = "HasEducators"
     
     public let educatorIDs: [(Int, String)]
-    fileprivate static let _educatorIDsJSONKey = "EducatorIds"
+    fileprivate static let educatorIDsJSONKey = "EducatorIds"
     
     public let isEmpty: Bool
-    fileprivate static let _isEmptyJSONKey = "IsEmpty"
+    fileprivate static let isEmptyJSONKey = "IsEmpty"
     
     public let displayName: String
-    fileprivate static let _displayNameJSONKey = "DisplayName"
+    fileprivate static let displayNameJSONKey = "DisplayName"
     
     public let hasGeographicCoordinates: Bool
-    fileprivate static let _hasGeographicCoordinatesJSONKey = "HasGeographicCoordinates"
+    fileprivate static let hasGeographicCoordinatesJSONKey = "HasGeographicCoordinates"
     
     public let latitude: Double?
-    fileprivate static let _latitudeJSONKey = "Latitude"
+    fileprivate static let latitudeJSONKey = "Latitude"
     
     public let longitude: Double?
-    fileprivate static let _longitudeJSONKey = "Longitude"
+    fileprivate static let longitudeJSONKey = "Longitude"
     
     public let latitudeValue: String?
-    fileprivate static let _latitudeValueJSONKey = "LatitudeValue"
+    fileprivate static let latitudeValueJSONKey = "LatitudeValue"
     
     public let longitudeValue: String?
-    fileprivate static let _longitudeValueJSONKey = "LongitudeValue"
+    fileprivate static let longitudeValueJSONKey = "LongitudeValue"
 }
 
 extension Location: JSONRepresentable {
     
     internal init?(from json: JSON) {
         
-        if let educatorsDisplayText = json[Location._educatorsDisplayTextJSONKey].string {
+        if let educatorsDisplayText = json[Location.educatorsDisplayTextJSONKey].string {
             self.educatorsDisplayText = educatorsDisplayText
         } else {
-            _jsonFailure(json: json, key: Location._educatorsDisplayTextJSONKey)
+            jsonFailure(json: json, key: Location.educatorsDisplayTextJSONKey)
             return nil
         }
         
-        if let hasEducators = json[Location._hasEducatorsJSONKey].bool {
+        if let hasEducators = json[Location.hasEducatorsJSONKey].bool {
             self.hasEducators = hasEducators
         } else {
-            _jsonFailure(json: json, key: Location._hasEducatorsJSONKey)
+            jsonFailure(json: json, key: Location.hasEducatorsJSONKey)
             return nil
         }
         
-        if let educatorIDs = json[Location._educatorIDsJSONKey]
+        if let educatorIDs = json[Location.educatorIDsJSONKey]
             .array?
             .flatMap({ (tuple: JSON) -> (Int, String)? in
                 if let id = tuple["Item1"].int,
@@ -73,58 +74,58 @@ extension Location: JSONRepresentable {
             }) {
             self.educatorIDs = educatorIDs
         } else {
-            _jsonFailure(json: json, key: Location._educatorIDsJSONKey)
+            jsonFailure(json: json, key: Location.educatorIDsJSONKey)
             return nil
         }
         
-        if let isEmpty = json[Location._isEmptyJSONKey].bool {
+        if let isEmpty = json[Location.isEmptyJSONKey].bool {
             self.isEmpty = isEmpty
         } else {
-            _jsonFailure(json: json, key: Location._isEmptyJSONKey)
+            jsonFailure(json: json, key: Location.isEmptyJSONKey)
             return nil
         }
         
-        if let displayName = json[Location._displayNameJSONKey].string {
+        if let displayName = json[Location.displayNameJSONKey].string {
             self.displayName = displayName
         } else {
-            _jsonFailure(json: json, key: Location._displayNameJSONKey)
+            jsonFailure(json: json, key: Location.displayNameJSONKey)
             return nil
         }
         
-        if let hasGeographicCoordinates = json[Location._hasGeographicCoordinatesJSONKey].bool {
+        if let hasGeographicCoordinates = json[Location.hasGeographicCoordinatesJSONKey].bool {
             self.hasGeographicCoordinates = hasGeographicCoordinates
         } else {
-            _jsonFailure(json: json, key: Location._hasGeographicCoordinatesJSONKey)
+            jsonFailure(json: json, key: Location.hasGeographicCoordinatesJSONKey)
             return nil
         }
         
         if hasGeographicCoordinates {
             
-            if let latitude = json[Location._latitudeJSONKey].double {
+            if let latitude = json[Location.latitudeJSONKey].double {
                 self.latitude = latitude
             } else {
-                _jsonFailure(json: json, key: Location._latitudeJSONKey)
+                jsonFailure(json: json, key: Location.latitudeJSONKey)
                 return nil
             }
             
-            if let longitude = json[Location._longitudeJSONKey].double {
+            if let longitude = json[Location.longitudeJSONKey].double {
                 self.longitude = longitude
             } else {
-                _jsonFailure(json: json, key: Location._longitudeJSONKey)
+                jsonFailure(json: json, key: Location.longitudeJSONKey)
                 return nil
             }
             
-            if let latitudeValue = json[Location._latitudeValueJSONKey].string {
+            if let latitudeValue = json[Location.latitudeValueJSONKey].string {
                 self.latitudeValue = latitudeValue
             } else {
-                _jsonFailure(json: json, key: Location._latitudeValueJSONKey)
+                jsonFailure(json: json, key: Location.latitudeValueJSONKey)
                 return nil
             }
             
-            if let longitudeValue = json[Location._longitudeValueJSONKey].string {
+            if let longitudeValue = json[Location.longitudeValueJSONKey].string {
                 self.longitudeValue = longitudeValue
             } else {
-                _jsonFailure(json: json, key: Location._longitudeValueJSONKey)
+                jsonFailure(json: json, key: Location.longitudeValueJSONKey)
                 return nil
             }
             

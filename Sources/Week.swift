@@ -10,45 +10,46 @@ import Foundation
 import SwiftyJSON
 import DefaultStringConvertible
 
+/// The information about a study week for a `StudentGroup`.
 public struct Week {
     
-    fileprivate static let _dateFormat = "yyyy-MM-dd"
+    fileprivate static let dateFormat = "yyyy-MM-dd"
     
     public let previousWeekMonday: Date
-    fileprivate static let _previousWeekMondayJSONKey = "PreviousWeekMonday"
+    fileprivate static let previousWeekMondayJSONKey = "PreviousWeekMonday"
     
     public let nextWeekMonday: Date
-    fileprivate static let _nextWeekMondayJSONKey = "NextWeekMonday"
+    fileprivate static let nextWeekMondayJSONKey = "NextWeekMonday"
     
     public let isPreviousWeekReferenceAvailable: Bool
-    fileprivate static let _isPreviousWeekReferenceAvailableJSONKey = "IsPreviousWeekReferenceAvailable"
+    fileprivate static let isPreviousWeekReferenceAvailableJSONKey = "IsPreviousWeekReferenceAvailable"
     
     public let isNextWeekReferenceAvailable: Bool
-    fileprivate static let _isNextWeekReferenceAvailableJSONKey = "IsNextWeekReferenceAvailable"
+    fileprivate static let isNextWeekReferenceAvailableJSONKey = "IsNextWeekReferenceAvailable"
     
     public let isCurrentWeekReferenceAvailable: Bool
-    fileprivate static let _isCurrentWeekReferenceAvailableJSONKey = "IsCurrentWeekReferenceAvailable"
+    fileprivate static let isCurrentWeekReferenceAvailableJSONKey = "IsCurrentWeekReferenceAvailable"
     
     public let weekDisplayText: String
-    fileprivate static let _weekDisplayTextJSONKey = "WeekDisplayText"
+    fileprivate static let weekDisplayTextJSONKey = "WeekDisplayText"
     
     public let days: [Day]
-    fileprivate static let _daysJSONKey = "Days"
+    fileprivate static let daysJSONKey = "Days"
     
     public let viewName: String
-    fileprivate static let _viewNameJSONKey = "ViewName"
+    fileprivate static let viewNameJSONKey = "ViewName"
     
     public let monday: Date
-    fileprivate static let _mondayJSONKey = "WeekMonday"
+    fileprivate static let mondayJSONKey = "WeekMonday"
     
     public let studentGroupID: Int
-    fileprivate static let _studentGroupIDJSONKey = "StudentGroupId"
+    fileprivate static let studentGroupIDJSONKey = "StudentGroupId"
     
     public let studentGroupDisplayName: String
-    fileprivate static let _studentGroupDisplayNameJSONKey = "StudentGroupDisplayName"
+    fileprivate static let studentGroupDisplayNameJSONKey = "StudentGroupDisplayName"
     
     public let timetableDisplayName: String
-    fileprivate static let _timeTableDisplayNameJSONKey = "TimeTableDisplayName"
+    fileprivate static let timeTableDisplayNameJSONKey = "TimeTableDisplayName"
 }
 
 extension Week: JSONRepresentable {
@@ -56,92 +57,92 @@ extension Week: JSONRepresentable {
     internal init?(from json: JSON) {
         
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = Week._dateFormat
+        dateFormatter.dateFormat = Week.dateFormat
         
-        if let previousWeekMondayString = json[Week._previousWeekMondayJSONKey].string,
+        if let previousWeekMondayString = json[Week.previousWeekMondayJSONKey].string,
             let previousWeekMonday = dateFormatter.date(from: previousWeekMondayString) {
             self.previousWeekMonday = previousWeekMonday
         } else {
-            _jsonFailure(json: json, key: Week._previousWeekMondayJSONKey)
+            jsonFailure(json: json, key: Week.previousWeekMondayJSONKey)
             return nil
         }
         
-        if let nextWeekMondayString = json[Week._nextWeekMondayJSONKey].string,
+        if let nextWeekMondayString = json[Week.nextWeekMondayJSONKey].string,
             let nextWeekMonday = dateFormatter.date(from: nextWeekMondayString) {
             self.nextWeekMonday = nextWeekMonday
         } else {
-            _jsonFailure(json: json, key: Week._nextWeekMondayJSONKey)
+            jsonFailure(json: json, key: Week.nextWeekMondayJSONKey)
             return nil
         }
         
-        if let isPreviousWeekReferenceAvailable = json[Week._isPreviousWeekReferenceAvailableJSONKey].bool {
+        if let isPreviousWeekReferenceAvailable = json[Week.isPreviousWeekReferenceAvailableJSONKey].bool {
             self.isPreviousWeekReferenceAvailable = isPreviousWeekReferenceAvailable
         } else {
-            _jsonFailure(json: json, key: Week._isPreviousWeekReferenceAvailableJSONKey)
+            jsonFailure(json: json, key: Week.isPreviousWeekReferenceAvailableJSONKey)
             return nil
         }
         
-        if let isNextWeekReferenceAvailable = json[Week._isNextWeekReferenceAvailableJSONKey].bool {
+        if let isNextWeekReferenceAvailable = json[Week.isNextWeekReferenceAvailableJSONKey].bool {
             self.isNextWeekReferenceAvailable = isNextWeekReferenceAvailable
         } else {
-            _jsonFailure(json: json, key: Week._isNextWeekReferenceAvailableJSONKey)
+            jsonFailure(json: json, key: Week.isNextWeekReferenceAvailableJSONKey)
             return nil
         }
         
-        if let isCurrentWeekReferenceAvailable = json[Week._isCurrentWeekReferenceAvailableJSONKey].bool {
+        if let isCurrentWeekReferenceAvailable = json[Week.isCurrentWeekReferenceAvailableJSONKey].bool {
             self.isCurrentWeekReferenceAvailable = isCurrentWeekReferenceAvailable
         } else {
-            _jsonFailure(json: json, key: Week._isCurrentWeekReferenceAvailableJSONKey)
+            jsonFailure(json: json, key: Week.isCurrentWeekReferenceAvailableJSONKey)
             return nil
         }
         
-        if let weekDisplayText = json[Week._weekDisplayTextJSONKey].string {
+        if let weekDisplayText = json[Week.weekDisplayTextJSONKey].string {
             self.weekDisplayText = weekDisplayText
         } else {
-            _jsonFailure(json: json, key: Week._weekDisplayTextJSONKey)
+            jsonFailure(json: json, key: Week.weekDisplayTextJSONKey)
             return nil
         }
         
-        if let days = json[Week._daysJSONKey].array?.flatMap(Day.init) {
+        if let days = json[Week.daysJSONKey].array?.flatMap(Day.init) {
             self.days = days
         } else {
-            _jsonFailure(json: json, key: Week._daysJSONKey)
+            jsonFailure(json: json, key: Week.daysJSONKey)
             return nil
         }
         
-        if let viewName = json[Week._viewNameJSONKey].string {
+        if let viewName = json[Week.viewNameJSONKey].string {
             self.viewName = viewName
         } else {
-            _jsonFailure(json: json, key: Week._viewNameJSONKey)
+            jsonFailure(json: json, key: Week.viewNameJSONKey)
             return nil
         }
         
-        if let mondayString = json[Week._mondayJSONKey].string,
+        if let mondayString = json[Week.mondayJSONKey].string,
             let monday = dateFormatter.date(from: mondayString) {
             self.monday = monday
         } else {
-            _jsonFailure(json: json, key: Week._mondayJSONKey)
+            jsonFailure(json: json, key: Week.mondayJSONKey)
             return nil
         }
         
-        if let studentGroupID = json[Week._studentGroupIDJSONKey].int {
+        if let studentGroupID = json[Week.studentGroupIDJSONKey].int {
             self.studentGroupID = studentGroupID
         } else {
-            _jsonFailure(json: json, key: Week._studentGroupIDJSONKey)
+            jsonFailure(json: json, key: Week.studentGroupIDJSONKey)
             return nil
         }
         
-        if let studentGroupDisplayName = json[Week._studentGroupDisplayNameJSONKey].string {
+        if let studentGroupDisplayName = json[Week.studentGroupDisplayNameJSONKey].string {
             self.studentGroupDisplayName = studentGroupDisplayName
         } else {
-            _jsonFailure(json: json, key: Week._studentGroupDisplayNameJSONKey)
+            jsonFailure(json: json, key: Week.studentGroupDisplayNameJSONKey)
             return nil
         }
         
-        if let timetableDisplayName = json[Week._timeTableDisplayNameJSONKey].string {
+        if let timetableDisplayName = json[Week.timeTableDisplayNameJSONKey].string {
             self.timetableDisplayName = timetableDisplayName
         } else {
-            _jsonFailure(json: json, key: Week._timeTableDisplayNameJSONKey)
+            jsonFailure(json: json, key: Week.timeTableDisplayNameJSONKey)
             return nil
         }
     }

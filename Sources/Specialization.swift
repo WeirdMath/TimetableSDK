@@ -9,30 +9,31 @@
 import SwiftyJSON
 import DefaultStringConvertible
 
+/// The infromation about a specialization available for a `StudyLevel`.
 public struct Specialization {
     
     public let name: String
-    fileprivate static let _nameJSONKey = "Name"
+    fileprivate static let nameJSONKey = "Name"
     
     public var admissionYears: [AdmissionYear]
-    fileprivate static let _admissionYearsJSONKey = "AdmissionYears"
+    fileprivate static let admissionYearsJSONKey = "AdmissionYears"
 }
 
 extension Specialization: JSONRepresentable {
     
     internal init?(from json: JSON) {
         
-        if let name = json[Specialization._nameJSONKey].string {
+        if let name = json[Specialization.nameJSONKey].string {
             self.name = name
         } else {
-            _jsonFailure(json: json, key: Specialization._nameJSONKey)
+            jsonFailure(json: json, key: Specialization.nameJSONKey)
             return nil
         }
         
-        if let admissionYears = json[Specialization._admissionYearsJSONKey].array?.flatMap(AdmissionYear.init) {
+        if let admissionYears = json[Specialization.admissionYearsJSONKey].array?.flatMap(AdmissionYear.init) {
             self.admissionYears = admissionYears
         } else {
-            _jsonFailure(json: json, key: Specialization._admissionYearsJSONKey)
+            jsonFailure(json: json, key: Specialization.admissionYearsJSONKey)
             return nil
         }
     }

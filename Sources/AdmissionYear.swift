@@ -9,23 +9,27 @@
 import SwiftyJSON
 import DefaultStringConvertible
 
+/// The information about an admission year for a particular `Specialization`.
 public final class AdmissionYear {
     
     public let isEmpty: Bool
-    fileprivate static let _isEmptyJSONKey = "IsEmpty"
+    fileprivate static let isEmptyJSONKey = "IsEmpty"
     
     public let divisionAlias: String
-    fileprivate static let _divisionAliasJSONKey = "PublicDivisionAlias"
+    fileprivate static let divisionAliasJSONKey = "PublicDivisionAlias"
     
     public let studyProgramID: Int
-    fileprivate static let _studyProgramIDJSONKey = "StudyProgramId"
+    fileprivate static let studyProgramIDJSONKey = "StudyProgramId"
     
     public let name: String
-    fileprivate static let _nameJSONKey = "YearName"
+    fileprivate static let nameJSONKey = "YearName"
     
     public let number: Int
-    fileprivate static let _numberJSONKey = "YearNumber"
+    fileprivate static let numberJSONKey = "YearNumber"
     
+    /// The sudent groups formed in this year. Initially is `nil`. Use
+    /// the `fetchStudentGroups(for:using:dispatchQueue:completion:)` method of a `Timetable` instance
+    /// in order to get student groups.
     public fileprivate(set) var studentGroups: [StudentGroup]?
     
     internal init(isEmpty: Bool,
@@ -42,13 +46,19 @@ public final class AdmissionYear {
     }
 }
 
-extension AdmissionYear: _APIQueryable {
+extension AdmissionYear: APIQueryable {
     
-    var _apiQuery: String {
+    /// Returnes an API method for fetching this entity.
+    internal var apiQuery: String {
         return "\(divisionAlias)/studyprogram/\(studyProgramID)/studentgroups"
     }
     
-    func _saveFetchResult(_ json: JSON) throws {
+    /// Converts an API response to an appropriate form.
+    ///
+    /// - Parameter json: An API response as JSON.
+    /// - Throws: A `TimetableError` that is caught in the `fetch(using:dispatchQueue:baseURL:completion)` method
+    ///           and retunred in a completion handler of thet method.
+    internal func saveFetchResult(_ json: JSON) throws {
         
         if let studentGroups = json.array?.flatMap(StudentGroup.init), !studentGroups.isEmpty {
             self.studentGroups = studentGroups
@@ -62,28 +72,28 @@ extension AdmissionYear: JSONRepresentable {
     
     internal convenience init?(from json: JSON) {
         
-        guard let isEmpty = json[AdmissionYear._isEmptyJSONKey].bool else {
-            _jsonFailure(json: json, key: AdmissionYear._isEmptyJSONKey)
+        guard let isEmpty = json[AdmissionYear.isEmptyJSONKey].bool else {
+            jsonFailure(json: json, key: AdmissionYear.isEmptyJSONKey)
             return nil
         }
         
-        guard let divisionAlias = json[AdmissionYear._divisionAliasJSONKey].string else {
-            _jsonFailure(json: json, key: AdmissionYear._divisionAliasJSONKey)
+        guard let divisionAlias = json[AdmissionYear.divisionAliasJSONKey].string else {
+            jsonFailure(json: json, key: AdmissionYear.divisionAliasJSONKey)
             return nil
         }
         
-        guard let studyProgramID = json[AdmissionYear._studyProgramIDJSONKey].int else {
-            _jsonFailure(json: json, key: AdmissionYear._studyProgramIDJSONKey)
+        guard let studyProgramID = json[AdmissionYear.studyProgramIDJSONKey].int else {
+            jsonFailure(json: json, key: AdmissionYear.studyProgramIDJSONKey)
             return nil
         }
         
-        guard let name = json[AdmissionYear._nameJSONKey].string else {
-            _jsonFailure(json: json, key: AdmissionYear._nameJSONKey)
+        guard let name = json[AdmissionYear.nameJSONKey].string else {
+            jsonFailure(json: json, key: AdmissionYear.nameJSONKey)
             return nil
         }
         
-        guard let number = json[AdmissionYear._numberJSONKey].int else {
-            _jsonFailure(json: json, key: AdmissionYear._numberJSONKey)
+        guard let number = json[AdmissionYear.numberJSONKey].int else {
+            jsonFailure(json: json, key: AdmissionYear.numberJSONKey)
             return nil
         }
         

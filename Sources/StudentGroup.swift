@@ -9,23 +9,27 @@
 import SwiftyJSON
 import DefaultStringConvertible
 
+/// The information about a student group formed in an `AdmissionYear`.
 public final class StudentGroup {
     
     public let id: Int
-    fileprivate static let _idJSONKey = "StudentGroupId"
+    fileprivate static let idJSONKey = "StudentGroupId"
     
     public let name: String
-    fileprivate static let _nameJSONKey = "StudentGroupName"
+    fileprivate static let nameJSONKey = "StudentGroupName"
     
     public let studyForm: String
-    fileprivate static let _studyFormJSONKey = "StudentGroupStudyForm"
+    fileprivate static let studyFormJSONKey = "StudentGroupStudyForm"
     
     public let profiles: String
-    fileprivate static let _profilesJSONKey = "StudentGroupProfiles"
+    fileprivate static let profilesJSONKey = "StudentGroupProfiles"
     
     public let divisionAlias: String
-    fileprivate static let _divisionAliasJSONKey = "PublicDivisionAlias"
+    fileprivate static let divisionAliasJSONKey = "PublicDivisionAlias"
     
+    /// The current week schedule for this student group. Initially is `nil`. Use
+    /// the `fetchCurrentWeek(for:using:dispatchQueue:completion:)` method of a `Timetable` instance
+    /// in order to get the current week.
     public fileprivate(set) var currentWeek: Week?
     
     internal init(id: Int,
@@ -41,13 +45,19 @@ public final class StudentGroup {
     }
 }
 
-extension StudentGroup: _APIQueryable {
+extension StudentGroup: APIQueryable {
     
-    var _apiQuery: String {
+    /// Returnes an API method for fetching this entity.
+    internal var apiQuery: String {
         return "\(divisionAlias)/studentgroup/\(id)/events"
     }
     
-    func _saveFetchResult(_ json: JSON) throws {
+    /// Converts an API response to an appropriate form.
+    ///
+    /// - Parameter json: An API response as JSON.
+    /// - Throws: A `TimetableError` that is caught in the `fetch(using:dispatchQueue:baseURL:completion)` method
+    ///           and retunred in a completion handler of thet method.
+    internal func saveFetchResult(_ json: JSON) throws {
         
         if let currentWeek = Week(from: json) {
             self.currentWeek = currentWeek
@@ -61,28 +71,28 @@ extension StudentGroup: JSONRepresentable {
     
     internal convenience init?(from json: JSON) {
         
-        guard let id = json[StudentGroup._idJSONKey].int else {
-            _jsonFailure(json: json, key: StudentGroup._idJSONKey)
+        guard let id = json[StudentGroup.idJSONKey].int else {
+            jsonFailure(json: json, key: StudentGroup.idJSONKey)
             return nil
         }
         
-        guard let name = json[StudentGroup._nameJSONKey].string else {
-            _jsonFailure(json: json, key: StudentGroup._nameJSONKey)
+        guard let name = json[StudentGroup.nameJSONKey].string else {
+            jsonFailure(json: json, key: StudentGroup.nameJSONKey)
             return nil
         }
         
-        guard let studyForm = json[StudentGroup._studyFormJSONKey].string else {
-            _jsonFailure(json: json, key: StudentGroup._studyFormJSONKey)
+        guard let studyForm = json[StudentGroup.studyFormJSONKey].string else {
+            jsonFailure(json: json, key: StudentGroup.studyFormJSONKey)
             return nil
         }
         
-        guard let profiles = json[StudentGroup._profilesJSONKey].string else {
-            _jsonFailure(json: json, key: StudentGroup._profilesJSONKey)
+        guard let profiles = json[StudentGroup.profilesJSONKey].string else {
+            jsonFailure(json: json, key: StudentGroup.profilesJSONKey)
             return nil
         }
         
-        guard let divisionAlias = json[StudentGroup._divisionAliasJSONKey].string  else {
-            _jsonFailure(json: json, key: StudentGroup._divisionAliasJSONKey)
+        guard let divisionAlias = json[StudentGroup.divisionAliasJSONKey].string  else {
+            jsonFailure(json: json, key: StudentGroup.divisionAliasJSONKey)
             return nil
         }
         

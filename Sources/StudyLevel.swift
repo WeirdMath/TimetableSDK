@@ -10,40 +10,41 @@ import Foundation
 import SwiftyJSON
 import DefaultStringConvertible
 
+/// The information about a study level available in a `Division`.
 public struct StudyLevel {
     
     public let name: String
-    fileprivate static let _nameJSONKey = "StudyLevelName"
+    fileprivate static let nameJSONKey = "StudyLevelName"
     
     public var specializations: [Specialization]
-    fileprivate static let _specializationsJSONKey = "StudyProgramCombinations"
+    fileprivate static let specializationsJSONKey = "StudyProgramCombinations"
     
     public let hasCourse6: Bool
-    fileprivate static let _hasCourse6JSONKey = "HasCourse6"
+    fileprivate static let hasCourse6JSONKey = "HasCourse6"
 }
 
 extension StudyLevel: JSONRepresentable {
     
     internal init?(from json: JSON) {
         
-        if let name = json[StudyLevel._nameJSONKey].string {
+        if let name = json[StudyLevel.nameJSONKey].string {
             self.name = name
         } else {
-            _jsonFailure(json: json, key: StudyLevel._nameJSONKey)
+            jsonFailure(json: json, key: StudyLevel.nameJSONKey)
             return nil
         }
         
-        if let specializations = json[StudyLevel._specializationsJSONKey].array?.flatMap(Specialization.init) {
+        if let specializations = json[StudyLevel.specializationsJSONKey].array?.flatMap(Specialization.init) {
             self.specializations = specializations
         } else {
-            _jsonFailure(json: json, key: StudyLevel._specializationsJSONKey)
+            jsonFailure(json: json, key: StudyLevel.specializationsJSONKey)
             return nil
         }
         
-        if let hasCourse6 = json[StudyLevel._hasCourse6JSONKey].bool {
+        if let hasCourse6 = json[StudyLevel.hasCourse6JSONKey].bool {
             self.hasCourse6 = hasCourse6
         } else {
-            _jsonFailure(json: json, key: StudyLevel._hasCourse6JSONKey)
+            jsonFailure(json: json, key: StudyLevel.hasCourse6JSONKey)
             return nil
         }
     }
