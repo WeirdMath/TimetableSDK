@@ -26,6 +26,8 @@ script:
     fi
 
 after_success:
-  - swift package generate-xcodeproj
-  - xcodebuild -project TimetableSDK.xcodeproj -scheme TimetableSDK -sdk macosx10.12 -destination arch=x86_64 -configuration Debug -enableCodeCoverage YES test | xcpretty
-  - bash <(curl -s https://codecov.io/bash)
+  - if [[ $LOCAL_TESTS == "YES" ]] ; then
+      swift package generate-xcodeproj;
+      xcodebuild -project TimetableSDK.xcodeproj -scheme TimetableSDK -sdk macosx10.12 -destination arch=x86_64 -configuration Debug -enableCodeCoverage YES test | xcpretty;
+      bash <(curl -s https://codecov.io/bash);
+    fi
