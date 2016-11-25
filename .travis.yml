@@ -11,10 +11,13 @@ matrix:
   allow_failures:
     - env: LOCAL_TESTS="NO" NETWORKING_TESTS="YES" POD_LINT="NO"
 
+before_install:
+  - gem install cocoapods
+  - pod repo update
 
 script:
   - if [[ $POD_LINT == "YES" ]] ; then
-      gem install cocoapods && pod repo update --silent && pod lib lint;
+      pod lib lint;
     fi
   - if [[ $LOCAL_TESTS == "YES" ]] ; then
       swift build;
