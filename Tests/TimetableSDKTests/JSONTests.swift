@@ -159,7 +159,7 @@ class JSONTests: XCTestCase {
                                     Day(date: timeFormatter.date(from: "2016-11-21T00:00:00")!,
                                         name: "понедельник, 21 ноября",
                                         events: [
-                                            Event(kind: nil,
+                                            StudyEvent(kind: nil,
                                                   locations: [
                                                     Location(educatorsDisplayText: "Евард М. Е., доцент",
                                                              hasEducators: true,

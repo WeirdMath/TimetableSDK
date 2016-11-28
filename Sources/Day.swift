@@ -21,7 +21,7 @@ public struct Day {
     public let name: String
     fileprivate static let nameJSONKey = "DayString"
     
-    public let events: [Event]
+    public let events: [StudyEvent]
     fileprivate static let eventsJSONKey = "DayStudyEvents"
 }
 
@@ -48,7 +48,7 @@ extension Day: JSONRepresentable {
             return nil
         }
         
-        if let events = json[Day.eventsJSONKey].array?.flatMap(Event.init) {
+        if let events = json[Day.eventsJSONKey].array?.flatMap(StudyEvent.init) {
             self.events = events
         } else {
             jsonFailure(json: json, key: Day.eventsJSONKey)

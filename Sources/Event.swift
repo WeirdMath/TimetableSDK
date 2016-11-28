@@ -11,7 +11,7 @@ import SwiftyJSON
 import DefaultStringConvertible
 
 /// A study event. May represent lectures, workshops, exams, etc.
-public struct Event {
+public struct StudyEvent {
     
     fileprivate static let defaultDateFormat = "yyyy-MM-dd"
     fileprivate static let fullDateFormat = "yyyy-MM-dd'T'HH:mm:ss"
@@ -92,46 +92,46 @@ public struct Event {
     fileprivate static let displayDateAndTimeIntervalStringJSONKey = "DisplayDateAndTimeIntervalString"
 }
 
-public extension Event {
+public extension StudyEvent {
     
     public enum Kind: Int {
         case unknown = 0, primary, attestation, final
     }
 }
 
-extension Event: JSONRepresentable {
+extension StudyEvent: JSONRepresentable {
     
     internal init?(from json: JSON) {
         
         let defaultDateFormatter = DateFormatter()
-        defaultDateFormatter.dateFormat = Event.defaultDateFormat
+        defaultDateFormatter.dateFormat = StudyEvent.defaultDateFormat
         let fullDateFormatter = DateFormatter()
-        fullDateFormatter.dateFormat = Event.fullDateFormat
+        fullDateFormatter.dateFormat = StudyEvent.fullDateFormat
         
-        if let kind = json[Event.kindJSONKey].int {
+        if let kind = json[StudyEvent.kindJSONKey].int {
             self.kind = Kind(rawValue: kind) ?? .unknown
-        } else if json[Event.kindJSONKey].null != nil {
+        } else if json[StudyEvent.kindJSONKey].null != nil {
             self.kind = nil
         } else {
-            jsonFailure(json: json, key: Event.kindJSONKey)
+            jsonFailure(json: json, key: StudyEvent.kindJSONKey)
             return nil
         }
         
-        if let locations = json[Event.locationsJSONKey].array?.flatMap(Location.init) {
+        if let locations = json[StudyEvent.locationsJSONKey].array?.flatMap(Location.init) {
             self.locations = locations
         } else {
-            jsonFailure(json: json, key: Event.locationsJSONKey)
+            jsonFailure(json: json, key: StudyEvent.locationsJSONKey)
             return nil
         }
         
-        if let contingentUnitName = json[Event.contingentUnitNameJSONKey].string {
+        if let contingentUnitName = json[StudyEvent.contingentUnitNameJSONKey].string {
             self.contingentUnitName = contingentUnitName
         } else {
-            jsonFailure(json: json, key: Event.contingentUnitNameJSONKey)
+            jsonFailure(json: json, key: StudyEvent.contingentUnitNameJSONKey)
             return nil
         }
         
-        if let educatorIDs = json[Event.educatorIDsJSONKey]
+        if let educatorIDs = json[StudyEvent.educatorIDsJSONKey]
             .array?
             .flatMap({ (tuple: JSON) -> (Int, String)? in
                 if let id = tuple["Item1"].int,
@@ -144,164 +144,164 @@ extension Event: JSONRepresentable {
             
             self.educatorIDs = educatorIDs
         } else {
-            jsonFailure(json: json, key: Event.educatorIDsJSONKey)
+            jsonFailure(json: json, key: StudyEvent.educatorIDsJSONKey)
             return nil
         }
         
-        if let contingentUnitCourse = json[Event.contingentUnitCourseJSONKey].string {
+        if let contingentUnitCourse = json[StudyEvent.contingentUnitCourseJSONKey].string {
             self.contingentUnitCourse = contingentUnitCourse
         } else {
-            jsonFailure(json: json, key: Event.contingentUnitCourseJSONKey)
+            jsonFailure(json: json, key: StudyEvent.contingentUnitCourseJSONKey)
             return nil
         }
         
-        if let contingentUnitDivision = json[Event.contingentUnitDivisionJSONKey].string {
+        if let contingentUnitDivision = json[StudyEvent.contingentUnitDivisionJSONKey].string {
             self.contingentUnitDivision = contingentUnitDivision
         } else {
-            jsonFailure(json: json, key: Event.contingentUnitDivisionJSONKey)
+            jsonFailure(json: json, key: StudyEvent.contingentUnitDivisionJSONKey)
             return nil
         }
         
-        if let isAssigned = json[Event.isAssignedJSONKey].bool {
+        if let isAssigned = json[StudyEvent.isAssignedJSONKey].bool {
             self.isAssigned = isAssigned
         } else {
-            jsonFailure(json: json, key: Event.isAssignedJSONKey)
+            jsonFailure(json: json, key: StudyEvent.isAssignedJSONKey)
             return nil
         }
         
-        if let timeWasChanged = json[Event.timeWasChangedJSONKey].bool {
+        if let timeWasChanged = json[StudyEvent.timeWasChangedJSONKey].bool {
             self.timeWasChanged = timeWasChanged
         } else {
-            jsonFailure(json: json, key: Event.timeWasChangedJSONKey)
+            jsonFailure(json: json, key: StudyEvent.timeWasChangedJSONKey)
             return nil
         }
         
-        if let locationsWereChanged = json[Event.locationsWereChangedJSONKey].bool {
+        if let locationsWereChanged = json[StudyEvent.locationsWereChangedJSONKey].bool {
             self.locationsWereChanged = locationsWereChanged
         } else {
-            jsonFailure(json: json, key: Event.locationsWereChangedJSONKey)
+            jsonFailure(json: json, key: StudyEvent.locationsWereChangedJSONKey)
             return nil
         }
         
-        if let educatorsWereReassigned = json[Event.educatorsWereReassignedJSONKey].bool {
+        if let educatorsWereReassigned = json[StudyEvent.educatorsWereReassignedJSONKey].bool {
             self.educatorsWereReassigned = educatorsWereReassigned
         } else {
-            jsonFailure(json: json, key: Event.educatorsWereReassignedJSONKey)
+            jsonFailure(json: json, key: StudyEvent.educatorsWereReassignedJSONKey)
             return nil
         }
         
-        if let startString = json[Event.startJSONKey].string,
+        if let startString = json[StudyEvent.startJSONKey].string,
             let start = fullDateFormatter.date(from: startString) {
             self.start = start
         } else {
-            jsonFailure(json: json, key: Event.startJSONKey)
+            jsonFailure(json: json, key: StudyEvent.startJSONKey)
             return nil
         }
         
-        if let endString = json[Event.endJSONKey].string,
+        if let endString = json[StudyEvent.endJSONKey].string,
             let end = fullDateFormatter.date(from: endString) {
             self.end = end
         } else {
-            jsonFailure(json: json, key: Event.endJSONKey)
+            jsonFailure(json: json, key: StudyEvent.endJSONKey)
             return nil
         }
         
-        if let subject = json[Event.subjectJSONKey].string {
+        if let subject = json[StudyEvent.subjectJSONKey].string {
             self.subject = subject
         } else {
-            jsonFailure(json: json, key: Event.subjectJSONKey)
+            jsonFailure(json: json, key: StudyEvent.subjectJSONKey)
             return nil
         }
         
-        if let timeIntervalString = json[Event.timeIntervalStringJSONKey].string {
+        if let timeIntervalString = json[StudyEvent.timeIntervalStringJSONKey].string {
             self.timeIntervalString = timeIntervalString
         } else {
-            jsonFailure(json: json, key: Event.timeIntervalStringJSONKey)
+            jsonFailure(json: json, key: StudyEvent.timeIntervalStringJSONKey)
             return nil
         }
         
-        if let dateWithTimeIntervalString = json[Event.dateWithTimeIntervalStringJSONKey].string {
+        if let dateWithTimeIntervalString = json[StudyEvent.dateWithTimeIntervalStringJSONKey].string {
             self.dateWithTimeIntervalString = dateWithTimeIntervalString
         } else {
-            jsonFailure(json: json, key: Event.dateWithTimeIntervalStringJSONKey)
+            jsonFailure(json: json, key: StudyEvent.dateWithTimeIntervalStringJSONKey)
             return nil
         }
         
-        if let locationsDisplayText = json[Event.locationsDisplayTextJSONKey].string {
+        if let locationsDisplayText = json[StudyEvent.locationsDisplayTextJSONKey].string {
             self.locationsDisplayText = locationsDisplayText
         } else {
-            jsonFailure(json: json, key: Event.locationsDisplayTextJSONKey)
+            jsonFailure(json: json, key: StudyEvent.locationsDisplayTextJSONKey)
             return nil
         }
         
-        if let educatorsDisplayText = json[Event.educatorsDisplayTextJSONKey].string {
+        if let educatorsDisplayText = json[StudyEvent.educatorsDisplayTextJSONKey].string {
             self.educatorsDisplayText = educatorsDisplayText
         } else {
-            jsonFailure(json: json, key: Event.educatorsDisplayTextJSONKey)
+            jsonFailure(json: json, key: StudyEvent.educatorsDisplayTextJSONKey)
             return nil
         }
         
-        if let hasEducators = json[Event.hasEducatorsJSONKey].bool {
+        if let hasEducators = json[StudyEvent.hasEducatorsJSONKey].bool {
             self.hasEducators = hasEducators
         } else {
-            jsonFailure(json: json, key: Event.hasEducatorsJSONKey)
+            jsonFailure(json: json, key: StudyEvent.hasEducatorsJSONKey)
             return nil
         }
         
-        if let isCancelled = json[Event.isCancelledJSONKey].bool {
+        if let isCancelled = json[StudyEvent.isCancelledJSONKey].bool {
             self.isCancelled = isCancelled
         } else {
-            jsonFailure(json: json, key: Event.isCancelledJSONKey)
+            jsonFailure(json: json, key: StudyEvent.isCancelledJSONKey)
             return nil
         }
         
-        if let hasTheSameTimeAsPreviousItem = json[Event.hasTheSameTimeAsPreviousItemJSONKey].bool {
+        if let hasTheSameTimeAsPreviousItem = json[StudyEvent.hasTheSameTimeAsPreviousItemJSONKey].bool {
             self.hasTheSameTimeAsPreviousItem = hasTheSameTimeAsPreviousItem
         } else {
-            jsonFailure(json: json, key: Event.hasTheSameTimeAsPreviousItemJSONKey)
+            jsonFailure(json: json, key: StudyEvent.hasTheSameTimeAsPreviousItemJSONKey)
             return nil
         }
         
-        if let contingentUnitsDisplayText = json[Event.contingentUnitsDisplayTextJSONKey].string {
+        if let contingentUnitsDisplayText = json[StudyEvent.contingentUnitsDisplayTextJSONKey].string {
             self.contingentUnitsDisplayText = contingentUnitsDisplayText
-        } else if json[Event.contingentUnitsDisplayTextJSONKey].null != nil {
+        } else if json[StudyEvent.contingentUnitsDisplayTextJSONKey].null != nil {
             self.contingentUnitsDisplayText = nil
         } else {
-            jsonFailure(json: json, key: Event.contingentUnitsDisplayTextJSONKey)
+            jsonFailure(json: json, key: StudyEvent.contingentUnitsDisplayTextJSONKey)
             return nil
         }
         
-        if let isStudy = json[Event.isStudyJSONKey].bool {
+        if let isStudy = json[StudyEvent.isStudyJSONKey].bool {
             self.isStudy = isStudy
         } else {
-            jsonFailure(json: json, key: Event.isStudyJSONKey)
+            jsonFailure(json: json, key: StudyEvent.isStudyJSONKey)
             return nil
         }
         
-        if let allDay = json[Event.allDayJSONKey].bool {
+        if let allDay = json[StudyEvent.allDayJSONKey].bool {
             self.allDay = allDay
         } else {
-            jsonFailure(json: json, key: Event.allDayJSONKey)
+            jsonFailure(json: json, key: StudyEvent.allDayJSONKey)
             return nil
         }
         
-        if let withinTheSameDay = json[Event.withinTheSameDayJSONKey].bool {
+        if let withinTheSameDay = json[StudyEvent.withinTheSameDayJSONKey].bool {
             self.withinTheSameDay = withinTheSameDay
         } else {
-            jsonFailure(json: json, key: Event.withinTheSameDayJSONKey)
+            jsonFailure(json: json, key: StudyEvent.withinTheSameDayJSONKey)
             return nil
         }
         
-        if let displayDateAndTimeIntervalString = json[Event.displayDateAndTimeIntervalStringJSONKey].string {
+        if let displayDateAndTimeIntervalString = json[StudyEvent.displayDateAndTimeIntervalStringJSONKey].string {
             self.displayDateAndTimeIntervalString = displayDateAndTimeIntervalString
         } else {
-            jsonFailure(json: json, key: Event.displayDateAndTimeIntervalStringJSONKey)
+            jsonFailure(json: json, key: StudyEvent.displayDateAndTimeIntervalStringJSONKey)
             return nil
         }
     }
 }
 
-extension Event: Equatable {
+extension StudyEvent: Equatable {
     
     /// Returns a Boolean value indicating whether two values are equal.
     ///
@@ -311,7 +311,7 @@ extension Event: Equatable {
     /// - Parameters:
     ///   - lhs: A value to compare.
     ///   - rhs: Another value to compare.
-    public static func ==(lhs: Event, rhs: Event) -> Bool {
+    public static func ==(lhs: StudyEvent, rhs: StudyEvent) -> Bool {
         
         return
             lhs.kind                                == rhs.kind                             &&
@@ -342,4 +342,4 @@ extension Event: Equatable {
     }
 }
 
-extension Event: CustomStringConvertible {}
+extension StudyEvent: CustomStringConvertible {}
