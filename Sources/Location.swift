@@ -13,13 +13,13 @@ import Foundation
 /// The information about a location that an `Event` may take place in.
 public struct Location {
     
-    public let educatorsDisplayText: String
+    public let educatorsDisplayText: String?
     fileprivate static let educatorsDisplayTextJSONKey = "EducatorsDisplayText"
     
     public let hasEducators: Bool
     fileprivate static let hasEducatorsJSONKey = "HasEducators"
     
-    public let educatorIDs: [(Int, String)]
+    public let educatorIDs: [(Int, String)]?
     fileprivate static let educatorIDsJSONKey = "EducatorIds"
     
     public let isEmpty: Bool
@@ -50,6 +50,8 @@ extension Location: JSONRepresentable {
         
         if let educatorsDisplayText = json[Location.educatorsDisplayTextJSONKey].string {
             self.educatorsDisplayText = educatorsDisplayText
+        } else if !json[Location.educatorsDisplayTextJSONKey].exists() {
+            self.educatorsDisplayText = nil
         } else {
             jsonFailure(json: json, key: Location.educatorsDisplayTextJSONKey)
             return nil
@@ -57,6 +59,8 @@ extension Location: JSONRepresentable {
         
         if let hasEducators = json[Location.hasEducatorsJSONKey].bool {
             self.hasEducators = hasEducators
+        } else if !json[Location.hasEducatorsJSONKey].exists() {
+            self.hasEducators = false
         } else {
             jsonFailure(json: json, key: Location.hasEducatorsJSONKey)
             return nil
@@ -73,6 +77,8 @@ extension Location: JSONRepresentable {
                 }
             }) {
             self.educatorIDs = educatorIDs
+        } else if !json[Location.educatorIDsJSONKey].exists() {
+            self.educatorIDs = nil
         } else {
             jsonFailure(json: json, key: Location.educatorIDsJSONKey)
             return nil
@@ -150,15 +156,17 @@ extension Location: Equatable {
     ///   - rhs: Another value to compare.
     public static func ==(lhs: Location, rhs: Location) -> Bool {
         
-        return lhs.educatorsDisplayText     == rhs.educatorsDisplayText                 &&
-            lhs.hasEducators                == rhs.hasEducators                         &&
-            zip(lhs.educatorIDs, rhs.educatorIDs).reduce(true, { $0 && $1.0 == $1.1 })  &&
-            lhs.isEmpty                     == rhs.isEmpty                              &&
-            lhs.displayName                 == rhs.displayName                          &&
-            lhs.hasGeographicCoordinates    == rhs.hasGeographicCoordinates             &&
-            lhs.latitude                    == rhs.latitude                             &&
-            lhs.longitude                   == rhs.longitude                            &&
-            lhs.latitudeValue               == rhs.latitudeValue                        &&
+        return lhs.educatorsDisplayText     == rhs.educatorsDisplayText                     &&
+            lhs.hasEducators                == rhs.hasEducators                             &&
+            lhs.educatorIDs == nil && rhs.educatorIDs == nil ||
+            (lhs.educatorIDs != nil && rhs.educatorIDs != nil &&
+            zip(lhs.educatorIDs!, rhs.educatorIDs!).reduce(true, { $0 && $1.0 == $1.1 }))   &&
+            lhs.isEmpty                     == rhs.isEmpty                                  &&
+            lhs.displayName                 == rhs.displayName                              &&
+            lhs.hasGeographicCoordinates    == rhs.hasGeographicCoordinates                 &&
+            lhs.latitude                    == rhs.latitude                                 &&
+            lhs.longitude                   == rhs.longitude                                &&
+            lhs.latitudeValue               == rhs.latitudeValue                            &&
             lhs.longitudeValue              == rhs.longitudeValue
     }
 }

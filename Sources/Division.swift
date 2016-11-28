@@ -25,6 +25,7 @@ public final class Division {
     /// the `fetchStudyLevels(for:using:dispatchQueue:completion:)` method of a `Timetable` instance
     /// in order to get study levels.
     public fileprivate(set) var studyLevels: [StudyLevel]?
+    internal static let studyLevelsResourceIdentifier = "studyLevels"
     
     internal init(name: String, alias: String, oid: String) {
         self.name = name
@@ -35,8 +36,7 @@ public final class Division {
 
 extension Division: APIQueryable {
     
-    /// Returnes an API method for fetching this entity.
-    internal var apiQuery: String {
+    internal var studyLevelsAPIQuery: String {
         return "\(alias)/studyprograms"
     }
     
@@ -45,13 +45,19 @@ extension Division: APIQueryable {
     /// - Parameter json: An API response as JSON.
     /// - Throws: A `TimetableError` that is caught in the `fetch(using:dispatchQueue:baseURL:completion)` method
     ///           and retunred in a completion handler of thet method.
-    internal func saveFetchResult(_ json: JSON) throws {
+    internal func saveFetchResult(_ json: JSON, resourceIdentifier: String) throws {
         
-        if let studyLevels = json.array?.flatMap(StudyLevel.init), !studyLevels.isEmpty {
-            self.studyLevels = studyLevels
-        } else {
-            throw TimetableError.incorrectJSONFormat(json)
+        switch resourceIdentifier {
+        case Division.studyLevelsResourceIdentifier:
+            if let studyLevels = json.array?.flatMap(StudyLevel.init), !studyLevels.isEmpty {
+                self.studyLevels = studyLevels
+                return
+            }
+        default:
+            assertionFailure("This should never happen.")
         }
+        
+        throw TimetableError.incorrectJSONFormat(json)
     }
 }
 

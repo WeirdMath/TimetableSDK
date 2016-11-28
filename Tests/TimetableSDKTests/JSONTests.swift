@@ -156,7 +156,7 @@ class JSONTests: XCTestCase {
                                 isCurrentWeekReferenceAvailable: false,
                                 weekDisplayText: "21 ноября – 27 ноября",
                                 days: [
-                                    Day(date: timeFormatter.date(from: "2016-11-21T00:00:00")!,
+                                    StudyDay(date: timeFormatter.date(from: "2016-11-21T00:00:00")!,
                                         name: "понедельник, 21 ноября",
                                         events: [
                                             StudyEvent(kind: nil,
@@ -209,5 +209,80 @@ class JSONTests: XCTestCase {
         
         // Then
         XCTAssertEqual(expectedWeek, returnedWeek)
+    }
+    
+    func testInitializeBillboardFromJSON() {
+        
+        // Given
+        let jsonData = getTestingResource(fromFile: "Billboard_events", ofType: "json")!
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        let timeFormatter = DateFormatter()
+        timeFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        let expectedBillboard =
+            Billboard(alias: "Billboard",
+                      days: [
+                        BillboardDay(day: timeFormatter.date(from: "2016-11-28T00:00:00")!,
+                                     events: [],
+                                     dayString: "понедельник, 28 ноября")
+                        ],
+                      earlierEvents: [
+                        BillboardEvent(allDay: true,
+                                       contingentUnitsDisplayText: "",
+                                       dateWithTimeIntervalString: "15.09 - 30.03",
+                                       displayDateAndTimeIntervalString: "15.09 - 30.03",
+                                       divisionAlias: "Billboard",
+                                       educatorsDisplayText: "",
+                                       end: timeFormatter.date(from: "2017-03-31T00:00:00")!,
+                                       fromDate: timeFormatter.date(from: "2016-09-12T00:00:00")!,
+                                       fromDateString: "2016-09-12",
+                                       fullDateWithTimeIntervalString: "15 сентября - 30 марта",
+                                       hasAgenda: true,
+                                       hasEducators: false,
+                                       hasTheSameTimeAsPreviousItem: false,
+                                       id: 485471,
+                                       isCancelled: false,
+                                       isEmpty: false,
+                                       isRecurrence: false,
+                                       isShowImmediateHidden: false,
+                                       isStudy: false,
+                                       location: Location(educatorsDisplayText: nil,
+                                                          hasEducators: false,
+                                                          educatorIDs: nil,
+                                                          isEmpty: false,
+                                                          displayName: "В.О., 10 линия, д. 33",
+                                                          hasGeographicCoordinates: true,
+                                                          latitude: 59.943003,
+                                                          longitude: 30.27314,
+                                                          latitudeValue: "59.943003",
+                                                          longitudeValue: "30.27314"),
+                                       locationsDisplayText: "",
+                                       orderIndex: 100500100500,
+                                       showImmediate: false,
+                                       showYear: false,
+                                       start: timeFormatter.date(from: "2016-09-15T00:00:00")!,
+                                       subject: "Чемпионат по географическому брэйн-рингу",
+                                       subkindDisplayName: "Иные мероприятия",
+                                       timeIntervalString: "0:00–0:00",
+                                       viewKind: 0,
+                                       withinTheSameDay: false,
+                                       year: 2016)
+                        ],
+                      hasEventsToShow: true,
+                      isCurrentWeekReferenceAvailable: false,
+                      isNextWeekReferenceAvailable: true,
+                      isPreviousWeekReferenceAvailable: true,
+                      nextWeekMonday: dateFormatter.date(from: "2016-12-05")!,
+                      previousWeekMonday: dateFormatter.date(from: "2016-11-21")!,
+                      title: "Афиша мероприятий",
+                      viewName: "IndexWeek",
+                      weekDisplayText: "28 ноября – 4 декабря",
+                      weekMonday: dateFormatter.date(from: "2016-11-28")!)
+        
+        // When
+        let returnedBillboard = Billboard(from: jsonData)
+        
+        // Then
+        XCTAssertEqual(expectedBillboard, returnedBillboard)
     }
 }

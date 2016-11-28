@@ -31,6 +31,7 @@ public final class StudentGroup {
     /// the `fetchCurrentWeek(for:using:dispatchQueue:completion:)` method of a `Timetable` instance
     /// in order to get the current week.
     public fileprivate(set) var currentWeek: Week?
+    internal static let currentWeekResourceIdentifier = "currentWeek"
     
     internal init(id: Int,
                   name: String,
@@ -47,8 +48,7 @@ public final class StudentGroup {
 
 extension StudentGroup: APIQueryable {
     
-    /// Returnes an API method for fetching this entity.
-    internal var apiQuery: String {
+    internal var currentWeekAPIQuery: String {
         return "\(divisionAlias)/studentgroup/\(id)/events"
     }
     
@@ -57,13 +57,19 @@ extension StudentGroup: APIQueryable {
     /// - Parameter json: An API response as JSON.
     /// - Throws: A `TimetableError` that is caught in the `fetch(using:dispatchQueue:baseURL:completion)` method
     ///           and retunred in a completion handler of thet method.
-    internal func saveFetchResult(_ json: JSON) throws {
+    internal func saveFetchResult(_ json: JSON, resourceIdentifier: String) throws {
         
-        if let currentWeek = Week(from: json) {
-            self.currentWeek = currentWeek
-        } else {
-            throw TimetableError.incorrectJSONFormat(json)            
+        switch resourceIdentifier {
+        case StudentGroup.currentWeekResourceIdentifier:
+            if let currentWeek = Week(from: json) {
+                self.currentWeek = currentWeek
+                return
+            }
+        default:
+            assertionFailure("This should never happen.")
         }
+
+        throw TimetableError.incorrectJSONFormat(json)
     }
 }
 

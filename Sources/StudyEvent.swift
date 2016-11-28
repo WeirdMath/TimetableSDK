@@ -1,5 +1,5 @@
 //
-//  Event.swift
+//  StudyEvent.swift
 //  TimetableSDK
 //
 //  Created by Sergej Jaskiewicz on 22.11.2016.

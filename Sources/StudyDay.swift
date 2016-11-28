@@ -1,5 +1,5 @@
 //
-//  Day.swift
+//  StudyDay.swift
 //  TimetableSDK
 //
 //  Created by Sergej Jaskiewicz on 22.11.2016.
@@ -11,7 +11,7 @@ import SwiftyJSON
 import DefaultStringConvertible
 
 /// The information about a day in a `Week`.
-public struct Day {
+public struct StudyDay {
     
     fileprivate static let dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
     
@@ -25,39 +25,39 @@ public struct Day {
     fileprivate static let eventsJSONKey = "DayStudyEvents"
 }
 
-extension Day: JSONRepresentable {
+extension StudyDay: JSONRepresentable {
     
     internal init?(from json: JSON) {
         
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = Day.dateFormat
+        dateFormatter.dateFormat = StudyDay.dateFormat
         
-        if let dateString = json[Day.dateJSONKey].string,
+        if let dateString = json[StudyDay.dateJSONKey].string,
             let date = dateFormatter.date(from: dateString) {
             
             self.date = date
         } else {
-            jsonFailure(json: json, key: Day.dateJSONKey)
+            jsonFailure(json: json, key: StudyDay.dateJSONKey)
             return nil
         }
         
-        if let name = json[Day.nameJSONKey].string {
+        if let name = json[StudyDay.nameJSONKey].string {
             self.name = name
         } else {
-            jsonFailure(json: json, key: Day.nameJSONKey)
+            jsonFailure(json: json, key: StudyDay.nameJSONKey)
             return nil
         }
         
-        if let events = json[Day.eventsJSONKey].array?.flatMap(StudyEvent.init) {
+        if let events = json[StudyDay.eventsJSONKey].array?.flatMap(StudyEvent.init) {
             self.events = events
         } else {
-            jsonFailure(json: json, key: Day.eventsJSONKey)
+            jsonFailure(json: json, key: StudyDay.eventsJSONKey)
             return nil
         }
     }
 }
 
-extension Day: Equatable {
+extension StudyDay: Equatable {
     
     /// Returns a Boolean value indicating whether two values are equal.
     ///
@@ -67,7 +67,7 @@ extension Day: Equatable {
     /// - Parameters:
     ///   - lhs: A value to compare.
     ///   - rhs: Another value to compare.
-    public static func ==(lhs: Day, rhs: Day) -> Bool{
+    public static func ==(lhs: StudyDay, rhs: StudyDay) -> Bool{
         
         return
             lhs.date    == rhs.date     &&
@@ -76,4 +76,4 @@ extension Day: Equatable {
     }
 }
 
-extension Day: CustomStringConvertible {}
+extension StudyDay: CustomStringConvertible {}

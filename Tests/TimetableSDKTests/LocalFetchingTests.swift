@@ -13,7 +13,7 @@ import Foundation
 class LocalFetchingTests: XCTestCase {
     
     var sut: Timetable!
-
+    
     override func setUp() {
         super.setUp()
         
@@ -24,114 +24,135 @@ class LocalFetchingTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
     }
-
-    func testFetchDivisionsLocally() {
+    
+    func testFetchDivisionsLocallyFromCorrectJSONData() {
         
         // Given
-        let correctJSONData = getTestingResource(fromFile: "divisions", ofType: "json")!
-        let incorrectJSONData = getTestingResource(fromFile: "MATH_studyprograms", ofType: "json")!
+        let jsonData = getTestingResource(fromFile: "divisions", ofType: "json")!
         var completionCalled = false
-        var receivedError: Error?
         
         XCTAssertNil(sut.divisions)
         
         // When
-        sut.fetchDivisions(using: correctJSONData) { _ in
+        sut.fetchDivisions(using: jsonData) { _ in
             completionCalled = true
         }
         
         // Then
-        XCTAssertNotNil(sut.divisions)
         XCTAssertTrue(completionCalled)
         XCTAssertEqual(sut.divisions?.count, 26)
+    }
+    
+    func testFetchDivisionsLocallyFromIncorrectJSONData() {
+        
+        // Given
+        let jsonData = getTestingResource(fromFile: "MATH_studyprograms", ofType: "json")!
+        var receivedError: Error?
         
         // When
-        sut.fetchDivisions(using: incorrectJSONData) { error in
+        sut.fetchDivisions(using: jsonData) { error in
             receivedError = error
         }
         
         // Then
         XCTAssertNotNil(receivedError)
+        XCTAssertNil(sut.divisions)
     }
     
-    func testFetchStudyLevelsLocally() {
+    func testFetchStudyLevelsLocallyFromCorrectJSONData() {
         
         // Given
-        let correctJSONData = getTestingResource(fromFile: "MATH_studyprograms", ofType: "json")!
-        let incorrectJSONData = getTestingResource(fromFile: "divisions", ofType: "json")!
+        let jsonData = getTestingResource(fromFile: "MATH_studyprograms", ofType: "json")!
         let division = Division(name:  "Математика, Механика",
                                 alias: "MATH",
                                 oid:   "d92b7020-54be-431d-8b06-5aea117e5bfa")
         var completionCalled = false
-        var receivedError: Error?
         
         XCTAssertNil(division.studyLevels)
         
         // When
-        sut.fetchStudyLevels(for: division, using: correctJSONData) { _ in
+        sut.fetchStudyLevels(for: division, using: jsonData) { _ in
             completionCalled = true
         }
         
         // Then
-        XCTAssertNotNil(division.studyLevels)
         XCTAssertTrue(completionCalled)
         XCTAssertEqual(division.studyLevels?.count, 6)
+    }
+    
+    func testFetchStudyLevelsLocallyFromIncorrectJSONData() {
+        
+        // Given
+        let jsonData = getTestingResource(fromFile: "divisions", ofType: "json")!
+        let division = Division(name:  "Математика, Механика",
+                                alias: "MATH",
+                                oid:   "d92b7020-54be-431d-8b06-5aea117e5bfa")
+        var receivedError: Error?
         
         // When
-        sut.fetchStudyLevels(for: division, using: incorrectJSONData) { error in
+        sut.fetchStudyLevels(for: division, using: jsonData) { error in
             receivedError = error
         }
         
         // Then
         XCTAssertNotNil(receivedError)
+        XCTAssertNil(division.studyLevels)
     }
     
-    func testFetchStudentGroupsLocally() {
+    func testFetchStudentGroupsLocallyFromCorrectJSONData() {
         
         // Given
-        let correctJSONData = getTestingResource(fromFile: "MATH_studyprogram_5466_studentGroups", ofType: "json")!
-        let incorrectJSONData = getTestingResource(fromFile: "divisions", ofType: "json")!
+        let jsonData = getTestingResource(fromFile: "MATH_studyprogram_5466_studentGroups", ofType: "json")!
         let admissionYear = AdmissionYear(isEmpty: false,
                                           divisionAlias: "MATH",
                                           studyProgramID: 8162,
                                           name: "2016",
                                           number: 2016)
         var completionCalled = false
-        var receivedError: Error?
         
         XCTAssertNil(admissionYear.studentGroups)
         
         // When
-        sut.fetchStudentGroups(for: admissionYear, using: correctJSONData) { _ in
+        sut.fetchStudentGroups(for: admissionYear, using: jsonData) { _ in
             completionCalled = true
         }
         
         // Then
-        XCTAssertNotNil(admissionYear.studentGroups)
         XCTAssertTrue(completionCalled)
         XCTAssertEqual(admissionYear.studentGroups?.count, 1)
+    }
+    
+    func testFetchStudentGroupsLocallyFromIncorrectJSONData() {
         
+        // Given
+        let jsonData = getTestingResource(fromFile: "divisions", ofType: "json")!
+        let admissionYear = AdmissionYear(isEmpty: false,
+                                          divisionAlias: "MATH",
+                                          studyProgramID: 8162,
+                                          name: "2016",
+                                          number: 2016)
+        var receivedError: Error?
+
         // When
-        sut.fetchStudentGroups(for: admissionYear, using: incorrectJSONData) { error in
+        sut.fetchStudentGroups(for: admissionYear, using: jsonData) { error in
             receivedError = error
         }
         
         // Then
         XCTAssertNotNil(receivedError)
+        XCTAssertNil(admissionYear.studentGroups)
     }
     
-    func testFetchCurrentWeekLocally() {
+    func testFetchCurrentWeekLocallyFromCorrectJSONData() {
         
         // Given
         let correctJSONData = getTestingResource(fromFile: "MATH_studentGroup_10014_events", ofType: "json")!
-        let incorrectJSONData = getTestingResource(fromFile: "divisions", ofType: "json")!
         let studentGroup = StudentGroup(id: 10014,
                                         name: "351 (14.Б10-мм)",
                                         studyForm: "очная",
                                         profiles: "",
                                         divisionAlias: "MATH")
         var completionCalled = false
-        var receivedError: Error?
         
         XCTAssertNil(studentGroup.currentWeek)
         
@@ -143,7 +164,19 @@ class LocalFetchingTests: XCTestCase {
         // Then
         XCTAssertNotNil(studentGroup.currentWeek)
         XCTAssertTrue(completionCalled)
+    }
+    
+    func testFetchCurrentWeekLocallyFromInorrectJSONData() {
         
+        // Given
+        let incorrectJSONData = getTestingResource(fromFile: "divisions", ofType: "json")!
+        let studentGroup = StudentGroup(id: 10014,
+                                        name: "351 (14.Б10-мм)",
+                                        studyForm: "очная",
+                                        profiles: "",
+                                        divisionAlias: "MATH")
+        var receivedError: Error?
+
         // When
         sut.fetchCurrentWeek(for: studentGroup, using: incorrectJSONData) { error in
             receivedError = error
@@ -151,5 +184,6 @@ class LocalFetchingTests: XCTestCase {
         
         // Then
         XCTAssertNotNil(receivedError)
+        XCTAssertNil(studentGroup.currentWeek)
     }
 }

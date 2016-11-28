@@ -31,6 +31,7 @@ public final class AdmissionYear {
     /// the `fetchStudentGroups(for:using:dispatchQueue:completion:)` method of a `Timetable` instance
     /// in order to get student groups.
     public fileprivate(set) var studentGroups: [StudentGroup]?
+    internal static let studentGroupsResourceIdentifier = "studentGroups"
     
     internal init(isEmpty: Bool,
                   divisionAlias: String,
@@ -48,8 +49,7 @@ public final class AdmissionYear {
 
 extension AdmissionYear: APIQueryable {
     
-    /// Returnes an API method for fetching this entity.
-    internal var apiQuery: String {
+    internal var studentGroupsAPIQuery: String {
         return "\(divisionAlias)/studyprogram/\(studyProgramID)/studentgroups"
     }
     
@@ -58,13 +58,19 @@ extension AdmissionYear: APIQueryable {
     /// - Parameter json: An API response as JSON.
     /// - Throws: A `TimetableError` that is caught in the `fetch(using:dispatchQueue:baseURL:completion)` method
     ///           and retunred in a completion handler of thet method.
-    internal func saveFetchResult(_ json: JSON) throws {
+    internal func saveFetchResult(_ json: JSON, resourceIdentifier: String) throws {
         
-        if let studentGroups = json.array?.flatMap(StudentGroup.init), !studentGroups.isEmpty {
-            self.studentGroups = studentGroups
-        } else {
-            throw TimetableError.incorrectJSONFormat(json)
+        switch resourceIdentifier {
+        case AdmissionYear.studentGroupsResourceIdentifier:
+            if let studentGroups = json.array?.flatMap(StudentGroup.init), !studentGroups.isEmpty {
+                self.studentGroups = studentGroups
+                return
+            }
+        default:
+            assertionFailure("This should never happen.")
         }
+
+        throw TimetableError.incorrectJSONFormat(json)
     }
 }
 

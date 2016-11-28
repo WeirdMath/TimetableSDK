@@ -33,7 +33,7 @@ public struct Week {
     public let weekDisplayText: String
     fileprivate static let weekDisplayTextJSONKey = "WeekDisplayText"
     
-    public let days: [Day]
+    public let days: [StudyDay]
     fileprivate static let daysJSONKey = "Days"
     
     public let viewName: String
@@ -103,7 +103,7 @@ extension Week: JSONRepresentable {
             return nil
         }
         
-        if let days = json[Week.daysJSONKey].array?.flatMap(Day.init) {
+        if let days = json[Week.daysJSONKey].array?.flatMap(StudyDay.init) {
             self.days = days
         } else {
             jsonFailure(json: json, key: Week.daysJSONKey)

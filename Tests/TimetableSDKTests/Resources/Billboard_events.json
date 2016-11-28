@@ -1,0 +1,121 @@
+{
+  "Alias":
+  "Billboard",
+  "Breadcrumb":
+  [],
+  "Days":
+  [
+    {
+      "Day":
+      "2016-11-28T00:00:00",
+      "DayEvents":
+      [],
+      "DayString":
+      "понедельник, 28 ноября"
+    }
+  ],
+  "EarlierEvents":
+  [
+    {
+      "AllDay":
+      true,
+      "ContingentUnitsDisplayTest":
+      "",
+      "DateWithTimeIntervalString":
+      "15.09 - 30.03",
+      "DisplayDateAndTimeIntervalString":
+      "15.09 - 30.03",
+      "DivisionAlias":
+      "Billboard",
+      "EducatorsDisplayText":
+      "",
+      "End":
+      "2017-03-31T00:00:00",
+      "FromDate":
+      "2016-09-12T00:00:00",
+      "FromDateString":
+      "2016-09-12",
+      "FullDateWithTimeIntervalString":
+      "15 сентября - 30 марта",
+      "HasAgenda":
+      true,
+      "HasEducators":
+      false,
+      "HasTheSameTimeAsPreviousItem":
+      false,
+      "Id":
+      485471,
+      "IsCancelled":
+      false,
+      "IsEmpty":
+      false,
+      "IsRecurrence":
+      false,
+      "IsShowImmediateHidden":
+      false,
+      "IsStudy":
+      false,
+      "Location":
+      {
+        "DisplayName":
+        "В.О., 10 линия, д. 33",
+        "HasGeographicCoordinates":
+        true,
+        "IsEmpty":
+        false,
+        "Latitude":
+        59.943003,
+        "LatitudeValue":
+        "59.943003",
+        "Longitude":
+        30.27314,
+        "LongitudeValue":
+        "30.27314"
+      },
+      "LocationsDisplayText":
+      "",
+      "OrderIndex":
+      100500100500,
+      "RecurrenceIndex":
+      null,
+      "ShowImmediate":
+      false,
+      "ShowYear":
+      false,
+      "Start":
+      "2016-09-15T00:00:00",
+      "Subject":
+      "Чемпионат по географическому брэйн-рингу",
+      "SubkindDisplayName":
+      "Иные мероприятия",
+      "TimeIntervalString":
+      "0:00–0:00",
+      "ViewKind":
+      0,
+      "WithinTheSameDay":
+      false,
+      "Year":
+      2016
+    }
+  ],
+  "HasEventsToShow":
+  true,
+  "IsCurrentWeekReferenceAvailable":
+  false,
+  "IsNextWeekReferenceAvailable":
+  true,
+  "IsPreviousWeekReferenceAvailable":
+  true,
+  "NextWeekMonday":
+  "2016-12-05",
+  "PreviousWeekMonday":
+  "2016-11-21",
+  "Title":
+  "Афиша мероприятий",
+  "ViewName":
+  "IndexWeek",
+  "WeekDisplayText":
+  "28 ноября – 4 декабря",
+  "WeekMonday":
+  "2016-11-28"
+}

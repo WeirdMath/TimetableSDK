@@ -31,8 +31,14 @@ public final class Timetable {
     }
     
     /// The divisions of the University. Initially is `nil`. Use
-    /// the `fetchDivisions(for:using:dispatchQueue:completion:)` methods in order to get divisions.
+    /// the `fetchDivisions(using:dispatchQueue:completion:)` methods in order to get divisions.
     public fileprivate(set) var divisions: [Division]?
+    internal static let divisionsResourceIdentifier = "divisions"
+    
+    /// The billboard. Initially is `nil`. Use
+    /// the `fetchBillboard(using:dispatchQueue:completion:)` methods in order to get divisions.
+    public fileprivate(set) var billboard: Billboard?
+    internal static let billboardResourceIdentifier = "billboard"
     
     /// Fetches the divisions of the University. In case of success saves the divisions into the
     /// `divisions` property.
@@ -49,13 +55,16 @@ public final class Timetable {
     ///                     parameter is `nil`, otherwise — an error.
     public func fetchDivisions(using jsonData: Data? = nil,
                                dispatchQueue: DispatchQueue? = nil,
-                               completion: ((TimetableError?) -> Void)?) {
+                               completion: @escaping (TimetableError?) -> Void) {
         
         fetch(using: jsonData,
-               dispatchQueue: dispatchQueue,
-               baseURL: baseURL,
-               completion: completion)
+              apiQuery: divisionsAPIQuery,
+              resourceIdentifier: Timetable.divisionsResourceIdentifier,
+              dispatchQueue: dispatchQueue,
+              baseURL: baseURL,
+              completion: completion)
     }
+    
     
     /// Fetches the study levels available for the provided `division`.
     ///
@@ -73,12 +82,14 @@ public final class Timetable {
     public func fetchStudyLevels(for division: Division,
                                  using jsonData: Data? = nil,
                                  dispatchQueue: DispatchQueue? = nil,
-                                 completion: ((TimetableError?) -> Void)?) {
+                                 completion: @escaping (TimetableError?) -> Void) {
         
         division.fetch(using: jsonData,
-                        dispatchQueue: dispatchQueue,
-                        baseURL: baseURL,
-                        completion: completion)
+                       apiQuery: division.studyLevelsAPIQuery,
+                       resourceIdentifier: Division.studyLevelsResourceIdentifier,
+                       dispatchQueue: dispatchQueue,
+                       baseURL: baseURL,
+                       completion: completion)
     }
     
     /// Fetches the sudent groups formed in the provided `admissionYear`.
@@ -97,12 +108,14 @@ public final class Timetable {
     public func fetchStudentGroups(for admissionYear: AdmissionYear,
                                    using jsonData: Data? = nil,
                                    dispatchQueue: DispatchQueue? = nil,
-                                   completion: ((TimetableError?) -> Void)?) {
+                                   completion: @escaping (TimetableError?) -> Void) {
         
         admissionYear.fetch(using: jsonData,
-                             dispatchQueue: dispatchQueue,
-                             baseURL: baseURL,
-                             completion: completion)
+                            apiQuery: admissionYear.studentGroupsAPIQuery,
+                            resourceIdentifier: AdmissionYear.studentGroupsResourceIdentifier,
+                            dispatchQueue: dispatchQueue,
+                            baseURL: baseURL,
+                            completion: completion)
     }
     
     /// Fetches the current week schedule for the provided `studentGroup`.
@@ -119,22 +132,27 @@ public final class Timetable {
     ///   - completion:     A closure that is called after a responce is received. In case of success, its
     ///                     parameter is `nil`, otherwise — an error.
     public func fetchCurrentWeek(for studentGroup: StudentGroup,
-                          using jsonData: Data? = nil,
-                          dispatchQueue: DispatchQueue? = nil,
-                          completion: ((TimetableError?) -> Void)?) {
+                                 using jsonData: Data? = nil,
+                                 dispatchQueue: DispatchQueue? = nil,
+                                 completion: @escaping (TimetableError?) -> Void) {
         
         studentGroup.fetch(using: jsonData,
-                            dispatchQueue: dispatchQueue,
-                            baseURL: baseURL,
-                            completion: completion)
+                           apiQuery: studentGroup.currentWeekAPIQuery,
+                           resourceIdentifier: StudentGroup.currentWeekResourceIdentifier,
+                           dispatchQueue: dispatchQueue,
+                           baseURL: baseURL,
+                           completion: completion)
     }
 }
 
 extension Timetable: APIQueryable {
     
-    /// Returnes an API method for fetching this entity.
-    internal var apiQuery: String {
+    internal var divisionsAPIQuery: String {
         return "divisions"
+    }
+    
+    internal var billboardAPIQuery: String {
+        return "Billboard/events"
     }
     
     /// Converts an API response to an appropriate form.
@@ -142,12 +160,23 @@ extension Timetable: APIQueryable {
     /// - Parameter json: An API response as JSON.
     /// - Throws: A `TimetableError` that is caught in the `fetch(using:dispatchQueue:baseURL:completion)` method
     ///           and retunred in a completion handler of thet method.
-    internal func saveFetchResult(_ json: JSON) throws {
+    internal func saveFetchResult(_ json: JSON, resourceIdentifier: String) throws {
         
-        if let divisions = json.array?.flatMap(Division.init), !divisions.isEmpty {
-            self.divisions = divisions
-        } else {
-            throw TimetableError.incorrectJSONFormat(json)
+        switch resourceIdentifier {
+        case Timetable.divisionsResourceIdentifier:
+            if let divisions = json.array?.flatMap(Division.init), !divisions.isEmpty {
+                self.divisions = divisions
+                return
+            }
+        case Timetable.billboardResourceIdentifier:
+            if let billboard = Billboard(from: json) {
+                self.billboard = billboard
+                return
+            }
+        default:
+            assertionFailure("This should never happen.")
         }
+        
+        throw TimetableError.incorrectJSONFormat(json)
     }
 }
