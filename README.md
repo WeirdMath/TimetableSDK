@@ -1,6 +1,7 @@
 # TimetableSDK
 [![Build Status](https://travis-ci.org/WeirdMath/TimetableSDK.svg?branch=master)](https://travis-ci.org/WeirdMath/TimetableSDK)
 [![codecov](https://codecov.io/gh/WeirdMath/TimetableSDK/branch/master/graph/badge.svg)](https://codecov.io/gh/WeirdMath/TimetableSDK)
+![Cocoapods](https://img.shields.io/cocoapods/v/TimetableSDK.svg?style=flat)
 
 Simple SDK for macOS, iOS and watchOS that allows you to get the data you need from [timetable.spbu.ru](http://timetable.spbu.ru).
 
@@ -46,24 +47,24 @@ import TimetableSDK
 let timetable = Timetable()
 
 timetable.fetchDivisions { error in
-    
+
     if let error = error {
         print(error)
         return
     }
-    
+
     let physics = timetable.divisions![19]
-    
+
     print(physics.name)
     // Prints "Физика"
-    
+
     timetable.fetchStudyLevels(for: physics) { error in
-        
+
         if let error = error {
             print(error)
             return
         }
-        
+
         print(physics.studyLevels![0].specializations[0].name)
         // Prints "Информационные технологии и численные методы"
     }
