@@ -11,49 +11,27 @@ import SwiftyJSON
 import DefaultStringConvertible
 
 /// The information about a day in a `Week`.
-public struct StudyDay {
+public struct StudyDay : JSONRepresentable {
     
-    fileprivate static let dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+    fileprivate static let dateFormatter: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        return dateFormatter
+    }()
     
     public let date: Date
-    fileprivate static let dateJSONKey = "Day"
     
     public let name: String
-    fileprivate static let nameJSONKey = "DayString"
     
     public let events: [StudyEvent]
-    fileprivate static let eventsJSONKey = "DayStudyEvents"
 }
 
-extension StudyDay: JSONRepresentable {
+extension StudyDay {
     
-    internal init?(from json: JSON) {
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = StudyDay.dateFormat
-        
-        if let dateString = json[StudyDay.dateJSONKey].string,
-            let date = dateFormatter.date(from: dateString) {
-            
-            self.date = date
-        } else {
-            jsonFailure(json: json, key: StudyDay.dateJSONKey)
-            return nil
-        }
-        
-        if let name = json[StudyDay.nameJSONKey].string {
-            self.name = name
-        } else {
-            jsonFailure(json: json, key: StudyDay.nameJSONKey)
-            return nil
-        }
-        
-        if let events = json[StudyDay.eventsJSONKey].array?.flatMap(StudyEvent.init) {
-            self.events = events
-        } else {
-            jsonFailure(json: json, key: StudyDay.eventsJSONKey)
-            return nil
-        }
+    internal init(from json: JSON) throws {
+        date    = try map(json["Day"], transformation: StudyDay.dateFormatter.date(from:))
+        name    = try map(json["DayString"])
+        events  = try map(json["DayStudyEvents"])
     }
 }
 
@@ -68,7 +46,6 @@ extension StudyDay: Equatable {
     ///   - lhs: A value to compare.
     ///   - rhs: Another value to compare.
     public static func ==(lhs: StudyDay, rhs: StudyDay) -> Bool{
-        
         return
             lhs.date    == rhs.date     &&
             lhs.name    == rhs.name     &&

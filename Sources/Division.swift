@@ -10,16 +10,13 @@ import SwiftyJSON
 import DefaultStringConvertible
 
 /// The information about a division of the Univeristy.
-public final class Division {
+public final class Division : JSONRepresentable {
     
     public let name: String
-    fileprivate static let nameJSONKey = "Name"
     
     public let alias: String
-    fileprivate static let aliasJSONKey = "Alias"
     
     public let oid: String
-    fileprivate static let oidJSONKey = "Oid"
     
     /// The study levels available for this division. Initially is `nil`. Use
     /// the `fetchStudyLevels(for:using:dispatchQueue:completion:)` method of a `Timetable` instance
@@ -31,6 +28,12 @@ public final class Division {
         self.name = name
         self.alias = alias
         self.oid = oid
+    }
+    
+    internal init(from json: JSON) throws {
+        name    = try map(json["Name"])
+        alias   = try map(json["Alias"])
+        oid     = try map(json["Oid"])
     }
 }
 
@@ -49,38 +52,14 @@ extension Division: APIQueryable {
         
         switch resourceIdentifier {
         case Division.studyLevelsResourceIdentifier:
-            if let studyLevels = json.array?.flatMap(StudyLevel.init), !studyLevels.isEmpty {
-                self.studyLevels = studyLevels
-                return
-            }
+            let _studyLevels: [StudyLevel] = try map(json)
+            studyLevels = _studyLevels
+            return
         default:
             assertionFailure("This should never happen.")
         }
         
-        throw TimetableError.incorrectJSONFormat(json)
-    }
-}
-
-extension Division: JSONRepresentable {
-    
-    convenience init?(from json: JSON) {
-        
-        guard let name = json[Division.nameJSONKey].string else {
-            jsonFailure(json: json, key: Division.nameJSONKey)
-            return nil
-        }
-        
-        guard let alias = json[Division.aliasJSONKey].string else {
-            jsonFailure(json: json, key: Division.aliasJSONKey)
-            return nil
-        }
-        
-        guard let oid = json[Division.oidJSONKey].string else {
-            jsonFailure(json: json, key: Division.oidJSONKey)
-            return nil
-        }
-        
-        self.init(name: name, alias: alias, oid: oid)
+        throw TimetableError.incorrectJSONFormat(json, description: "")
     }
 }
 

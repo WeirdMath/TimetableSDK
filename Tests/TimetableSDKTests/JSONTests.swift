@@ -15,7 +15,7 @@ class JSONTests: XCTestCase {
                                         oid:   "d92b7020-54be-431d-8b06-5aea117e5bfa")
         
         // When
-        let returnedDivision = Division(from: json[7])
+        let returnedDivision = try? Division(from: json[7])
         
         // Then
         XCTAssertEqual(expectedDivision, returnedDivision)
@@ -117,7 +117,7 @@ class JSONTests: XCTestCase {
                        hasCourse6: false)
         
         // When
-        let returnedStudyLevel = StudyLevel(from: json[0])
+        let returnedStudyLevel = try? StudyLevel(from: json[0])
         
         // Then
         XCTAssertEqual(expectedStudyLevel, returnedStudyLevel)
@@ -135,7 +135,7 @@ class JSONTests: XCTestCase {
                                                 divisionAlias: "MATH")
         
         // When
-        let returnedStudentGroup = StudentGroup(from: json[0])
+        let returnedStudentGroup = try? StudentGroup(from: json[0])
         
         // Then
         XCTAssertEqual(expectedStudentGroup, returnedStudentGroup)
@@ -205,7 +205,7 @@ class JSONTests: XCTestCase {
                                 timetableDisplayName: "Все занятия")
         
         // When
-        let returnedWeek = Week(from: jsonData)
+        let returnedWeek = try? Week(from: jsonData)
         
         // Then
         XCTAssertEqual(expectedWeek, returnedWeek)
@@ -280,7 +280,7 @@ class JSONTests: XCTestCase {
                       weekMonday: dateFormatter.date(from: "2016-11-28")!)
         
         // When
-        let returnedBillboard = Billboard(from: jsonData)
+        let returnedBillboard = try? Billboard(from: jsonData)
         
         // Then
         XCTAssertEqual(expectedBillboard, returnedBillboard)

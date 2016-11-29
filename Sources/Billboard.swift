@@ -10,150 +10,60 @@ import Foundation
 import SwiftyJSON
 import DefaultStringConvertible
 
-public struct Billboard {
+public struct Billboard : JSONRepresentable {
     
-    fileprivate static let dateFormat = "yyyy-MM-dd"
+    fileprivate static let dateFormatter: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        return dateFormatter
+    }()
     
     public let alias: String
-    fileprivate static let aliasJSONKey = "Alias"
     
     public let days: [BillboardDay]
-    fileprivate static let daysJSONKey = "Days"
     
     public let earlierEvents: [BillboardEvent]
-    fileprivate static let earlierEventsJSONKey = "EarlierEvents"
     
     public let hasEventsToShow: Bool
-    fileprivate static let hasEventsToShowJSONKey = "HasEventsToShow"
     
     public let isCurrentWeekReferenceAvailable: Bool
-    fileprivate static let isCurrentWeekReferenceAvailableJSONKey = "IsCurrentWeekReferenceAvailable"
     
     public let isNextWeekReferenceAvailable: Bool
-    fileprivate static let isNextWeekReferenceAvailableJSONKey = "IsNextWeekReferenceAvailable"
     
     public let isPreviousWeekReferenceAvailable: Bool
-    fileprivate static let isPreviousWeekReferenceAvailableJSONKey = "IsPreviousWeekReferenceAvailable"
     
     public let nextWeekMonday: Date
-    fileprivate static let nextWeekMondayJSONKey = "NextWeekMonday"
     
     public let previousWeekMonday: Date
-    fileprivate static let previousWeekMondayJSONKey = "PreviousWeekMonday"
     
     public let title: String
-    fileprivate static let titleJSONKey = "Title"
     
     public let viewName: String
-    fileprivate static let viewNameJSONKey = "ViewName"
     
     public let weekDisplayText: String
-    fileprivate static let weekDisplayTextJSONKey = "WeekDisplayText"
     
     public let weekMonday: Date
-    fileprivate static let weekMondayJSONKey = "WeekMonday"
 }
 
-extension Billboard: JSONRepresentable {
+extension Billboard {
     
-    internal init?(from json: JSON) {
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = Billboard.dateFormat
-        
-        if let alias = json[Billboard.aliasJSONKey].string {
-            self.alias = alias
-        } else {
-            jsonFailure(json: json, key: Billboard.aliasJSONKey)
-            return nil
-        }
-        
-        if let days = json[Billboard.daysJSONKey].array?.flatMap(BillboardDay.init) {
-            self.days = days
-        } else {
-            jsonFailure(json: json, key: Billboard.daysJSONKey)
-            return nil
-        }
-        
-        if let earlierEvents = json[Billboard.earlierEventsJSONKey].array?.flatMap(BillboardEvent.init) {
-            self.earlierEvents = earlierEvents
-        } else {
-            jsonFailure(json: json, key: Billboard.earlierEventsJSONKey)
-            return nil
-        }
-        
-        if let hasEventsToShow = json[Billboard.hasEventsToShowJSONKey].bool {
-            self.hasEventsToShow = hasEventsToShow
-        } else {
-            jsonFailure(json: json, key: Billboard.hasEventsToShowJSONKey)
-            return nil
-        }
-        
-        if let isCurrentWeekReferenceAvailable = json[Billboard.isCurrentWeekReferenceAvailableJSONKey].bool {
-            self.isCurrentWeekReferenceAvailable = isCurrentWeekReferenceAvailable
-        } else {
-            jsonFailure(json: json, key: Billboard.isCurrentWeekReferenceAvailableJSONKey)
-            return nil
-        }
-        
-        if let isNextWeekReferenceAvailable = json[Billboard.isNextWeekReferenceAvailableJSONKey].bool {
-            self.isNextWeekReferenceAvailable = isNextWeekReferenceAvailable
-        } else {
-            jsonFailure(json: json, key: Billboard.isNextWeekReferenceAvailableJSONKey)
-            return nil
-        }
-        
-        if let isPreviousWeekReferenceAvailable = json[Billboard.isPreviousWeekReferenceAvailableJSONKey].bool {
-            self.isPreviousWeekReferenceAvailable = isPreviousWeekReferenceAvailable
-        } else {
-            jsonFailure(json: json, key: Billboard.isPreviousWeekReferenceAvailableJSONKey)
-            return nil
-        }
-        
-        if let nextWeekMondayString = json[Billboard.nextWeekMondayJSONKey].string,
-            let nextWeekMonday = dateFormatter.date(from: nextWeekMondayString) {
-            self.nextWeekMonday = nextWeekMonday
-        } else {
-            jsonFailure(json: json, key: Billboard.nextWeekMondayJSONKey)
-            return nil
-        }
-        
-        if let previousWeekMondayString = json[Billboard.previousWeekMondayJSONKey].string,
-            let previousWeekMonday = dateFormatter.date(from: previousWeekMondayString){
-            self.previousWeekMonday = previousWeekMonday
-        } else {
-            jsonFailure(json: json, key: Billboard.previousWeekMondayJSONKey)
-            return nil
-        }
-        
-        if let title = json[Billboard.titleJSONKey].string {
-            self.title = title
-        } else {
-            jsonFailure(json: json, key: Billboard.titleJSONKey)
-            return nil
-        }
-        
-        if let viewName = json[Billboard.viewNameJSONKey].string {
-            self.viewName = viewName
-        } else {
-            jsonFailure(json: json, key: Billboard.viewNameJSONKey)
-            return nil
-        }
-        
-        if let weekDisplayText = json[Billboard.weekDisplayTextJSONKey].string {
-            self.weekDisplayText = weekDisplayText
-        } else {
-            jsonFailure(json: json, key: Billboard.weekDisplayTextJSONKey)
-            return nil
-        }
-        
-        if let weekMondayString = json[Billboard.weekMondayJSONKey].string,
-            let weekMonday = dateFormatter.date(from: weekMondayString) {
-            self.weekMonday = weekMonday
-        } else {
-            jsonFailure(json: json, key: Billboard.weekMondayJSONKey)
-            return nil
-        }
+    internal init(from json: JSON) throws {
+        alias                               = try map(json["Alias"])
+        days                                = try map(json["Days"])
+        earlierEvents                       = try map(json["EarlierEvents"])
+        hasEventsToShow                     = try map(json["HasEventsToShow"])
+        isCurrentWeekReferenceAvailable     = try map(json["IsCurrentWeekReferenceAvailable"])
+        isNextWeekReferenceAvailable        = try map(json["IsNextWeekReferenceAvailable"])
+        isPreviousWeekReferenceAvailable    = try map(json["IsPreviousWeekReferenceAvailable"])
+        nextWeekMonday                      = try map(json["NextWeekMonday"],
+                                                      transformation: Billboard.dateFormatter.date(from:))
+        previousWeekMonday                  = try map(json["PreviousWeekMonday"],
+                                                      transformation: Billboard.dateFormatter.date(from:))
+        title                               = try map(json["Title"])
+        viewName                            = try map(json["ViewName"])
+        weekDisplayText                     = try map(json["WeekDisplayText"])
+        weekMonday                          = try map(json["WeekMonday"],
+                                                      transformation: Billboard.dateFormatter.date(from:))
     }
 }
 

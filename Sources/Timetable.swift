@@ -164,19 +164,17 @@ extension Timetable: APIQueryable {
         
         switch resourceIdentifier {
         case Timetable.divisionsResourceIdentifier:
-            if let divisions = json.array?.flatMap(Division.init), !divisions.isEmpty {
-                self.divisions = divisions
-                return
-            }
+            let _divisions: [Division] = try map(json)
+            divisions = _divisions
+            return
         case Timetable.billboardResourceIdentifier:
-            if let billboard = Billboard(from: json) {
-                self.billboard = billboard
-                return
-            }
+            let _billboard: Billboard = try map(json)
+            billboard = _billboard
+            return
         default:
             assertionFailure("This should never happen.")
         }
         
-        throw TimetableError.incorrectJSONFormat(json)
+        throw TimetableError.incorrectJSONFormat(json, description: "")
     }
 }

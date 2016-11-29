@@ -10,22 +10,17 @@ import SwiftyJSON
 import DefaultStringConvertible
 
 /// The information about an admission year for a particular `Specialization`.
-public final class AdmissionYear {
+public final class AdmissionYear : JSONRepresentable {
     
     public let isEmpty: Bool
-    fileprivate static let isEmptyJSONKey = "IsEmpty"
     
     public let divisionAlias: String
-    fileprivate static let divisionAliasJSONKey = "PublicDivisionAlias"
     
     public let studyProgramID: Int
-    fileprivate static let studyProgramIDJSONKey = "StudyProgramId"
     
     public let name: String
-    fileprivate static let nameJSONKey = "YearName"
     
     public let number: Int
-    fileprivate static let numberJSONKey = "YearNumber"
     
     /// The sudent groups formed in this year. Initially is `nil`. Use
     /// the `fetchStudentGroups(for:using:dispatchQueue:completion:)` method of a `Timetable` instance
@@ -45,6 +40,14 @@ public final class AdmissionYear {
         self.name = name
         self.number = number
     }
+    
+    internal init(from json: JSON) throws {
+        isEmpty         = try map(json["IsEmpty"])
+        divisionAlias   = try map(json["PublicDivisionAlias"])
+        studyProgramID  = try map(json["StudyProgramId"])
+        name            = try map(json["YearName"])
+        number          = try map(json["YearNumber"])
+    }
 }
 
 extension AdmissionYear: APIQueryable {
@@ -62,52 +65,14 @@ extension AdmissionYear: APIQueryable {
         
         switch resourceIdentifier {
         case AdmissionYear.studentGroupsResourceIdentifier:
-            if let studentGroups = json.array?.flatMap(StudentGroup.init), !studentGroups.isEmpty {
-                self.studentGroups = studentGroups
-                return
-            }
+            let _studentGroups: [StudentGroup] = try map(json)
+            studentGroups = _studentGroups
+            return
         default:
             assertionFailure("This should never happen.")
         }
 
-        throw TimetableError.incorrectJSONFormat(json)
-    }
-}
-
-extension AdmissionYear: JSONRepresentable {
-    
-    internal convenience init?(from json: JSON) {
-        
-        guard let isEmpty = json[AdmissionYear.isEmptyJSONKey].bool else {
-            jsonFailure(json: json, key: AdmissionYear.isEmptyJSONKey)
-            return nil
-        }
-        
-        guard let divisionAlias = json[AdmissionYear.divisionAliasJSONKey].string else {
-            jsonFailure(json: json, key: AdmissionYear.divisionAliasJSONKey)
-            return nil
-        }
-        
-        guard let studyProgramID = json[AdmissionYear.studyProgramIDJSONKey].int else {
-            jsonFailure(json: json, key: AdmissionYear.studyProgramIDJSONKey)
-            return nil
-        }
-        
-        guard let name = json[AdmissionYear.nameJSONKey].string else {
-            jsonFailure(json: json, key: AdmissionYear.nameJSONKey)
-            return nil
-        }
-        
-        guard let number = json[AdmissionYear.numberJSONKey].int else {
-            jsonFailure(json: json, key: AdmissionYear.numberJSONKey)
-            return nil
-        }
-        
-        self.init(isEmpty: isEmpty,
-                  divisionAlias: divisionAlias,
-                  studyProgramID: studyProgramID,
-                  name: name,
-                  number: number)
+        throw TimetableError.incorrectJSONFormat(json, description: "")
     }
 }
 

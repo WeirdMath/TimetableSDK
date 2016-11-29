@@ -10,7 +10,7 @@ import SwiftyJSON
 import DefaultStringConvertible
 
 /// The information about a student group formed in an `AdmissionYear`.
-public final class StudentGroup {
+public final class StudentGroup : JSONRepresentable {
     
     public let id: Int
     fileprivate static let idJSONKey = "StudentGroupId"
@@ -44,6 +44,14 @@ public final class StudentGroup {
         self.profiles = profiles
         self.divisionAlias = divisionAlias
     }
+    
+    internal init(from json: JSON) throws {
+        id              = try map(json["StudentGroupId"])
+        name            = try map(json["StudentGroupName"])
+        studyForm       = try map(json["StudentGroupStudyForm"])
+        profiles        = try map(json["StudentGroupProfiles"])
+        divisionAlias   = try map(json["PublicDivisionAlias"])
+    }
 }
 
 extension StudentGroup: APIQueryable {
@@ -61,52 +69,14 @@ extension StudentGroup: APIQueryable {
         
         switch resourceIdentifier {
         case StudentGroup.currentWeekResourceIdentifier:
-            if let currentWeek = Week(from: json) {
-                self.currentWeek = currentWeek
-                return
-            }
+            let _currentWeek: Week = try map(json)
+            currentWeek = _currentWeek
+            return
         default:
             assertionFailure("This should never happen.")
         }
 
-        throw TimetableError.incorrectJSONFormat(json)
-    }
-}
-
-extension StudentGroup: JSONRepresentable {
-    
-    internal convenience init?(from json: JSON) {
-        
-        guard let id = json[StudentGroup.idJSONKey].int else {
-            jsonFailure(json: json, key: StudentGroup.idJSONKey)
-            return nil
-        }
-        
-        guard let name = json[StudentGroup.nameJSONKey].string else {
-            jsonFailure(json: json, key: StudentGroup.nameJSONKey)
-            return nil
-        }
-        
-        guard let studyForm = json[StudentGroup.studyFormJSONKey].string else {
-            jsonFailure(json: json, key: StudentGroup.studyFormJSONKey)
-            return nil
-        }
-        
-        guard let profiles = json[StudentGroup.profilesJSONKey].string else {
-            jsonFailure(json: json, key: StudentGroup.profilesJSONKey)
-            return nil
-        }
-        
-        guard let divisionAlias = json[StudentGroup.divisionAliasJSONKey].string  else {
-            jsonFailure(json: json, key: StudentGroup.divisionAliasJSONKey)
-            return nil
-        }
-        
-        self.init(id: id,
-                  name: name,
-                  studyForm: studyForm,
-                  profiles: profiles,
-                  divisionAlias: divisionAlias)
+        throw TimetableError.incorrectJSONFormat(json, description: "")
     }
 }
 

@@ -11,42 +11,21 @@ import SwiftyJSON
 import DefaultStringConvertible
 
 /// The information about a study level available in a `Division`.
-public struct StudyLevel {
+public struct StudyLevel : JSONRepresentable {
     
     public let name: String
-    fileprivate static let nameJSONKey = "StudyLevelName"
     
     public var specializations: [Specialization]
-    fileprivate static let specializationsJSONKey = "StudyProgramCombinations"
     
     public let hasCourse6: Bool
-    fileprivate static let hasCourse6JSONKey = "HasCourse6"
 }
 
-extension StudyLevel: JSONRepresentable {
+extension StudyLevel {
     
-    internal init?(from json: JSON) {
-        
-        if let name = json[StudyLevel.nameJSONKey].string {
-            self.name = name
-        } else {
-            jsonFailure(json: json, key: StudyLevel.nameJSONKey)
-            return nil
-        }
-        
-        if let specializations = json[StudyLevel.specializationsJSONKey].array?.flatMap(Specialization.init) {
-            self.specializations = specializations
-        } else {
-            jsonFailure(json: json, key: StudyLevel.specializationsJSONKey)
-            return nil
-        }
-        
-        if let hasCourse6 = json[StudyLevel.hasCourse6JSONKey].bool {
-            self.hasCourse6 = hasCourse6
-        } else {
-            jsonFailure(json: json, key: StudyLevel.hasCourse6JSONKey)
-            return nil
-        }
+    internal init(from json: JSON) throws {
+        name            = try map(json["StudyLevelName"])
+        specializations = try map(json["StudyProgramCombinations"])
+        hasCourse6      = try map(json["HasCourse6"])
     }
 }
 

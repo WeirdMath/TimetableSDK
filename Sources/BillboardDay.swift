@@ -9,54 +9,40 @@
 import Foundation
 import SwiftyJSON
 
-public struct BillboardDay {
+public struct BillboardDay : JSONRepresentable {
     
-    fileprivate static let dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+    fileprivate static let dateFormatter: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        return dateFormatter
+    }()
     
     public let day: Date
-    fileprivate static let dayJSONKey = "Day"
     
     public let events: [BillboardEvent]
-    fileprivate static let eventsJSONKey = "DayEvents"
     
     public let dayString: String
-    fileprivate static let dayStringJSONKey = "DayString"
 }
 
-extension BillboardDay: JSONRepresentable {
+extension BillboardDay {
     
-    init?(from json: JSON) {
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = BillboardDay.dateFormat
-        
-        if let dayString = json[BillboardDay.dayJSONKey].string,
-            let day = dateFormatter.date(from: dayString) {
-            self.day = day
-        } else {
-            jsonFailure(json: json, key: BillboardDay.dayJSONKey)
-            return nil
-        }
-        
-        if let dayEvents = json[BillboardDay.eventsJSONKey].array?.flatMap(BillboardEvent.init) {
-            self.events = dayEvents
-        } else {
-            jsonFailure(json: json, key: BillboardDay.eventsJSONKey)
-            return nil
-        }
-        
-        if let dayString = json[BillboardDay.dayStringJSONKey].string {
-            self.dayString = dayString
-        } else {
-            jsonFailure(json: json, key: BillboardDay.dayStringJSONKey)
-            return nil
-        }
-
+    init(from json: JSON) throws {
+        day         = try map(json["Day"], transformation: BillboardDay.dateFormatter.date(from:))
+        events      = try map(json["DayEvents"])
+        dayString   = try map(json["DayString"])
     }
 }
 
 extension BillboardDay: Equatable {
     
+    /// Returns a Boolean value indicating whether two values are equal.
+    ///
+    /// Equality is the inverse of inequality. For any values `a` and `b`,
+    /// `a == b` implies that `a != b` is `false`.
+    ///
+    /// - Parameters:
+    ///   - lhs: A value to compare.
+    ///   - rhs: Another value to compare.
     public static func ==(lhs: BillboardDay, rhs: BillboardDay) -> Bool {
         return
             lhs.day         == rhs.day       &&
