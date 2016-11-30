@@ -8,15 +8,7 @@
 
 import Foundation
 import Alamofire
-import SwiftyJSON
-
-private func mapToArray<T : JSONRepresentable>(_ json: JSON) throws -> [T] {
-    return try map(json)
-}
-
-private func mapToValue<T : JSONRepresentable>(_ json: JSON) throws -> T {
-    return try map(json)
-}
+import struct SwiftyJSON.JSON
 
 private func _fetch<T>(using jsonData: Data?,
                     apiQuery: String,
@@ -75,10 +67,23 @@ internal func fetch<T : JSONRepresentable>(
            apiQuery: apiQuery,
            dispatchQueue: dispatchQueue,
            baseURL: baseURL,
-           map: mapToValue,
+           map: map,
            completion: completion)
 }
 
+/// Does all the networking things.
+///
+/// - Parameters:
+///   - jsonData:           If this is not `nil`, then instead of networking uses provided json data as mock
+///                         data. May be useful for testing locally.
+///   - apiQuery:           An API method to request.
+///   - dispatchQueue:      If this is `nil`, uses `DispatchQueue.main` as a queue to asyncronously
+///                         execute a networking request on. Otherwise uses the specified queue.
+///                         If `jsonData` is not `nil`, setting this
+///                         makes no change as in this case fetching happens syncronously in the current queue.
+///                         Default value is `nil`.
+///   - baseURL:            The URL to use `apiQuery` on.
+///   - completion:         A closure that is called after a responce is received.
 internal func fetch<T : JSONRepresentable>(
     using jsonData: Data?,
     apiQuery: String,
@@ -90,6 +95,6 @@ internal func fetch<T : JSONRepresentable>(
            apiQuery: apiQuery,
            dispatchQueue: dispatchQueue,
            baseURL: baseURL,
-           map: mapToArray,
+           map: map,
            completion: completion)
 }

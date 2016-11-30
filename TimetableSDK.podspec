@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "TimetableSDK"
-  s.version      = "1.0.0"
+  s.version      = "2.0.0"
   s.summary      = "Simple SDK for timetable.spbu.ru that works on macOS, iOS and watchOS"
 
   s.description  = <<-DESC
