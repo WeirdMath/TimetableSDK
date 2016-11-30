@@ -8,6 +8,7 @@
 
 import Foundation
 import SwiftyJSON
+import enum Alamofire.Result
 
 /// A pivit point for fetching data from the Timetable service.
 public final class Timetable {
@@ -33,12 +34,18 @@ public final class Timetable {
     /// The divisions of the University. Initially is `nil`. Use
     /// the `fetchDivisions(using:dispatchQueue:completion:)` methods in order to get divisions.
     public fileprivate(set) var divisions: [Division]?
-    internal static let divisionsResourceIdentifier = "divisions"
+    
+    internal var divisionsAPIQuery: String {
+        return "divisions"
+    }
     
     /// The billboard. Initially is `nil`. Use
     /// the `fetchBillboard(using:dispatchQueue:completion:)` methods in order to get divisions.
     public fileprivate(set) var billboard: Billboard?
-    internal static let billboardResourceIdentifier = "billboard"
+    
+    internal var billboardAPIQuery: String {
+        return "Billboard/events"
+    }
     
     /// Fetches the divisions of the University. In case of success saves the divisions into the
     /// `divisions` property.
@@ -59,10 +66,17 @@ public final class Timetable {
         
         fetch(using: jsonData,
               apiQuery: divisionsAPIQuery,
-              resourceIdentifier: Timetable.divisionsResourceIdentifier,
               dispatchQueue: dispatchQueue,
-              baseURL: baseURL,
-              completion: completion)
+              baseURL: baseURL) { [weak self] (result: Result<[Division]>) in
+                
+                switch result {
+                case .success(let value):
+                    self?.divisions = value
+                    completion(nil)
+                case .failure(let error):
+                    completion(error as? TimetableError)
+                }
+        }
     }
     
     
@@ -84,12 +98,19 @@ public final class Timetable {
                                  dispatchQueue: DispatchQueue? = nil,
                                  completion: @escaping (TimetableError?) -> Void) {
         
-        division.fetch(using: jsonData,
-                       apiQuery: division.studyLevelsAPIQuery,
-                       resourceIdentifier: Division.studyLevelsResourceIdentifier,
-                       dispatchQueue: dispatchQueue,
-                       baseURL: baseURL,
-                       completion: completion)
+        fetch(using: jsonData,
+              apiQuery: division.studyLevelsAPIQuery,
+              dispatchQueue: dispatchQueue,
+              baseURL: baseURL) { [weak division] (result: Result<[StudyLevel]>) in
+                
+                switch result {
+                case .success(let value):
+                    division?.studyLevels = value
+                    completion(nil)
+                case .failure(let error):
+                    completion(error as? TimetableError)
+                }
+        }
     }
     
     /// Fetches the sudent groups formed in the provided `admissionYear`.
@@ -110,12 +131,19 @@ public final class Timetable {
                                    dispatchQueue: DispatchQueue? = nil,
                                    completion: @escaping (TimetableError?) -> Void) {
         
-        admissionYear.fetch(using: jsonData,
-                            apiQuery: admissionYear.studentGroupsAPIQuery,
-                            resourceIdentifier: AdmissionYear.studentGroupsResourceIdentifier,
-                            dispatchQueue: dispatchQueue,
-                            baseURL: baseURL,
-                            completion: completion)
+        fetch(using: jsonData,
+              apiQuery: admissionYear.studentGroupsAPIQuery,
+              dispatchQueue: dispatchQueue,
+              baseURL: baseURL) { [weak admissionYear] (result: Result<[StudentGroup]>) in
+                
+                switch result {
+                case .success(let value):
+                    admissionYear?.studentGroups = value
+                    completion(nil)
+                case .failure(let error):
+                    completion(error as? TimetableError)
+                }
+        }
     }
     
     /// Fetches the current week schedule for the provided `studentGroup`.
@@ -136,45 +164,18 @@ public final class Timetable {
                                  dispatchQueue: DispatchQueue? = nil,
                                  completion: @escaping (TimetableError?) -> Void) {
         
-        studentGroup.fetch(using: jsonData,
-                           apiQuery: studentGroup.currentWeekAPIQuery,
-                           resourceIdentifier: StudentGroup.currentWeekResourceIdentifier,
-                           dispatchQueue: dispatchQueue,
-                           baseURL: baseURL,
-                           completion: completion)
-    }
-}
-
-extension Timetable: APIQueryable {
-    
-    internal var divisionsAPIQuery: String {
-        return "divisions"
-    }
-    
-    internal var billboardAPIQuery: String {
-        return "Billboard/events"
-    }
-    
-    /// Converts an API response to an appropriate form.
-    ///
-    /// - Parameter json: An API response as JSON.
-    /// - Throws: A `TimetableError` that is caught in the `fetch(using:dispatchQueue:baseURL:completion)` method
-    ///           and retunred in a completion handler of thet method.
-    internal func saveFetchResult(_ json: JSON, resourceIdentifier: String) throws {
-        
-        switch resourceIdentifier {
-        case Timetable.divisionsResourceIdentifier:
-            let _divisions: [Division] = try map(json)
-            divisions = _divisions
-            return
-        case Timetable.billboardResourceIdentifier:
-            let _billboard: Billboard = try map(json)
-            billboard = _billboard
-            return
-        default:
-            assertionFailure("This should never happen.")
+        fetch(using: jsonData,
+              apiQuery: studentGroup.currentWeekAPIQuery,
+              dispatchQueue: dispatchQueue,
+              baseURL: baseURL) { [weak studentGroup] (result: Result<Week>) in
+                
+                switch result {
+                case .success(let value):
+                    studentGroup?.currentWeek = value
+                    completion(nil)
+                case .failure(let error):
+                    completion(error as? TimetableError)
+                }
         }
-        
-        throw TimetableError.incorrectJSONFormat(json, description: "")
     }
 }

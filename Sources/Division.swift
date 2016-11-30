@@ -21,8 +21,10 @@ public final class Division : JSONRepresentable {
     /// The study levels available for this division. Initially is `nil`. Use
     /// the `fetchStudyLevels(for:using:dispatchQueue:completion:)` method of a `Timetable` instance
     /// in order to get study levels.
-    public fileprivate(set) var studyLevels: [StudyLevel]?
-    internal static let studyLevelsResourceIdentifier = "studyLevels"
+    public internal(set) var studyLevels: [StudyLevel]?
+    internal var studyLevelsAPIQuery: String {
+        return "\(alias)/studyprograms"
+    }
     
     internal init(name: String, alias: String, oid: String) {
         self.name = name
@@ -34,32 +36,6 @@ public final class Division : JSONRepresentable {
         name    = try map(json["Name"])
         alias   = try map(json["Alias"])
         oid     = try map(json["Oid"])
-    }
-}
-
-extension Division: APIQueryable {
-    
-    internal var studyLevelsAPIQuery: String {
-        return "\(alias)/studyprograms"
-    }
-    
-    /// Converts an API response to an appropriate form.
-    ///
-    /// - Parameter json: An API response as JSON.
-    /// - Throws: A `TimetableError` that is caught in the `fetch(using:dispatchQueue:baseURL:completion)` method
-    ///           and retunred in a completion handler of thet method.
-    internal func saveFetchResult(_ json: JSON, resourceIdentifier: String) throws {
-        
-        switch resourceIdentifier {
-        case Division.studyLevelsResourceIdentifier:
-            let _studyLevels: [StudyLevel] = try map(json)
-            studyLevels = _studyLevels
-            return
-        default:
-            assertionFailure("This should never happen.")
-        }
-        
-        throw TimetableError.incorrectJSONFormat(json, description: "")
     }
 }
 

@@ -30,8 +30,10 @@ public final class StudentGroup : JSONRepresentable {
     /// The current week schedule for this student group. Initially is `nil`. Use
     /// the `fetchCurrentWeek(for:using:dispatchQueue:completion:)` method of a `Timetable` instance
     /// in order to get the current week.
-    public fileprivate(set) var currentWeek: Week?
-    internal static let currentWeekResourceIdentifier = "currentWeek"
+    public internal(set) var currentWeek: Week?
+    internal var currentWeekAPIQuery: String {
+        return "\(divisionAlias)/studentgroup/\(id)/events"
+    }
     
     internal init(id: Int,
                   name: String,
@@ -51,32 +53,6 @@ public final class StudentGroup : JSONRepresentable {
         studyForm       = try map(json["StudentGroupStudyForm"])
         profiles        = try map(json["StudentGroupProfiles"])
         divisionAlias   = try map(json["PublicDivisionAlias"])
-    }
-}
-
-extension StudentGroup: APIQueryable {
-    
-    internal var currentWeekAPIQuery: String {
-        return "\(divisionAlias)/studentgroup/\(id)/events"
-    }
-    
-    /// Converts an API response to an appropriate form.
-    ///
-    /// - Parameter json: An API response as JSON.
-    /// - Throws: A `TimetableError` that is caught in the `fetch(using:dispatchQueue:baseURL:completion)` method
-    ///           and retunred in a completion handler of thet method.
-    internal func saveFetchResult(_ json: JSON, resourceIdentifier: String) throws {
-        
-        switch resourceIdentifier {
-        case StudentGroup.currentWeekResourceIdentifier:
-            let _currentWeek: Week = try map(json)
-            currentWeek = _currentWeek
-            return
-        default:
-            assertionFailure("This should never happen.")
-        }
-
-        throw TimetableError.incorrectJSONFormat(json, description: "")
     }
 }
 

@@ -25,8 +25,10 @@ public final class AdmissionYear : JSONRepresentable {
     /// The sudent groups formed in this year. Initially is `nil`. Use
     /// the `fetchStudentGroups(for:using:dispatchQueue:completion:)` method of a `Timetable` instance
     /// in order to get student groups.
-    public fileprivate(set) var studentGroups: [StudentGroup]?
-    internal static let studentGroupsResourceIdentifier = "studentGroups"
+    public internal(set) var studentGroups: [StudentGroup]?
+    internal var studentGroupsAPIQuery: String {
+        return "\(divisionAlias)/studyprogram/\(studyProgramID)/studentgroups"
+    }
     
     internal init(isEmpty: Bool,
                   divisionAlias: String,
@@ -47,32 +49,6 @@ public final class AdmissionYear : JSONRepresentable {
         studyProgramID  = try map(json["StudyProgramId"])
         name            = try map(json["YearName"])
         number          = try map(json["YearNumber"])
-    }
-}
-
-extension AdmissionYear: APIQueryable {
-    
-    internal var studentGroupsAPIQuery: String {
-        return "\(divisionAlias)/studyprogram/\(studyProgramID)/studentgroups"
-    }
-    
-    /// Converts an API response to an appropriate form.
-    ///
-    /// - Parameter json: An API response as JSON.
-    /// - Throws: A `TimetableError` that is caught in the `fetch(using:dispatchQueue:baseURL:completion)` method
-    ///           and retunred in a completion handler of thet method.
-    internal func saveFetchResult(_ json: JSON, resourceIdentifier: String) throws {
-        
-        switch resourceIdentifier {
-        case AdmissionYear.studentGroupsResourceIdentifier:
-            let _studentGroups: [StudentGroup] = try map(json)
-            studentGroups = _studentGroups
-            return
-        default:
-            assertionFailure("This should never happen.")
-        }
-
-        throw TimetableError.incorrectJSONFormat(json, description: "")
     }
 }
 
