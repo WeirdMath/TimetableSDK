@@ -20,16 +20,24 @@ public final class StudyLevel : JSONRepresentable, TimetableEntity {
     public var specializations: [Specialization]
     public let hasCourse6: Bool
     
-    public init(name: String, specializations: [Specialization], hasCourse6: Bool) {
+    internal init(name: String, specializations: [Specialization], hasCourse6: Bool) {
         self.name            = name
         self.specializations = specializations
         self.hasCourse6      = hasCourse6
     }
     
+    /// Creates a new entity from its JSON representation.
+    ///
+    /// - Parameter json: The JSON representation of the entity.
+    /// - Throws: `TimetableError.incorrectJSONFormat`
     public init(from json: JSON) throws {
-        name            = try map(json["StudyLevelName"])
-        specializations = try map(json["StudyProgramCombinations"])
-        hasCourse6      = try map(json["HasCourse6"])
+        do {
+            name            = try map(json["StudyLevelName"])
+            specializations = try map(json["StudyProgramCombinations"])
+            hasCourse6      = try map(json["HasCourse6"])
+        } catch {
+            throw TimetableError.incorrectJSON(json, whenConverting: StudyLevel.self)
+        }
     }
 }
 

@@ -116,41 +116,49 @@ public struct BillboardEvent : JSONRepresentable, TimetableEntity {
         self.year = year
     }
     
+    /// Creates a new entity from its JSON representation.
+    ///
+    /// - Parameter json: The JSON representation of the entity.
+    /// - Throws: `TimetableError.incorrectJSONFormat`
     public init(from json: JSON) throws {
-        allDay                              = try map(json["AllDay"])
-        contingentUnitsDisplayText          = try map(json["ContingentUnitsDisplayTest"])
-        dateWithTimeIntervalString          = try map(json["DateWithTimeIntervalString"])
-        displayDateAndTimeIntervalString    = try map(json["DisplayDateAndTimeIntervalString"])
-        divisionAlias                       = try map(json["DivisionAlias"])
-        educatorsDisplayText                = try map(json["EducatorsDisplayText"])
-        end                                 = try map(json["End"],
-                                                      transformation: BillboardEvent.dateFormatter.date(from:))
-        fromDate                            = try map(json["FromDate"],
-                                                      transformation: BillboardEvent.dateFormatter.date(from:))
-        fromDateString                      = try map(json["FromDateString"])
-        fullDateWithTimeIntervalString      = try map(json["FullDateWithTimeIntervalString"])
-        hasAgenda                           = try map(json["HasAgenda"])
-        hasEducators                        = try map(json["HasEducators"])
-        hasTheSameTimeAsPreviousItem        = try map(json["HasTheSameTimeAsPreviousItem"])
-        id                                  = try map(json["Id"])
-        isCancelled                         = try map(json["IsCancelled"])
-        isEmpty                             = try map(json["IsEmpty"])
-        isRecurrence                        = try map(json["IsRecurrence"])
-        isShowImmediateHidden               = try map(json["IsShowImmediateHidden"])
-        isStudy                             = try map(json["IsStudy"])
-        location                            = try map(json["Location"])
-        locationsDisplayText                = try map(json["LocationsDisplayText"])
-        orderIndex                          = try map(json["OrderIndex"])
-        showImmediate                       = try map(json["ShowImmediate"])
-        showYear                            = try map(json["ShowYear"])
-        start                               = try map(json["Start"],
-                                                      transformation: BillboardEvent.dateFormatter.date(from:))
-        subject                             = try map(json["Subject"])
-        subkindDisplayName                  = try map(json["SubkindDisplayName"])
-        timeIntervalString                  = try map(json["TimeIntervalString"])
-        viewKind                            = try map(json["ViewKind"])
-        withinTheSameDay                    = try map(json["WithinTheSameDay"])
-        year                                = try map(json["Year"])
+        do {
+            allDay                              = try map(json["AllDay"])
+            contingentUnitsDisplayText          = try map(json["ContingentUnitsDisplayTest"])
+            dateWithTimeIntervalString          = try map(json["DateWithTimeIntervalString"])
+            displayDateAndTimeIntervalString    = try map(json["DisplayDateAndTimeIntervalString"])
+            divisionAlias                       = try map(json["DivisionAlias"])
+            educatorsDisplayText                = try map(json["EducatorsDisplayText"])
+            end                                 = try map(json["End"],
+                                                          transformation: BillboardEvent.dateFormatter.date(from:))
+            fromDate                            = try map(json["FromDate"],
+                                                          transformation: BillboardEvent.dateFormatter.date(from:))
+            fromDateString                      = try map(json["FromDateString"])
+            fullDateWithTimeIntervalString      = try map(json["FullDateWithTimeIntervalString"])
+            hasAgenda                           = try map(json["HasAgenda"])
+            hasEducators                        = try map(json["HasEducators"])
+            hasTheSameTimeAsPreviousItem        = try map(json["HasTheSameTimeAsPreviousItem"])
+            id                                  = try map(json["Id"])
+            isCancelled                         = try map(json["IsCancelled"])
+            isEmpty                             = try map(json["IsEmpty"])
+            isRecurrence                        = try map(json["IsRecurrence"])
+            isShowImmediateHidden               = try map(json["IsShowImmediateHidden"])
+            isStudy                             = try map(json["IsStudy"])
+            location                            = try map(json["Location"])
+            locationsDisplayText                = try map(json["LocationsDisplayText"])
+            orderIndex                          = try map(json["OrderIndex"])
+            showImmediate                       = try map(json["ShowImmediate"])
+            showYear                            = try map(json["ShowYear"])
+            start                               = try map(json["Start"],
+                                                          transformation: BillboardEvent.dateFormatter.date(from:))
+            subject                             = try map(json["Subject"])
+            subkindDisplayName                  = try map(json["SubkindDisplayName"])
+            timeIntervalString                  = try map(json["TimeIntervalString"])
+            viewKind                            = try map(json["ViewKind"])
+            withinTheSameDay                    = try map(json["WithinTheSameDay"])
+            year                                = try map(json["Year"])
+        } catch {
+            throw TimetableError.incorrectJSON(json, whenConverting: BillboardEvent.self)
+        }
     }
 }
 

@@ -79,12 +79,13 @@ class WWWFetchingTests: XCTestCase {
         let division = Division(name:  "Математика, Механика",
                                 alias: "MATH",
                                 oid:   "d92b7020-54be-431d-8b06-5aea117e5bfa")
+        division.timetable = sut
         XCTAssertNil(division.studyLevels)
         var returnedError: Error?
         
         // When
         let exp = expectation(description: "fetching study levels")
-        sut.fetchStudyLevels(for: division) { error in
+        division.fetchStudyLevels { error in
             
             returnedError = error
             exp.fulfill()
@@ -107,12 +108,13 @@ class WWWFetchingTests: XCTestCase {
                                           studyProgramID: 8162,
                                           name: "2016",
                                           number: 2016)
+        admissionYear.timetable = sut
         XCTAssertNil(admissionYear.studentGroups)
         var returnedError: Error?
         
         // When
         let exp = expectation(description: "fetching student groups")
-        sut.fetchStudentGroups(for: admissionYear) { error in
+        admissionYear.fetchStudentGroups { error in
             
             returnedError = error
             exp.fulfill()
@@ -135,12 +137,13 @@ class WWWFetchingTests: XCTestCase {
                                         studyForm: "очная",
                                         profiles: "",
                                         divisionAlias: "MATH")
+        studentGroup.timetable = sut
         XCTAssertNil(studentGroup.currentWeek)
         var returnedError: Error?
         
         // When
         let exp = expectation(description: "fetching current week")
-        sut.fetchCurrentWeek(for: studentGroup) { error in
+        studentGroup.fetchCurrentWeek { error in
             
             returnedError = error
             exp.fulfill()

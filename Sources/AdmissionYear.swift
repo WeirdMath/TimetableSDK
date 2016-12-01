@@ -6,6 +6,8 @@
 //
 //
 
+import Foundation
+import enum Alamofire.Result
 import SwiftyJSON
 import DefaultStringConvertible
 
@@ -42,15 +44,52 @@ public final class AdmissionYear : JSONRepresentable, TimetableEntity {
         self.number         = number
     }
     
+    /// Creates a new entity from its JSON representation.
+    ///
+    /// - Parameter json: The JSON representation of the entity.
+    /// - Throws: `TimetableError.incorrectJSONFormat`
     public init(from json: JSON) throws {
-        isEmpty         = try map(json["IsEmpty"])
-        divisionAlias   = try map(json["PublicDivisionAlias"])
-        studyProgramID  = try map(json["StudyProgramId"])
-        name            = try map(json["YearName"])
-        number          = try map(json["YearNumber"])
+        do {
+            isEmpty         = try map(json["IsEmpty"])
+            divisionAlias   = try map(json["PublicDivisionAlias"])
+            studyProgramID  = try map(json["StudyProgramId"])
+            name            = try map(json["YearName"])
+            number          = try map(json["YearNumber"])
+        } catch {
+            throw TimetableError.incorrectJSON(json, whenConverting: AdmissionYear.self)
+        }
     }
     
-
+    /// Fetches the sudent groups formed in the admission year.
+    ///
+    /// - Parameters:
+    ///   - jsonData:       If this is not `nil`, then instead of networking uses provided json data as mock
+    ///                     data. May be useful for testing locally. Default value is `nil`.
+    ///   - dispatchQueue:  If this is `nil`, uses `DispatchQueue.main` as a queue to asyncronously
+    ///                     execute a networking request on. Otherwise uses the specified queue.
+    ///                     If `jsonData` is not `nil`, setting this
+    ///                     makes no change as in this case fetching happens syncronously in the current queue.
+    ///                     Default value is `nil`.
+    ///   - completion:     A closure that is called after a responce is received. In case of success, its
+    ///                     parameter is `nil`, otherwise — an error.
+    public func fetchStudentGroups(using jsonData: Data? = nil,
+                                   dispatchQueue: DispatchQueue? = nil,
+                                   completion: @escaping (TimetableError?) -> Void) {
+        
+        fetch(using: jsonData,
+              apiQuery: studentGroupsAPIQuery,
+              dispatchQueue: dispatchQueue,
+              timetable: timetable) { [weak self] (result: Result<[StudentGroup]>) in
+                
+                switch result {
+                case .success(let value):
+                    self?.studentGroups = value
+                    completion(nil)
+                case .failure(let error):
+                    completion(error as? TimetableError)
+                }
+        }
+    }
 }
 
 extension AdmissionYear: Equatable {
@@ -66,10 +105,10 @@ extension AdmissionYear: Equatable {
     public static func ==(lhs: AdmissionYear, rhs: AdmissionYear) -> Bool{
         return
             lhs.isEmpty         == rhs.isEmpty          &&
-            lhs.divisionAlias   == rhs.divisionAlias    &&
-            lhs.studyProgramID  == rhs.studyProgramID   &&
-            lhs.name            == rhs.name             &&
-            lhs.number          == rhs.number
+                lhs.divisionAlias   == rhs.divisionAlias    &&
+                lhs.studyProgramID  == rhs.studyProgramID   &&
+                lhs.name            == rhs.name             &&
+                lhs.number          == rhs.number
     }
 }
 

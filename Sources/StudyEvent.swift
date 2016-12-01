@@ -106,35 +106,43 @@ public struct StudyEvent : JSONRepresentable, TimetableEntity {
         self.displayDateAndTimeIntervalString = displayDateAndTimeIntervalString
     }
     
+    /// Creates a new entity from its JSON representation.
+    ///
+    /// - Parameter json: The JSON representation of the entity.
+    /// - Throws: `TimetableError.incorrectJSONFormat`
     public init(from json: JSON) throws {
-        kind                                = try map(json["StudyEventsTimeTableKindCode"],
-                                                      transformation: Kind.init)
-        locations                           = try map(json["EventLocations"])
-        contingentUnitName                  = try map(json["ContingentUnitName"])
-        educatorIDs                         = try map(json["EducatorIds"])
-        contingentUnitCourse                = try map(json["ContingentUnitCourse"])
-        contingentUnitDivision              = try map(json["ContingentUnitDivision"])
-        isAssigned                          = try map(json["IsAssigned"])
-        timeWasChanged                      = try map(json["TimeWasChanged"])
-        locationsWereChanged                = try map(json["LocationsWereChanged"])
-        educatorsWereReassigned             = try map(json["EducatorsWereReassigned"])
-        start                               = try map(json["Start"],
-                                                      transformation: StudyEvent.fullDateFormatter.date(from:))
-        end                                 = try map(json["End"],
-                                                      transformation: StudyEvent.fullDateFormatter.date(from:))
-        subject                             = try map(json["Subject"])
-        timeIntervalString                  = try map(json["TimeIntervalString"])
-        dateWithTimeIntervalString          = try map(json["DateWithTimeIntervalString"])
-        locationsDisplayText                = try map(json["LocationsDisplayText"])
-        educatorsDisplayText                = try map(json["EducatorsDisplayText"])
-        hasEducators                        = try map(json["HasEducators"])
-        isCancelled                         = try map(json["IsCancelled"])
-        hasTheSameTimeAsPreviousItem        = try map(json["HasTheSameTimeAsPreviousItem"])
-        contingentUnitsDisplayText          = try map(json["ContingentUnitsDisplayTest"])
-        isStudy                             = try map(json["IsStudy"])
-        allDay                              = try map(json["AllDay"])
-        withinTheSameDay                    = try map(json["WithinTheSameDay"])
-        displayDateAndTimeIntervalString    = try map(json["DisplayDateAndTimeIntervalString"])
+        do {
+            kind                                = try map(json["StudyEventsTimeTableKindCode"],
+                                                          transformation: Kind.init)
+            locations                           = try map(json["EventLocations"])
+            contingentUnitName                  = try map(json["ContingentUnitName"])
+            educatorIDs                         = try map(json["EducatorIds"])
+            contingentUnitCourse                = try map(json["ContingentUnitCourse"])
+            contingentUnitDivision              = try map(json["ContingentUnitDivision"])
+            isAssigned                          = try map(json["IsAssigned"])
+            timeWasChanged                      = try map(json["TimeWasChanged"])
+            locationsWereChanged                = try map(json["LocationsWereChanged"])
+            educatorsWereReassigned             = try map(json["EducatorsWereReassigned"])
+            start                               = try map(json["Start"],
+                                                          transformation: StudyEvent.fullDateFormatter.date(from:))
+            end                                 = try map(json["End"],
+                                                          transformation: StudyEvent.fullDateFormatter.date(from:))
+            subject                             = try map(json["Subject"])
+            timeIntervalString                  = try map(json["TimeIntervalString"])
+            dateWithTimeIntervalString          = try map(json["DateWithTimeIntervalString"])
+            locationsDisplayText                = try map(json["LocationsDisplayText"])
+            educatorsDisplayText                = try map(json["EducatorsDisplayText"])
+            hasEducators                        = try map(json["HasEducators"])
+            isCancelled                         = try map(json["IsCancelled"])
+            hasTheSameTimeAsPreviousItem        = try map(json["HasTheSameTimeAsPreviousItem"])
+            contingentUnitsDisplayText          = try map(json["ContingentUnitsDisplayTest"])
+            isStudy                             = try map(json["IsStudy"])
+            allDay                              = try map(json["AllDay"])
+            withinTheSameDay                    = try map(json["WithinTheSameDay"])
+            displayDateAndTimeIntervalString    = try map(json["DisplayDateAndTimeIntervalString"])
+        } catch {
+            throw TimetableError.incorrectJSON(json, whenConverting: StudyEvent.self)
+        }
     }
 }
 

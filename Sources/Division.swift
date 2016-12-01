@@ -6,7 +6,9 @@
 //
 //
 
+import Foundation
 import SwiftyJSON
+import enum Alamofire.Result
 import DefaultStringConvertible
 
 /// The information about a division of the Univeristy.
@@ -24,7 +26,7 @@ public final class Division : JSONRepresentable, TimetableEntity {
     /// The study levels available for this division. Initially is `nil`. Use
     /// the `fetchStudyLevels(for:using:dispatchQueue:completion:)` method of a `Timetable` instance
     /// in order to get study levels.
-    public internal(set) var studyLevels: [StudyLevel]?
+    public var studyLevels: [StudyLevel]?
     internal var studyLevelsAPIQuery: String {
         return "\(alias)/studyprograms"
     }
@@ -35,10 +37,49 @@ public final class Division : JSONRepresentable, TimetableEntity {
         self.oid   = oid
     }
     
+    /// Creates a new entity from its JSON representation.
+    ///
+    /// - Parameter json: The JSON representation of the entity.
+    /// - Throws: `TimetableError.incorrectJSONFormat`
     public init(from json: JSON) throws {
-        name    = try map(json["Name"])
-        alias   = try map(json["Alias"])
-        oid     = try map(json["Oid"])
+        do {
+            name    = try map(json["Name"])
+            alias   = try map(json["Alias"])
+            oid     = try map(json["Oid"])
+        } catch {
+            throw TimetableError.incorrectJSON(json, whenConverting: Division.self)
+        }
+    }
+    
+    /// Fetches the study levels available for the division.
+    ///
+    /// - Parameters:
+    ///   - jsonData:       If this is not `nil`, then instead of networking uses provided json data as mock
+    ///                     data. May be useful for testing locally. Default value is `nil`.
+    ///   - dispatchQueue:  If this is `nil`, uses `DispatchQueue.main` as a queue to asyncronously
+    ///                     execute a networking request on. Otherwise uses the specified queue.
+    ///                     If `jsonData` is not `nil`, setting this
+    ///                     makes no change as in this case fetching happens syncronously in the current queue.
+    ///                     Default value is `nil`.
+    ///   - completion:     A closure that is called after a responce is received. In case of success, its
+    ///                     parameter is `nil`, otherwise — an error.
+    public func fetchStudyLevels(using jsonData: Data? = nil,
+                                 dispatchQueue: DispatchQueue? = nil,
+                                 completion: @escaping (TimetableError?) -> Void) {
+        
+        fetch(using: jsonData,
+              apiQuery: studyLevelsAPIQuery,
+              dispatchQueue: dispatchQueue,
+              timetable: timetable) { [weak self] (result: Result<[StudyLevel]>) in
+                
+                switch result {
+                case .success(let value):
+                    self?.studyLevels = value
+                    completion(nil)
+                case .failure(let error):
+                    completion(error as? TimetableError)
+                }
+        }
     }
 }
 

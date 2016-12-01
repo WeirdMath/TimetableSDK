@@ -11,6 +11,10 @@ import SwiftyJSON
 
 internal protocol JSONRepresentable {
     
+    /// Creates a new entity from its JSON representation.
+    ///
+    /// - Parameter json: The JSON representation of the entity.
+    /// - Throws: `TimetableError.incorrectJSONFormat`
     init(from json: JSON) throws
 }
 
@@ -28,7 +32,7 @@ extension Double : JSONRepresentable {
         if let double = json.double {
             self.init(double)
         } else {
-            throw TimetableError.incorrectJSONFormat(json, description: "Could not convert JSON to Double")
+            throw TimetableError.incorrectJSON(json, whenConverting: Double.self)
         }
     }
 }
@@ -38,7 +42,7 @@ extension Int : JSONRepresentable {
         if let int = json.int {
             self.init(int)
         } else {
-            throw TimetableError.incorrectJSONFormat(json, description: "Could not convert JSON to Int")
+            throw TimetableError.incorrectJSON(json, whenConverting: Int.self)
         }
     }
 }
@@ -48,7 +52,7 @@ extension String : JSONRepresentable {
         if let string = json.string {
             self.init(string.characters)
         } else {
-            throw TimetableError.incorrectJSONFormat(json, description: "Could not convert JSON to String")
+            throw TimetableError.incorrectJSON(json, whenConverting: String.self)
         }
     }
 }
@@ -58,7 +62,7 @@ extension Bool : JSONRepresentable {
         if let bool = json.bool {
             self.init(bool)
         } else {
-            throw TimetableError.incorrectJSONFormat(json, description: "Could not convert JSON to Bool")
+            throw TimetableError.incorrectJSON(json, whenConverting: Bool.self)
         }
     }
 }
@@ -82,7 +86,7 @@ internal func map<T : JSONRepresentable>(_ json: JSON) throws -> [T] {
     if let array = json.array {
         return try array.map(T.init)
     } else {
-        throw TimetableError.incorrectJSONFormat(json, description: "Could not convert JSON to Array")
+        throw TimetableError.incorrectJSON(json, whenConverting: Array<T>.self)
     }
 }
 
@@ -96,14 +100,18 @@ internal func map<T : JSONRepresentable>(_ json: JSON) throws -> [T]? {
 }
 
 internal func map<T : JSONRepresentable, S : JSONRepresentable>(_ json: JSON) throws -> (T, S) {
-    return (try T(from: json["Item1"]), try S(from: json["Item2"]))
+    do {
+        return (try T(from: json["Item1"]), try S(from: json["Item2"]))
+    } catch {
+        throw TimetableError.incorrectJSON(json, whenConverting: (T, S).self)
+    }
 }
 
 internal func map<T : JSONRepresentable, S : JSONRepresentable>(_ json: JSON) throws -> [(T, S)] {
     if let array = json.array {
         return try array.map(map)
     } else {
-        throw TimetableError.incorrectJSONFormat(json, description: "Could not convert JSON to Array")
+        throw TimetableError.incorrectJSON(json, whenConverting: Array<(T, S)>.self)
     }
 }
 

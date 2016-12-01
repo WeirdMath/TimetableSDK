@@ -71,7 +71,7 @@ class LocalFetchingTests: XCTestCase {
         XCTAssertNil(division.studyLevels)
         
         // When
-        sut.fetchStudyLevels(for: division, using: jsonData) { _ in
+        division.fetchStudyLevels(using: jsonData) { _ in
             completionCalled = true
         }
         
@@ -90,7 +90,7 @@ class LocalFetchingTests: XCTestCase {
         var receivedError: Error?
         
         // When
-        sut.fetchStudyLevels(for: division, using: jsonData) { error in
+        division.fetchStudyLevels(using: jsonData) { error in
             receivedError = error
         }
         
@@ -113,7 +113,7 @@ class LocalFetchingTests: XCTestCase {
         XCTAssertNil(admissionYear.studentGroups)
         
         // When
-        sut.fetchStudentGroups(for: admissionYear, using: jsonData) { _ in
+        admissionYear.fetchStudentGroups(using: jsonData) { _ in
             completionCalled = true
         }
         
@@ -134,7 +134,7 @@ class LocalFetchingTests: XCTestCase {
         var receivedError: Error?
 
         // When
-        sut.fetchStudentGroups(for: admissionYear, using: jsonData) { error in
+        admissionYear.fetchStudentGroups(using: jsonData) { error in
             receivedError = error
         }
         
@@ -157,7 +157,7 @@ class LocalFetchingTests: XCTestCase {
         XCTAssertNil(studentGroup.currentWeek)
         
         // When
-        sut.fetchCurrentWeek(for: studentGroup, using: correctJSONData) { _ in
+        studentGroup.fetchCurrentWeek(using: correctJSONData) { _ in
             completionCalled = true
         }
         
@@ -178,7 +178,7 @@ class LocalFetchingTests: XCTestCase {
         var receivedError: Error?
 
         // When
-        sut.fetchCurrentWeek(for: studentGroup, using: incorrectJSONData) { error in
+        studentGroup.fetchCurrentWeek(using: incorrectJSONData) { error in
             receivedError = error
         }
         

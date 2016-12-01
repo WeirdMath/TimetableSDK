@@ -19,6 +19,14 @@ public enum TimetableError: Error {
     
     /// Returned when a `Timetable` object is deallocated prior to fetching.
     case timetableIsDeallocated
+    
+    private static func incorrectJSONDescription<T>(for type: T.Type) -> String {
+        return "Could not convert JSON to \(type)"
+    }
+    
+    internal static func incorrectJSON<T>(_ json: JSON, whenConverting type: T.Type) -> TimetableError {
+        return TimetableError.incorrectJSONFormat(json, description: incorrectJSONDescription(for: type))
+    }
 }
 
 extension TimetableError: Equatable {

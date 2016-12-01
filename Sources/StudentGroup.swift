@@ -6,6 +6,8 @@
 //
 //
 
+import Foundation
+import enum Alamofire.Result
 import SwiftyJSON
 import DefaultStringConvertible
 
@@ -16,19 +18,10 @@ public final class StudentGroup : JSONRepresentable, TimetableEntity {
     public weak var timetable: Timetable?
     
     public let id: Int
-    fileprivate static let idJSONKey = "StudentGroupId"
-    
     public let name: String
-    fileprivate static let nameJSONKey = "StudentGroupName"
-    
     public let studyForm: String
-    fileprivate static let studyFormJSONKey = "StudentGroupStudyForm"
-    
     public let profiles: String
-    fileprivate static let profilesJSONKey = "StudentGroupProfiles"
-    
     public let divisionAlias: String
-    fileprivate static let divisionAliasJSONKey = "PublicDivisionAlias"
     
     /// The current week schedule for this student group. Initially is `nil`. Use
     /// the `fetchCurrentWeek(for:using:dispatchQueue:completion:)` method of a `Timetable` instance
@@ -50,12 +43,51 @@ public final class StudentGroup : JSONRepresentable, TimetableEntity {
         self.divisionAlias = divisionAlias
     }
     
+    /// Creates a new entity from its JSON representation.
+    ///
+    /// - Parameter json: The JSON representation of the entity.
+    /// - Throws: `TimetableError.incorrectJSONFormat`
     public init(from json: JSON) throws {
-        id              = try map(json["StudentGroupId"])
-        name            = try map(json["StudentGroupName"])
-        studyForm       = try map(json["StudentGroupStudyForm"])
-        profiles        = try map(json["StudentGroupProfiles"])
-        divisionAlias   = try map(json["PublicDivisionAlias"])
+        do {
+            id              = try map(json["StudentGroupId"])
+            name            = try map(json["StudentGroupName"])
+            studyForm       = try map(json["StudentGroupStudyForm"])
+            profiles        = try map(json["StudentGroupProfiles"])
+            divisionAlias   = try map(json["PublicDivisionAlias"])
+        } catch {
+            throw TimetableError.incorrectJSON(json, whenConverting: StudentGroup.self)
+        }
+    }
+    
+    /// Fetches the current week schedule for the student group.
+    ///
+    /// - Parameters:
+    ///   - jsonData:       If this is not `nil`, then instead of networking uses provided json data as mock
+    ///                     data. May be useful for testing locally. Default value is `nil`.
+    ///   - dispatchQueue:  If this is `nil`, uses `DispatchQueue.main` as a queue to asyncronously
+    ///                     execute a networking request on. Otherwise uses the specified queue.
+    ///                     If `jsonData` is not `nil`, setting this
+    ///                     makes no change as in this case fetching happens syncronously in the current queue.
+    ///                     Default value is `nil`.
+    ///   - completion:     A closure that is called after a responce is received. In case of success, its
+    ///                     parameter is `nil`, otherwise — an error.
+    public func fetchCurrentWeek(using jsonData: Data? = nil,
+                                 dispatchQueue: DispatchQueue? = nil,
+                                 completion: @escaping (TimetableError?) -> Void) {
+        
+        fetch(using: jsonData,
+              apiQuery: currentWeekAPIQuery,
+              dispatchQueue: dispatchQueue,
+              timetable: timetable) { [weak self] (result: Result<Week>) in
+                
+                switch result {
+                case .success(let value):
+                    self?.currentWeek = value
+                    completion(nil)
+                case .failure(let error):
+                    completion(error as? TimetableError)
+                }
+        }
     }
 }
 

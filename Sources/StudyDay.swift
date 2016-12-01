@@ -32,10 +32,18 @@ public final class StudyDay : JSONRepresentable, TimetableEntity {
         self.events = events
     }
     
+    /// Creates a new entity from its JSON representation.
+    ///
+    /// - Parameter json: The JSON representation of the entity.
+    /// - Throws: `TimetableError.incorrectJSONFormat`
     public init(from json: JSON) throws {
-        date    = try map(json["Day"], transformation: StudyDay.dateFormatter.date(from:))
-        name    = try map(json["DayString"])
-        events  = try map(json["DayStudyEvents"])
+        do {
+            date    = try map(json["Day"], transformation: StudyDay.dateFormatter.date(from:))
+            name    = try map(json["DayString"])
+            events  = try map(json["DayStudyEvents"])
+        } catch {
+            throw TimetableError.incorrectJSON(json, whenConverting: StudyDay.self)
+        }
     }
 }
 

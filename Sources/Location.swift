@@ -49,25 +49,33 @@ public struct Location : JSONRepresentable, TimetableEntity {
         self.longitudeValue           = longitudeValue
     }
     
+    /// Creates a new entity from its JSON representation.
+    ///
+    /// - Parameter json: The JSON representation of the entity.
+    /// - Throws: `TimetableError.incorrectJSONFormat`
     public init(from json: JSON) throws {
-        educatorsDisplayText        = try map(json["EducatorsDisplayText"])
-        hasEducators                = (try? map(json["HasEducators"])) ?? false
-        educatorIDs                 = try map(json["EducatorIds"])
-        isEmpty                     = try map(json["IsEmpty"])
-        displayName                 = try map(json["DisplayName"])
-        hasGeographicCoordinates    = try map(json["HasGeographicCoordinates"])
-        
-        if hasGeographicCoordinates {
-            latitude                = try map(json["Latitude"])
-            longitude               = try map(json["Longitude"])
-            latitudeValue           = try map(json["LatitudeValue"])
-            longitudeValue          = try map(json["LongitudeValue"])
+        do {
+            educatorsDisplayText        = try map(json["EducatorsDisplayText"])
+            hasEducators                = (try? map(json["HasEducators"])) ?? false
+            educatorIDs                 = try map(json["EducatorIds"])
+            isEmpty                     = try map(json["IsEmpty"])
+            displayName                 = try map(json["DisplayName"])
+            hasGeographicCoordinates    = try map(json["HasGeographicCoordinates"])
             
-        } else {
-            latitude = nil
-            longitude = nil
-            latitudeValue = nil
-            longitudeValue = nil
+            if hasGeographicCoordinates {
+                latitude                = try map(json["Latitude"])
+                longitude               = try map(json["Longitude"])
+                latitudeValue           = try map(json["LatitudeValue"])
+                longitudeValue          = try map(json["LongitudeValue"])
+                
+            } else {
+                latitude = nil
+                longitude = nil
+                latitudeValue = nil
+                longitudeValue = nil
+            }
+        } catch {
+            throw TimetableError.incorrectJSON(json, whenConverting: Location.self)
         }
     }
 }

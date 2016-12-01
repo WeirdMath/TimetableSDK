@@ -23,9 +23,17 @@ public final class Specialization : JSONRepresentable, TimetableEntity {
         self.admissionYears = admissionYears
     }
     
+    /// Creates a new entity from its JSON representation.
+    ///
+    /// - Parameter json: The JSON representation of the entity.
+    /// - Throws: `TimetableError.incorrectJSONFormat`
     public init(from json: JSON) throws {
-        name            = try map(json["Name"])
-        admissionYears  = try map(json["AdmissionYears"])
+        do {
+            name            = try map(json["Name"])
+            admissionYears  = try map(json["AdmissionYears"])
+        } catch {
+            throw TimetableError.incorrectJSON(json, whenConverting: Specialization.self)
+        }
     }
 }
 
@@ -40,7 +48,6 @@ extension Specialization: Equatable {
     ///   - lhs: A value to compare.
     ///   - rhs: Another value to compare.
     public static func ==(lhs: Specialization, rhs: Specialization) -> Bool {
-        
         return
             lhs.name            == rhs.name             &&
             lhs.admissionYears  == rhs.admissionYears

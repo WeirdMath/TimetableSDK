@@ -10,6 +10,7 @@ import Foundation
 import SwiftyJSON
 import DefaultStringConvertible
 
+/// The information about various events taking place in the Univeristy.
 public final class Billboard : JSONRepresentable, TimetableEntity {
     
     /// The Timetable this entity was fetched from. `nil` if it was initialized from a custom JSON object.
@@ -35,23 +36,31 @@ public final class Billboard : JSONRepresentable, TimetableEntity {
     public let weekDisplayText: String
     public let weekMonday: Date
     
+    /// Creates a new entity from its JSON representation.
+    ///
+    /// - Parameter json: The JSON representation of the entity.
+    /// - Throws: `TimetableError.incorrectJSONFormat`
     public init(from json: JSON) throws {
-        alias                               = try map(json["Alias"])
-        days                                = try map(json["Days"])
-        earlierEvents                       = try map(json["EarlierEvents"])
-        hasEventsToShow                     = try map(json["HasEventsToShow"])
-        isCurrentWeekReferenceAvailable     = try map(json["IsCurrentWeekReferenceAvailable"])
-        isNextWeekReferenceAvailable        = try map(json["IsNextWeekReferenceAvailable"])
-        isPreviousWeekReferenceAvailable    = try map(json["IsPreviousWeekReferenceAvailable"])
-        nextWeekMonday                      = try map(json["NextWeekMonday"],
-                                                      transformation: Billboard.dateFormatter.date(from:))
-        previousWeekMonday                  = try map(json["PreviousWeekMonday"],
-                                                      transformation: Billboard.dateFormatter.date(from:))
-        title                               = try map(json["Title"])
-        viewName                            = try map(json["ViewName"])
-        weekDisplayText                     = try map(json["WeekDisplayText"])
-        weekMonday                          = try map(json["WeekMonday"],
-                                                      transformation: Billboard.dateFormatter.date(from:))
+        do {
+            alias                               = try map(json["Alias"])
+            days                                = try map(json["Days"])
+            earlierEvents                       = try map(json["EarlierEvents"])
+            hasEventsToShow                     = try map(json["HasEventsToShow"])
+            isCurrentWeekReferenceAvailable     = try map(json["IsCurrentWeekReferenceAvailable"])
+            isNextWeekReferenceAvailable        = try map(json["IsNextWeekReferenceAvailable"])
+            isPreviousWeekReferenceAvailable    = try map(json["IsPreviousWeekReferenceAvailable"])
+            nextWeekMonday                      = try map(json["NextWeekMonday"],
+                                                          transformation: Billboard.dateFormatter.date(from:))
+            previousWeekMonday                  = try map(json["PreviousWeekMonday"],
+                                                          transformation: Billboard.dateFormatter.date(from:))
+            title                               = try map(json["Title"])
+            viewName                            = try map(json["ViewName"])
+            weekDisplayText                     = try map(json["WeekDisplayText"])
+            weekMonday                          = try map(json["WeekMonday"],
+                                                          transformation: Billboard.dateFormatter.date(from:))
+        } catch {
+            throw TimetableError.incorrectJSON(json, whenConverting: Billboard.self)
+        }
     }
     
     internal init(alias: String,

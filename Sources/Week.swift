@@ -61,22 +61,30 @@ public final class Week : JSONRepresentable, TimetableEntity {
         self.timetableDisplayName             = timetableDisplayName
     }
     
+    /// Creates a new entity from its JSON representation.
+    ///
+    /// - Parameter json: The JSON representation of the entity.
+    /// - Throws: `TimetableError.incorrectJSONFormat`
     public init(from json: JSON) throws {
-        previousWeekMonday                  = try map(json["PreviousWeekMonday"],
-                                                      transformation: Week.dateForatter.date(from:))
-        nextWeekMonday                      = try map(json["NextWeekMonday"],
-                                                      transformation: Week.dateForatter.date(from:))
-        isPreviousWeekReferenceAvailable    = try map(json["IsPreviousWeekReferenceAvailable"])
-        isNextWeekReferenceAvailable        = try map(json["IsNextWeekReferenceAvailable"])
-        isCurrentWeekReferenceAvailable     = try map(json["IsCurrentWeekReferenceAvailable"])
-        weekDisplayText                     = try map(json["WeekDisplayText"])
-        days                                = try map(json["Days"])
-        viewName                            = try map(json["ViewName"])
-        monday                              = try map(json["WeekMonday"],
-                                                      transformation: Week.dateForatter.date(from:))
-        studentGroupID                      = try map(json["StudentGroupId"])
-        studentGroupDisplayName             = try map(json["StudentGroupDisplayName"])
-        timetableDisplayName                = try map(json["TimeTableDisplayName"])
+        do {
+            previousWeekMonday                  = try map(json["PreviousWeekMonday"],
+                                                          transformation: Week.dateForatter.date(from:))
+            nextWeekMonday                      = try map(json["NextWeekMonday"],
+                                                          transformation: Week.dateForatter.date(from:))
+            isPreviousWeekReferenceAvailable    = try map(json["IsPreviousWeekReferenceAvailable"])
+            isNextWeekReferenceAvailable        = try map(json["IsNextWeekReferenceAvailable"])
+            isCurrentWeekReferenceAvailable     = try map(json["IsCurrentWeekReferenceAvailable"])
+            weekDisplayText                     = try map(json["WeekDisplayText"])
+            days                                = try map(json["Days"])
+            viewName                            = try map(json["ViewName"])
+            monday                              = try map(json["WeekMonday"],
+                                                          transformation: Week.dateForatter.date(from:))
+            studentGroupID                      = try map(json["StudentGroupId"])
+            studentGroupDisplayName             = try map(json["StudentGroupDisplayName"])
+            timetableDisplayName                = try map(json["TimeTableDisplayName"])
+        } catch {
+            throw TimetableError.incorrectJSON(json, whenConverting: Week.self)
+        }
     }
 }
 
