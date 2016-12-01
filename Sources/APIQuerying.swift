@@ -8,14 +8,14 @@
 
 import Foundation
 import Alamofire
-import struct SwiftyJSON.JSON
+import SwiftyJSON
 
-private func _fetch<T>(using jsonData: Data?,
+private func _fetch<Entity>(using jsonData: Data?,
                     apiQuery: String,
                     dispatchQueue: DispatchQueue?,
-                    baseURL: URL,
-                    map: @escaping (JSON) throws -> T,
-                    completion: @escaping (Result<T>) -> Void) {
+                    timetable: Timetable?,
+                    map: @escaping (JSON) throws -> Entity,
+                    completion: @escaping (Result<Entity>) -> Void) {
     
     if let jsonData = jsonData {
         do {
@@ -24,6 +24,12 @@ private func _fetch<T>(using jsonData: Data?,
             completion(.failure(error))
         }
     } else {
+        
+        guard let baseURL = timetable?.baseURL else {
+            completion(.failure(TimetableError.timetableIsDeallocated))
+            return
+        }
+        
         Alamofire
             .request(baseURL.appendingPathComponent(apiQuery))
             .validate(statusCode: 200 ..< 300)
@@ -56,19 +62,27 @@ private func _fetch<T>(using jsonData: Data?,
 ///                         Default value is `nil`.
 ///   - baseURL:            The URL to use `apiQuery` on.
 ///   - completion:         A closure that is called after a responce is received.
-internal func fetch<T : JSONRepresentable>(
+internal func fetch<Entity : JSONRepresentable & TimetableEntity>(
     using jsonData: Data?,
     apiQuery: String,
     dispatchQueue: DispatchQueue?,
-    baseURL: URL,
-    completion: @escaping (Result<T>) -> Void) {
+    timetable: Timetable?,
+    completion: @escaping (Result<Entity>) -> Void) {
     
     _fetch(using: jsonData,
            apiQuery: apiQuery,
            dispatchQueue: dispatchQueue,
-           baseURL: baseURL,
-           map: map,
-           completion: completion)
+           timetable: timetable,
+           map: map) { (result: Result<Entity>) in
+            
+            switch result {
+            case .success(var value):
+                value.timetable = timetable
+                completion(.success(value))
+            case .failure:
+                completion(result)
+            }
+    }
 }
 
 /// Does all the networking things.
@@ -84,17 +98,29 @@ internal func fetch<T : JSONRepresentable>(
 ///                         Default value is `nil`.
 ///   - baseURL:            The URL to use `apiQuery` on.
 ///   - completion:         A closure that is called after a responce is received.
-internal func fetch<T : JSONRepresentable>(
+internal func fetch<Entity : JSONRepresentable & TimetableEntity>(
     using jsonData: Data?,
     apiQuery: String,
     dispatchQueue: DispatchQueue?,
-    baseURL: URL,
-    completion: @escaping (Result<[T]>) -> Void) {
+    timetable: Timetable?,
+    completion: @escaping (Result<[Entity]>) -> Void) {
     
     _fetch(using: jsonData,
            apiQuery: apiQuery,
            dispatchQueue: dispatchQueue,
-           baseURL: baseURL,
-           map: map,
-           completion: completion)
+           timetable: timetable,
+           map: map) { (result: Result<[Entity]>) in
+            
+            switch result {
+            case .success(let _value):
+                let value = _value.map { _element -> Entity in
+                    var element = _element
+                    element.timetable = timetable
+                    return element
+                }
+                completion(.success(value))
+            case .failure:
+                completion(result)
+            }
+    }
 }

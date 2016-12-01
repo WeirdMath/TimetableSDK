@@ -10,7 +10,10 @@ import SwiftyJSON
 import DefaultStringConvertible
 
 /// The information about a division of the Univeristy.
-public final class Division : JSONRepresentable {
+public final class Division : JSONRepresentable, TimetableEntity {
+    
+    /// The Timetable this entity was fetched from. `nil` if it was initialized from a custom JSON object.
+    public weak var timetable: Timetable?
     
     public let name: String
     
@@ -27,12 +30,12 @@ public final class Division : JSONRepresentable {
     }
     
     internal init(name: String, alias: String, oid: String) {
-        self.name = name
+        self.name  = name
         self.alias = alias
-        self.oid = oid
+        self.oid   = oid
     }
     
-    internal init(from json: JSON) throws {
+    public init(from json: JSON) throws {
         name    = try map(json["Name"])
         alias   = try map(json["Alias"])
         oid     = try map(json["Oid"])

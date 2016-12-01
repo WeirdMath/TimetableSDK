@@ -9,7 +9,10 @@
 import Foundation
 import SwiftyJSON
 
-public struct BillboardDay : JSONRepresentable {
+public final class BillboardDay : JSONRepresentable, TimetableEntity {
+    
+    /// The Timetable this entity was fetched from. `nil` if it was initialized from a custom JSON object.
+    public weak var timetable: Timetable?
     
     fileprivate static let dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
@@ -18,15 +21,18 @@ public struct BillboardDay : JSONRepresentable {
     }()
     
     public let day: Date
-    
     public let events: [BillboardEvent]
-    
     public let dayString: String
-}
-
-extension BillboardDay {
     
-    init(from json: JSON) throws {
+    internal init(day: Date,
+                  events: [BillboardEvent],
+                  dayString: String) {
+        self.day       = day
+        self.events    = events
+        self.dayString = dayString
+    }
+    
+    public init(from json: JSON) throws {
         day         = try map(json["Day"], transformation: BillboardDay.dateFormatter.date(from:))
         events      = try map(json["DayEvents"])
         dayString   = try map(json["DayString"])

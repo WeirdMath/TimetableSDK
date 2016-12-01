@@ -11,7 +11,10 @@ import SwiftyJSON
 import DefaultStringConvertible
 
 /// The information about a study week for a `StudentGroup`.
-public struct Week : JSONRepresentable {
+public final class Week : JSONRepresentable, TimetableEntity {
+    
+    /// The Timetable this entity was fetched from. `nil` if it was initialized from a custom JSON object.
+    public weak var timetable: Timetable?
     
     fileprivate static let dateForatter: DateFormatter = {
         let dateFormatter = DateFormatter()
@@ -20,33 +23,45 @@ public struct Week : JSONRepresentable {
     }()
     
     public let previousWeekMonday: Date
-    
     public let nextWeekMonday: Date
-    
     public let isPreviousWeekReferenceAvailable: Bool
-    
     public let isNextWeekReferenceAvailable: Bool
-    
     public let isCurrentWeekReferenceAvailable: Bool
-    
     public let weekDisplayText: String
-    
     public let days: [StudyDay]
-    
     public let viewName: String
-    
     public let monday: Date
-    
     public let studentGroupID: Int
-    
     public let studentGroupDisplayName: String
-    
     public let timetableDisplayName: String
-}
-
-extension Week {
     
-    internal init(from json: JSON) throws {
+    internal init(previousWeekMonday: Date,
+                  nextWeekMonday: Date,
+                  isPreviousWeekReferenceAvailable: Bool,
+                  isNextWeekReferenceAvailable: Bool,
+                  isCurrentWeekReferenceAvailable: Bool,
+                  weekDisplayText: String,
+                  days: [StudyDay],
+                  viewName: String,
+                  monday: Date,
+                  studentGroupID: Int,
+                  studentGroupDisplayName: String,
+                  timetableDisplayName: String) {
+        self.previousWeekMonday               = previousWeekMonday
+        self.nextWeekMonday                   = nextWeekMonday
+        self.isPreviousWeekReferenceAvailable = isPreviousWeekReferenceAvailable
+        self.isNextWeekReferenceAvailable     = isNextWeekReferenceAvailable
+        self.isCurrentWeekReferenceAvailable  = isCurrentWeekReferenceAvailable
+        self.weekDisplayText                  = weekDisplayText
+        self.days                             = days
+        self.viewName                         = viewName
+        self.monday                           = monday
+        self.studentGroupID                   = studentGroupID
+        self.studentGroupDisplayName          = studentGroupDisplayName
+        self.timetableDisplayName             = timetableDisplayName
+    }
+    
+    public init(from json: JSON) throws {
         previousWeekMonday                  = try map(json["PreviousWeekMonday"],
                                                       transformation: Week.dateForatter.date(from:))
         nextWeekMonday                      = try map(json["NextWeekMonday"],

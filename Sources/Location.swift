@@ -11,32 +11,45 @@ import DefaultStringConvertible
 import Foundation
 
 /// The information about a location that an `Event` may take place in.
-public struct Location : JSONRepresentable {
+public struct Location : JSONRepresentable, TimetableEntity {
+    
+    /// The Timetable this entity was fetched from. `nil` if it was initialized from a custom JSON object.
+    public weak var timetable: Timetable?
     
     public let educatorsDisplayText: String?
-    
     public let hasEducators: Bool
-    
     public let educatorIDs: [(Int, String)]?
-    
     public let isEmpty: Bool
-    
     public let displayName: String
-    
     public let hasGeographicCoordinates: Bool
-    
     public let latitude: Double?
-    
     public let longitude: Double?
-    
     public let latitudeValue: String?
-    
     public let longitudeValue: String?
-}
-
-extension Location {
     
-    internal init(from json: JSON) throws {
+    internal init(educatorsDisplayText: String?,
+                  hasEducators: Bool,
+                  educatorIDs: [(Int, String)]?,
+                  isEmpty: Bool,
+                  displayName: String,
+                  hasGeographicCoordinates: Bool,
+                  latitude: Double?,
+                  longitude: Double?,
+                  latitudeValue: String?,
+                  longitudeValue: String?) {
+        self.educatorsDisplayText     = educatorsDisplayText
+        self.hasEducators             = hasEducators
+        self.educatorIDs              = educatorIDs
+        self.isEmpty                  = isEmpty
+        self.displayName              = displayName
+        self.hasGeographicCoordinates = hasGeographicCoordinates
+        self.latitude                 = latitude
+        self.longitude                = longitude
+        self.latitudeValue            = latitudeValue
+        self.longitudeValue           = longitudeValue
+    }
+    
+    public init(from json: JSON) throws {
         educatorsDisplayText        = try map(json["EducatorsDisplayText"])
         hasEducators                = (try? map(json["HasEducators"])) ?? false
         educatorIDs                 = try map(json["EducatorIds"])

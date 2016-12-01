@@ -25,6 +25,30 @@ class WWWFetchingTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
     }
+    
+    func testCatchNetworkingError() {
+        
+        // Given
+        XCTAssertNil(sut.divisions)
+        let expectedError = TimetableError.networkingError(NSError())
+        var returnedError: TimetableError?
+        
+        // When
+        let exp = expectation(description: "catching networking error")
+        sut.baseURL = URL(string: "http://example.com")! // Set the wrong base URL
+        sut.fetchDivisions { error in
+            
+            returnedError = error
+            exp.fulfill()
+        }
+        
+        // Then
+        waitForExpectations(timeout: 10) { _ in
+            
+            XCTAssertNil(self.sut.divisions)
+            XCTAssertEqual(expectedError, returnedError)
+        }
+    }
 
     func testFetchDivisionsFromWWW() {
         
@@ -44,6 +68,7 @@ class WWWFetchingTests: XCTestCase {
         waitForExpectations(timeout: 10) { _ in
             
             XCTAssertNotNil(self.sut.divisions)
+            XCTAssertNotNil(self.sut.divisions?.first?.timetable)
             XCTAssertNil(returnedError)
         }
     }
@@ -69,6 +94,7 @@ class WWWFetchingTests: XCTestCase {
         waitForExpectations(timeout: 10) { _ in
             
             XCTAssertNotNil(division.studyLevels)
+            XCTAssertNotNil(division.studyLevels?.first?.timetable)
             XCTAssertNil(returnedError)
         }
     }
@@ -96,6 +122,7 @@ class WWWFetchingTests: XCTestCase {
         waitForExpectations(timeout: 10) { _ in
             
             XCTAssertNotNil(admissionYear.studentGroups)
+            XCTAssertNotNil(admissionYear.studentGroups?.first?.timetable)
             XCTAssertNil(returnedError)
         }
     }
@@ -123,6 +150,7 @@ class WWWFetchingTests: XCTestCase {
         waitForExpectations(timeout: 10) { _ in
             
             XCTAssertNotNil(studentGroup.currentWeek)
+            XCTAssertNotNil(studentGroup.currentWeek?.timetable)
             XCTAssertNil(returnedError)
         }
     }

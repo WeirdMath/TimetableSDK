@@ -10,7 +10,10 @@ import SwiftyJSON
 import DefaultStringConvertible
 
 /// The information about a student group formed in an `AdmissionYear`.
-public final class StudentGroup : JSONRepresentable {
+public final class StudentGroup : JSONRepresentable, TimetableEntity {
+    
+    /// The Timetable this entity was fetched from. `nil` if it was initialized from a custom JSON object.
+    public weak var timetable: Timetable?
     
     public let id: Int
     fileprivate static let idJSONKey = "StudentGroupId"
@@ -40,14 +43,14 @@ public final class StudentGroup : JSONRepresentable {
                   studyForm: String,
                   profiles: String,
                   divisionAlias: String) {
-        self.id = id
-        self.name = name
-        self.studyForm = studyForm
-        self.profiles = profiles
+        self.id            = id
+        self.name          = name
+        self.studyForm     = studyForm
+        self.profiles      = profiles
         self.divisionAlias = divisionAlias
     }
     
-    internal init(from json: JSON) throws {
+    public init(from json: JSON) throws {
         id              = try map(json["StudentGroupId"])
         name            = try map(json["StudentGroupName"])
         studyForm       = try map(json["StudentGroupStudyForm"])

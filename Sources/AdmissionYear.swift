@@ -10,16 +10,15 @@ import SwiftyJSON
 import DefaultStringConvertible
 
 /// The information about an admission year for a particular `Specialization`.
-public final class AdmissionYear : JSONRepresentable {
+public final class AdmissionYear : JSONRepresentable, TimetableEntity {
+    
+    /// The Timetable this entity was fetched from. `nil` if it was initialized from a custom JSON object.
+    public weak var timetable: Timetable?
     
     public let isEmpty: Bool
-    
     public let divisionAlias: String
-    
     public let studyProgramID: Int
-    
     public let name: String
-    
     public let number: Int
     
     /// The sudent groups formed in this year. Initially is `nil`. Use
@@ -36,20 +35,22 @@ public final class AdmissionYear : JSONRepresentable {
                   name: String,
                   number: Int) {
         
-        self.isEmpty = isEmpty
-        self.divisionAlias = divisionAlias
+        self.isEmpty        = isEmpty
+        self.divisionAlias  = divisionAlias
         self.studyProgramID = studyProgramID
-        self.name = name
-        self.number = number
+        self.name           = name
+        self.number         = number
     }
     
-    internal init(from json: JSON) throws {
+    public init(from json: JSON) throws {
         isEmpty         = try map(json["IsEmpty"])
         divisionAlias   = try map(json["PublicDivisionAlias"])
         studyProgramID  = try map(json["StudyProgramId"])
         name            = try map(json["YearName"])
         number          = try map(json["YearNumber"])
     }
+    
+
 }
 
 extension AdmissionYear: Equatable {

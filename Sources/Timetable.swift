@@ -10,14 +10,14 @@ import Foundation
 import SwiftyJSON
 import enum Alamofire.Result
 
-/// A pivit point for fetching data from the Timetable service.
+/// A pivot point for fetching data from the Timetable service.
 public final class Timetable {
     
     /// The default url used to send API requests against.
     public static let defaultBaseURL = URL(string: "http://timetable.spbu.ru/api/v1/")!
     
     /// The url used to send API requests against.
-    public let baseURL: URL
+    public var baseURL: URL
     
     /// Creates a new instance with provided `basURL`.
     ///
@@ -67,7 +67,7 @@ public final class Timetable {
         fetch(using: jsonData,
               apiQuery: divisionsAPIQuery,
               dispatchQueue: dispatchQueue,
-              baseURL: baseURL) { [weak self] (result: Result<[Division]>) in
+              timetable: self) { [weak self] (result: Result<[Division]>) in
                 
                 switch result {
                 case .success(let value):
@@ -101,7 +101,7 @@ public final class Timetable {
         fetch(using: jsonData,
               apiQuery: division.studyLevelsAPIQuery,
               dispatchQueue: dispatchQueue,
-              baseURL: baseURL) { [weak division] (result: Result<[StudyLevel]>) in
+              timetable: self) { [weak division] (result: Result<[StudyLevel]>) in
                 
                 switch result {
                 case .success(let value):
@@ -134,7 +134,7 @@ public final class Timetable {
         fetch(using: jsonData,
               apiQuery: admissionYear.studentGroupsAPIQuery,
               dispatchQueue: dispatchQueue,
-              baseURL: baseURL) { [weak admissionYear] (result: Result<[StudentGroup]>) in
+              timetable: self) { [weak admissionYear] (result: Result<[StudentGroup]>) in
                 
                 switch result {
                 case .success(let value):
@@ -167,7 +167,7 @@ public final class Timetable {
         fetch(using: jsonData,
               apiQuery: studentGroup.currentWeekAPIQuery,
               dispatchQueue: dispatchQueue,
-              baseURL: baseURL) { [weak studentGroup] (result: Result<Week>) in
+              timetable: self) { [weak studentGroup] (result: Result<Week>) in
                 
                 switch result {
                 case .success(let value):

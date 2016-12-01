@@ -11,18 +11,22 @@ import SwiftyJSON
 import DefaultStringConvertible
 
 /// The information about a study level available in a `Division`.
-public struct StudyLevel : JSONRepresentable {
+public final class StudyLevel : JSONRepresentable, TimetableEntity {
+    
+    /// The Timetable this entity was fetched from. `nil` if it was initialized from a custom JSON object.
+    public weak var timetable: Timetable?
     
     public let name: String
-    
     public var specializations: [Specialization]
-    
     public let hasCourse6: Bool
-}
-
-extension StudyLevel {
     
-    internal init(from json: JSON) throws {
+    public init(name: String, specializations: [Specialization], hasCourse6: Bool) {
+        self.name            = name
+        self.specializations = specializations
+        self.hasCourse6      = hasCourse6
+    }
+    
+    public init(from json: JSON) throws {
         name            = try map(json["StudyLevelName"])
         specializations = try map(json["StudyProgramCombinations"])
         hasCourse6      = try map(json["HasCourse6"])

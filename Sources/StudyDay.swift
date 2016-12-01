@@ -11,7 +11,10 @@ import SwiftyJSON
 import DefaultStringConvertible
 
 /// The information about a day in a `Week`.
-public struct StudyDay : JSONRepresentable {
+public final class StudyDay : JSONRepresentable, TimetableEntity {
+    
+    /// The Timetable this entity was fetched from. `nil` if it was initialized from a custom JSON object.
+    public weak var timetable: Timetable?
     
     fileprivate static let dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
@@ -20,15 +23,16 @@ public struct StudyDay : JSONRepresentable {
     }()
     
     public let date: Date
-    
     public let name: String
-    
     public let events: [StudyEvent]
-}
-
-extension StudyDay {
     
-    internal init(from json: JSON) throws {
+    internal init(date: Date, name: String, events: [StudyEvent]) {
+        self.date   = date
+        self.name   = name
+        self.events = events
+    }
+    
+    public init(from json: JSON) throws {
         date    = try map(json["Day"], transformation: StudyDay.dateFormatter.date(from:))
         name    = try map(json["DayString"])
         events  = try map(json["DayStudyEvents"])

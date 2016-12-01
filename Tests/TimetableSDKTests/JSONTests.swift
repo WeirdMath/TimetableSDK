@@ -46,7 +46,7 @@ class JSONTests: XCTestCase {
                                                       studyProgramID: 7306,
                                                       name: "2014",
                                                       number: 2014)
-                                       ]),
+                            ]),
                         Specialization(name: "Вычислительная математика и кибернетика",
                                        admissionYears: [
                                         AdmissionYear(isEmpty: false,
@@ -59,7 +59,7 @@ class JSONTests: XCTestCase {
                                                       studyProgramID: 6652,
                                                       name: "2014",
                                                       number: 2014)
-                                       ]),
+                            ]),
                         Specialization(name: "Информатика",
                                        admissionYears: [
                                         AdmissionYear(isEmpty: false,
@@ -77,7 +77,7 @@ class JSONTests: XCTestCase {
                                                       studyProgramID: 7622,
                                                       name: "2014",
                                                       number: 2014)
-                                       ]),
+                            ]),
                         Specialization(name: "Математика",
                                        admissionYears: [
                                         AdmissionYear(isEmpty: false,
@@ -95,7 +95,7 @@ class JSONTests: XCTestCase {
                                                       studyProgramID: 1340,
                                                       name: "2014",
                                                       number: 2014)
-                                       ]),
+                            ]),
                         Specialization(name: "Механика",
                                        admissionYears: [
                                         AdmissionYear(isEmpty: false,
@@ -112,8 +112,8 @@ class JSONTests: XCTestCase {
                                                       studyProgramID: 2020,
                                                       name: "2014",
                                                       number: 2014)
-                                       ])
-                       ],
+                            ])
+                ],
                        hasCourse6: false)
         
         // When
@@ -142,7 +142,7 @@ class JSONTests: XCTestCase {
     }
     
     func testInitializeWeekFromJSON() {
-        
+
         // Given
         let jsonData = getTestingResource(fromFile: "MATH_studentGroup_10014_events", ofType: "json")!
         let dateFomatter = DateFormatter()
@@ -157,47 +157,50 @@ class JSONTests: XCTestCase {
                                 weekDisplayText: "21 ноября – 27 ноября",
                                 days: [
                                     StudyDay(date: timeFormatter.date(from: "2016-11-21T00:00:00")!,
-                                        name: "понедельник, 21 ноября",
-                                        events: [
-                                            StudyEvent(kind: nil,
-                                                  locations: [
-                                                    Location(educatorsDisplayText: "Евард М. Е., доцент",
-                                                             hasEducators: true,
-                                                             educatorIDs: [(2643, "Евард М. Е., доцент")],
-                                                             isEmpty: false,
-                                                             displayName: "Университетский просп., д. 28, 1510",
-                                                             hasGeographicCoordinates: true,
-                                                             latitude: 59.879785,
-                                                             longitude: 29.829026,
-                                                             latitudeValue: "59.879785",
-                                                             longitudeValue: "29.829026")
-                                                  ],
-                                                  contingentUnitName: "",
-                                                  educatorIDs: [(2643, "Евард М. Е., доцент")],
-                                                  contingentUnitCourse: "",
-                                                  contingentUnitDivision: "",
-                                                  isAssigned: false,
-                                                  timeWasChanged: false,
-                                                  locationsWereChanged: false,
-                                                  educatorsWereReassigned: false,
-                                                  start: timeFormatter.date(from: "2016-11-21T09:30:00")!,
-                                                  end: timeFormatter.date(from: "2016-11-21T11:05:00")!,
-                                                  subject: "Механика деформируемого твердого тела, " +
-                                                           "практическое занятие, факультатив",
-                                                  timeIntervalString: "9:30–11:05",
-                                                  dateWithTimeIntervalString: "21 ноября 9:30-11:05",
-                                                  locationsDisplayText: "Университетский просп., д. 28, 1510",
-                                                  educatorsDisplayText: "Евард М. Е., доцент",
-                                                  hasEducators: true,
-                                                  isCancelled: false,
-                                                  hasTheSameTimeAsPreviousItem: false,
-                                                  contingentUnitsDisplayText: nil,
-                                                  isStudy: false,
-                                                  allDay: false,
-                                                  withinTheSameDay: false,
-                                                  displayDateAndTimeIntervalString: "21 ноября 9:30-11:05")
+                                             name: "понедельник, 21 ноября",
+                                             events: [
+                                                StudyEvent(kind: nil,
+                                                           locations: [
+                                                            Location(educatorsDisplayText: "Евард М. Е., доцент",
+                                                                     hasEducators: true,
+                                                                     educatorIDs: [(2643, "Евард М. Е., доцент")],
+                                                                     isEmpty: false,
+                                                                     displayName:
+                                                                "Университетский просп., д. 28, 1510",
+                                                                     hasGeographicCoordinates: true,
+                                                                     latitude: 59.879785,
+                                                                     longitude: 29.829026,
+                                                                     latitudeValue: "59.879785",
+                                                                     longitudeValue: "29.829026")
+                                                    ],
+                                                           contingentUnitName: "",
+                                                           educatorIDs: [(2643, "Евард М. Е., доцент")],
+                                                           contingentUnitCourse: "",
+                                                           contingentUnitDivision: "",
+                                                           isAssigned: false,
+                                                           timeWasChanged: false,
+                                                           locationsWereChanged: false,
+                                                           educatorsWereReassigned: false,
+                                                           start: timeFormatter.date(from: "2016-11-21T09:30:00")!,
+                                                           end: timeFormatter.date(from: "2016-11-21T11:05:00")!,
+                                                           subject: "Механика деформируемого твердого тела, " +
+                                                    "практическое занятие, факультатив",
+                                                           timeIntervalString: "9:30–11:05",
+                                                           dateWithTimeIntervalString: "21 ноября 9:30-11:05",
+                                                           locationsDisplayText:
+                                                    "Университетский просп., д. 28, 1510",
+                                                           educatorsDisplayText: "Евард М. Е., доцент",
+                                                           hasEducators: true,
+                                                           isCancelled: false,
+                                                           hasTheSameTimeAsPreviousItem: false,
+                                                           contingentUnitsDisplayText: nil,
+                                                           isStudy: false,
+                                                           allDay: false,
+                                                           withinTheSameDay: false,
+                                                           displayDateAndTimeIntervalString:
+                                                    "21 ноября 9:30-11:05")
                                         ])
-                                ],
+            ],
                                 viewName: "Primary",
                                 monday: dateFomatter.date(from: "2016-11-21")!,
                                 studentGroupID: 10014,
@@ -225,7 +228,7 @@ class JSONTests: XCTestCase {
                         BillboardDay(day: timeFormatter.date(from: "2016-11-28T00:00:00")!,
                                      events: [],
                                      dayString: "понедельник, 28 ноября")
-                        ],
+                ],
                       earlierEvents: [
                         BillboardEvent(allDay: true,
                                        contingentUnitsDisplayText: "",
@@ -267,7 +270,7 @@ class JSONTests: XCTestCase {
                                        viewKind: 0,
                                        withinTheSameDay: false,
                                        year: 2016)
-                        ],
+                ],
                       hasEventsToShow: true,
                       isCurrentWeekReferenceAvailable: false,
                       isNextWeekReferenceAvailable: true,

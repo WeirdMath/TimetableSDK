@@ -16,4 +16,32 @@ public enum TimetableError: Error {
     
     /// Returned when a networking error occures.
     case networkingError(Error)
+    
+    /// Returned when a `Timetable` object is deallocated prior to fetching.
+    case timetableIsDeallocated
+}
+
+extension TimetableError: Equatable {
+    
+    /// Returns a Boolean value indicating whether two values are equal.
+    ///
+    /// Equality is the inverse of inequality. For any values `a` and `b`,
+    /// `a == b` implies that `a != b` is `false`.
+    ///
+    /// - Parameters:
+    ///   - lhs: A value to compare.
+    ///   - rhs: Another value to compare.
+    public static func ==(lhs: TimetableError, rhs: TimetableError) -> Bool {
+        
+        switch (lhs, rhs) {
+        case (incorrectJSONFormat(let json1, let description1), incorrectJSONFormat(let json2, let description2)):
+            return json1 == json2 && description1 == description2
+        case (.networkingError, .networkingError):
+            return true
+        case (.timetableIsDeallocated, .timetableIsDeallocated):
+            return true
+        default:
+            return false
+        }
+    }
 }

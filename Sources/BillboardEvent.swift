@@ -9,7 +9,10 @@
 import Foundation
 import SwiftyJSON
 
-public struct BillboardEvent : JSONRepresentable {
+public struct BillboardEvent : JSONRepresentable, TimetableEntity {
+    
+    /// The Timetable this entity was fetched from. `nil` if it was initialized from a custom JSON object.
+    public weak var timetable: Timetable?
     
     fileprivate static let dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
@@ -18,72 +21,102 @@ public struct BillboardEvent : JSONRepresentable {
     }()
     
     public let allDay: Bool
-    
     public let contingentUnitsDisplayText: String
-    
     public let dateWithTimeIntervalString: String
-    
     public let displayDateAndTimeIntervalString: String
-    
     public let divisionAlias: String
-    
     public let educatorsDisplayText: String
-    
     public let end: Date
-    
     public let fromDate: Date
-    
     public let fromDateString: String
-    
     public let fullDateWithTimeIntervalString: String
-    
     public let hasAgenda: Bool
-    
     public let hasEducators: Bool
-    
     public let hasTheSameTimeAsPreviousItem: Bool
-    
     public let id: Int
-    
     public let isCancelled: Bool
-    
     public let isEmpty: Bool
-    
     public let isRecurrence: Bool
-    
     public let isShowImmediateHidden: Bool
-    
     public let isStudy: Bool
-    
     public let location: Location
-    
     public let locationsDisplayText: String
-    
     public let orderIndex: Int
-
     public let showImmediate: Bool
-    
     public let showYear: Bool
-    
     public let start: Date
-    
     public let subject: String
-    
     public let subkindDisplayName: String
-    
     public let timeIntervalString: String
-    
     public let viewKind: Int
-    
     public let withinTheSameDay: Bool
-    
     public let year: Int
-    fileprivate static let yearJSONKey = "Year"
-}
-
-extension BillboardEvent {
     
-    init(from json: JSON) throws {
+    internal init(allDay: Bool,
+                  contingentUnitsDisplayText: String,
+                  dateWithTimeIntervalString: String,
+                  displayDateAndTimeIntervalString: String,
+                  divisionAlias: String,
+                  educatorsDisplayText: String,
+                  end: Date,
+                  fromDate: Date,
+                  fromDateString: String,
+                  fullDateWithTimeIntervalString: String,
+                  hasAgenda: Bool,
+                  hasEducators: Bool,
+                  hasTheSameTimeAsPreviousItem: Bool,
+                  id: Int,
+                  isCancelled: Bool,
+                  isEmpty: Bool,
+                  isRecurrence: Bool,
+                  isShowImmediateHidden: Bool,
+                  isStudy: Bool,
+                  location: Location,
+                  locationsDisplayText: String,
+                  orderIndex: Int,
+                  showImmediate: Bool,
+                  showYear: Bool,
+                  start: Date,
+                  subject: String,
+                  subkindDisplayName: String,
+                  timeIntervalString: String,
+                  viewKind: Int,
+                  withinTheSameDay: Bool,
+                  year: Int) {
+        self.allDay = allDay
+        self.contingentUnitsDisplayText = contingentUnitsDisplayText
+        self.dateWithTimeIntervalString = dateWithTimeIntervalString
+        self.displayDateAndTimeIntervalString = displayDateAndTimeIntervalString
+        self.divisionAlias = divisionAlias
+        self.educatorsDisplayText = educatorsDisplayText
+        self.end = end
+        self.fromDate = fromDate
+        self.fromDateString = fromDateString
+        self.fullDateWithTimeIntervalString = fullDateWithTimeIntervalString
+        self.hasAgenda = hasAgenda
+        self.hasEducators = hasEducators
+        self.hasTheSameTimeAsPreviousItem = hasTheSameTimeAsPreviousItem
+        self.id = id
+        self.isCancelled = isCancelled
+        self.isEmpty = isEmpty
+        self.isRecurrence = isRecurrence
+        self.isShowImmediateHidden = isShowImmediateHidden
+        self.isStudy = isStudy
+        self.location = location
+        self.locationsDisplayText = locationsDisplayText
+        self.orderIndex = orderIndex
+        self.showImmediate = showImmediate
+        self.showYear = showYear
+        self.start = start
+        self.subject = subject
+        self.subkindDisplayName = subkindDisplayName
+        self.timeIntervalString = timeIntervalString
+        self.viewKind = viewKind
+        self.withinTheSameDay = withinTheSameDay
+        self.year = year
+    }
+    
+    public init(from json: JSON) throws {
         allDay                              = try map(json["AllDay"])
         contingentUnitsDisplayText          = try map(json["ContingentUnitsDisplayTest"])
         dateWithTimeIntervalString          = try map(json["DateWithTimeIntervalString"])
@@ -123,6 +156,14 @@ extension BillboardEvent {
 
 extension BillboardEvent: Equatable {
     
+    /// Returns a Boolean value indicating whether two values are equal.
+    ///
+    /// Equality is the inverse of inequality. For any values `a` and `b`,
+    /// `a == b` implies that `a != b` is `false`.
+    ///
+    /// - Parameters:
+    ///   - lhs: A value to compare.
+    ///   - rhs: Another value to compare.
     public static func ==(lhs: BillboardEvent, rhs: BillboardEvent) -> Bool {
         return
             lhs.allDay                              == rhs.allDay                           &&

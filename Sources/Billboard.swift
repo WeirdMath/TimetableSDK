@@ -10,7 +10,10 @@ import Foundation
 import SwiftyJSON
 import DefaultStringConvertible
 
-public struct Billboard : JSONRepresentable {
+public final class Billboard : JSONRepresentable, TimetableEntity {
+    
+    /// The Timetable this entity was fetched from. `nil` if it was initialized from a custom JSON object.
+    public weak var timetable: Timetable?
     
     fileprivate static let dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
@@ -19,35 +22,20 @@ public struct Billboard : JSONRepresentable {
     }()
     
     public let alias: String
-    
     public let days: [BillboardDay]
-    
     public let earlierEvents: [BillboardEvent]
-    
     public let hasEventsToShow: Bool
-    
     public let isCurrentWeekReferenceAvailable: Bool
-    
     public let isNextWeekReferenceAvailable: Bool
-    
     public let isPreviousWeekReferenceAvailable: Bool
-    
     public let nextWeekMonday: Date
-    
     public let previousWeekMonday: Date
-    
     public let title: String
-    
     public let viewName: String
-    
     public let weekDisplayText: String
-    
     public let weekMonday: Date
-}
-
-extension Billboard {
     
-    internal init(from json: JSON) throws {
+    public init(from json: JSON) throws {
         alias                               = try map(json["Alias"])
         days                                = try map(json["Days"])
         earlierEvents                       = try map(json["EarlierEvents"])
@@ -65,10 +53,47 @@ extension Billboard {
         weekMonday                          = try map(json["WeekMonday"],
                                                       transformation: Billboard.dateFormatter.date(from:))
     }
+    
+    internal init(alias: String,
+                  days: [BillboardDay],
+                  earlierEvents: [BillboardEvent],
+                  hasEventsToShow: Bool,
+                  isCurrentWeekReferenceAvailable: Bool,
+                  isNextWeekReferenceAvailable: Bool,
+                  isPreviousWeekReferenceAvailable: Bool,
+                  nextWeekMonday: Date,
+                  previousWeekMonday: Date,
+                  title: String,
+                  viewName: String,
+                  weekDisplayText: String,
+                  weekMonday: Date) {
+        
+        self.alias                            = alias
+        self.days                             = days
+        self.earlierEvents                    = earlierEvents
+        self.hasEventsToShow                  = hasEventsToShow
+        self.isCurrentWeekReferenceAvailable  = isCurrentWeekReferenceAvailable
+        self.isNextWeekReferenceAvailable     = isNextWeekReferenceAvailable
+        self.isPreviousWeekReferenceAvailable = isPreviousWeekReferenceAvailable
+        self.nextWeekMonday                   = nextWeekMonday
+        self.previousWeekMonday               = previousWeekMonday
+        self.title                            = title
+        self.viewName                         = viewName
+        self.weekDisplayText                  = weekDisplayText
+        self.weekMonday                       = weekMonday
+    }
 }
 
 extension Billboard: Equatable {
     
+    /// Returns a Boolean value indicating whether two values are equal.
+    ///
+    /// Equality is the inverse of inequality. For any values `a` and `b`,
+    /// `a == b` implies that `a != b` is `false`.
+    ///
+    /// - Parameters:
+    ///   - lhs: A value to compare.
+    ///   - rhs: Another value to compare.
     public static func ==(lhs: Billboard, rhs: Billboard) -> Bool {
         return
             lhs.alias                               == rhs.alias                            &&
