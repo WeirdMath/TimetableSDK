@@ -157,4 +157,27 @@ class WWWFetchingTests: XCTestCase {
             XCTAssertNil(returnedError)
         }
     }
+    
+    func testFetchBillboardFromWWW() {
+        
+        // Given
+        XCTAssertNil(sut.billboard)
+        var returnedError: Error?
+        
+        // When
+        let exp = expectation(description: "fetching billboard")
+        sut.fetchBillboard { error in
+            
+            returnedError = error
+            exp.fulfill()
+        }
+        
+        // Then
+        waitForExpectations(timeout: 10) { _ in
+            
+            XCTAssertNotNil(self.sut.billboard)
+            XCTAssertNotNil(self.sut.billboard?.timetable)
+            XCTAssertNil(returnedError)
+        }
+    }
 }

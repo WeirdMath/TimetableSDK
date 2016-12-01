@@ -186,4 +186,38 @@ class LocalFetchingTests: XCTestCase {
         XCTAssertNotNil(receivedError)
         XCTAssertNil(studentGroup.currentWeek)
     }
+    
+    func testFetchBillboardLocallyFromCorrectJSONData() {
+        
+        // Given
+        let jsonData = getTestingResource(fromFile: "Billboard_events", ofType: "json")!
+        var completionCalled = false
+        
+        XCTAssertNil(sut.billboard)
+        
+        // When
+        sut.fetchBillboard(using: jsonData) { _ in
+            completionCalled = true
+        }
+        
+        // Then
+        XCTAssertTrue(completionCalled)
+        XCTAssertNotNil(sut.billboard)
+    }
+    
+    func testFetchBillboardLocallyFromIncorrectJSONData() {
+        
+        // Given
+        let jsonData = getTestingResource(fromFile: "MATH_studyprograms", ofType: "json")!
+        var receivedError: Error?
+        
+        // When
+        sut.fetchBillboard(using: jsonData) { error in
+            receivedError = error
+        }
+        
+        // Then
+        XCTAssertNotNil(receivedError)
+        XCTAssertNil(sut.billboard)
+    }
 }
