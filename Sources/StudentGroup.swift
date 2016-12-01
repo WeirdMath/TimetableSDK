@@ -27,7 +27,7 @@ public final class StudentGroup : JSONRepresentable, TimetableEntity {
     /// the `fetchCurrentWeek(for:using:dispatchQueue:completion:)` method of a `Timetable` instance
     /// in order to get the current week.
     public internal(set) var currentWeek: Week?
-    internal var currentWeekAPIQuery: String {
+    internal var weekAPIQuery: String {
         return "\(divisionAlias)/studentgroup/\(id)/events"
     }
     
@@ -69,24 +69,55 @@ public final class StudentGroup : JSONRepresentable, TimetableEntity {
     ///                     If `jsonData` is not `nil`, setting this
     ///                     makes no change as in this case fetching happens syncronously in the current queue.
     ///                     Default value is `nil`.
-    ///   - completion:     A closure that is called after a responce is received. In case of success, its
-    ///                     parameter is `nil`, otherwise — an error.
+    ///   - completion:     A closure that is called after a responce is received.
     public func fetchCurrentWeek(using jsonData: Data? = nil,
                                  dispatchQueue: DispatchQueue? = nil,
-                                 completion: @escaping (TimetableError?) -> Void) {
+                                 completion: @escaping (Result<Week>) -> Void) {
         
         fetch(using: jsonData,
-              apiQuery: currentWeekAPIQuery,
+              apiQuery: weekAPIQuery,
               dispatchQueue: dispatchQueue,
               timetable: timetable) { [weak self] (result: Result<Week>) in
                 
-                switch result {
-                case .success(let value):
+                if case .success(let value) = result {
+                    value.studentGroup = self
                     self?.currentWeek = value
-                    completion(nil)
-                case .failure(let error):
-                    completion(error as? TimetableError)
                 }
+                
+                completion(result)
+        }
+    }
+    
+    /// Fetches the week that begins with the specified `day` for the student group.
+    ///
+    /// - Parameters:
+    ///   - day             The day the week begins.
+    ///   - jsonData:       If this is not `nil`, then instead of networking uses provided json data as mock
+    ///                     data. May be useful for testing locally. Default value is `nil`.
+    ///   - dispatchQueue:  If this is `nil`, uses `DispatchQueue.main` as a queue to asyncronously
+    ///                     execute a completion handler on. Otherwise uses the specified queue.
+    ///                     If `jsonData` is not `nil`, setting this
+    ///                     makes no change as in this case fetching happens syncronously in the current queue.
+    ///                     Default value is `nil`.
+    ///   - completion:     A closure that is called after a responce is received.
+    public func fetchWeek(beginningWithDay day: Date,
+                          using jsonData: Data? = nil,
+                          dispatchQueue: DispatchQueue? = nil,
+                          completion: @escaping (Result<Week>) -> Void) {
+
+        let dayString = Week.dateForatter.string(from: day)
+        
+        fetch(using: jsonData,
+              apiQuery: weekAPIQuery,
+              parameters: ["weekMonday" : dayString],
+              dispatchQueue: dispatchQueue,
+              timetable: timetable) { [weak self] (result: Result<Week>) in
+                
+                if case .success(let value) = result {
+                    value.studentGroup = self
+                }
+                
+                completion(result)
         }
     }
 }
@@ -112,4 +143,5 @@ extension StudentGroup: Equatable {
     }
 }
 
-extension StudentGroup: CustomStringConvertible {}
+// FIXME: https://github.com/jessesquires/DefaultStringConvertible/issues/9
+// extension StudentGroup: CustomStringConvertible {}

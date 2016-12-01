@@ -9,6 +9,7 @@
 import Foundation
 import SwiftyJSON
 
+/// Some activity described in a `Billboard`.
 public struct BillboardEvent : JSONRepresentable, TimetableEntity {
     
     /// The Timetable this entity was fetched from. `nil` if it was initialized from a custom JSON object.

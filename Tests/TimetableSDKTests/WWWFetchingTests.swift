@@ -8,6 +8,7 @@
 
 import XCTest
 import Foundation
+import Dispatch
 import DefaultStringConvertible
 @testable import TimetableSDK
 
@@ -30,15 +31,17 @@ class WWWFetchingTests: XCTestCase {
         
         // Given
         XCTAssertNil(sut.divisions)
-        let expectedError = TimetableError.networkingError(NSError())
-        var returnedError: TimetableError?
+        var returnedError: Error?
         
         // When
         let exp = expectation(description: "catching networking error")
         sut.baseURL = URL(string: "http://example.com")! // Set the wrong base URL
-        sut.fetchDivisions { error in
+        sut.fetchDivisions { result in
             
-            returnedError = error
+            if case .failure(let error) = result {
+                returnedError = error
+            }
+            
             exp.fulfill()
         }
         
@@ -46,7 +49,7 @@ class WWWFetchingTests: XCTestCase {
         waitForExpectations(timeout: 10) { _ in
             
             XCTAssertNil(self.sut.divisions)
-            XCTAssertEqual(expectedError, returnedError)
+            XCTAssertNotNil(returnedError)
         }
     }
 
@@ -58,9 +61,12 @@ class WWWFetchingTests: XCTestCase {
         
         // When
         let exp = expectation(description: "fetching divisions")
-        sut.fetchDivisions { error in
+        sut.fetchDivisions { result in
             
-            returnedError = error
+            if case .failure(let error) = result {
+                returnedError = error
+            }
+            
             exp.fulfill()
         }
         
@@ -85,9 +91,12 @@ class WWWFetchingTests: XCTestCase {
         
         // When
         let exp = expectation(description: "fetching study levels")
-        division.fetchStudyLevels { error in
+        division.fetchStudyLevels { result in
             
-            returnedError = error
+            if case .failure(let error) = result {
+                returnedError = error
+            }
+            
             exp.fulfill()
         }
         
@@ -114,9 +123,12 @@ class WWWFetchingTests: XCTestCase {
         
         // When
         let exp = expectation(description: "fetching student groups")
-        admissionYear.fetchStudentGroups { error in
+        admissionYear.fetchStudentGroups { result in
             
-            returnedError = error
+            if case .failure(let error) = result {
+                returnedError = error
+            }
+            
             exp.fulfill()
         }
         
@@ -143,9 +155,12 @@ class WWWFetchingTests: XCTestCase {
         
         // When
         let exp = expectation(description: "fetching current week")
-        studentGroup.fetchCurrentWeek { error in
+        studentGroup.fetchCurrentWeek { result in
             
-            returnedError = error
+            if case .failure(let error) = result {
+                returnedError = error
+            }
+            
             exp.fulfill()
         }
         
@@ -158,6 +173,89 @@ class WWWFetchingTests: XCTestCase {
         }
     }
     
+    func testFetchArbitraryWeekFromWWW() {
+        
+        // Given
+        let studentGroup = StudentGroup(id: 10014,
+                                        name: "351 (14.Б10-мм)",
+                                        studyForm: "очная",
+                                        profiles: "",
+                                        divisionAlias: "MATH")
+        studentGroup.timetable = sut
+        var returnedWeek: Week?
+        let day = Date().addingTimeInterval(60*60*24*7)
+        
+        // When
+        let exp = expectation(description: "fetching arbitrary week")
+        studentGroup.fetchWeek(beginningWithDay: day) { result in
+            if case .success(let value) = result {
+                returnedWeek = value
+            }
+            
+            exp.fulfill()
+        }
+        
+        // Then
+        waitForExpectations(timeout: 10) { _ in
+            
+            XCTAssertNotNil(returnedWeek)
+        }
+    }
+    
+    func testFetchNextPreviousWeekFromWWW() {
+        
+        // Given
+        let studentGroup = StudentGroup(id: 10014,
+                                        name: "351 (14.Б10-мм)",
+                                        studyForm: "очная",
+                                        profiles: "",
+                                        divisionAlias: "MATH")
+        studentGroup.timetable = sut
+        var current: Week?
+        var next: Week?
+        var previous: Week?
+        
+        // When
+        let exp = expectation(description: "fetching next week")
+
+        
+        studentGroup.fetchCurrentWeek(dispatchQueue: .global(qos: .utility)) { result in
+            
+            if case .success(let _current) = result {
+                
+                current = _current
+                
+                _current.fetchNextWeek(dispatchQueue: .global(qos: .utility)) { result in
+                    
+                    if case .success(let _next) = result {
+                        next = _next
+                    }
+                    
+                    _current.fetchPreviousWeek(dispatchQueue: .global(qos: .utility)) { result in
+                        
+                        if case .success(let _previous) = result {
+                            previous = _previous
+                        }
+                        
+                        exp.fulfill()
+                    }
+                }
+            }
+        }
+        
+        // Then
+        waitForExpectations(timeout: 10) { _ in
+            
+            XCTAssertNotNil(current)
+            XCTAssertNotNil(next)
+            XCTAssertNotNil(previous)
+            XCTAssertEqual(current?.next, next)
+            XCTAssertEqual(next?.previous, current)
+            XCTAssertEqual(previous?.next, current)
+            XCTAssertEqual(previous, current?.previous)
+        }
+    }
+    
     func testFetchBillboardFromWWW() {
         
         // Given
@@ -166,9 +264,12 @@ class WWWFetchingTests: XCTestCase {
         
         // When
         let exp = expectation(description: "fetching billboard")
-        sut.fetchBillboard { error in
+        sut.fetchBillboard { result in
             
-            returnedError = error
+            if case .failure(let error) = result {
+                returnedError = error
+            }
+            
             exp.fulfill()
         }
         

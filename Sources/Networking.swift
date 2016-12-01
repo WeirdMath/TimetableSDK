@@ -1,5 +1,5 @@
 //
-//  APIQuerying.swift
+//  Networking.swift
 //  TimetableSDK
 //
 //  Created by Sergej Jaskiewicz on 24.11.2016.
@@ -12,6 +12,7 @@ import SwiftyJSON
 
 private func _fetch<Entity>(using jsonData: Data?,
                     apiQuery: String,
+                    parameters: Parameters?,
                     dispatchQueue: DispatchQueue?,
                     timetable: Timetable?,
                     map: @escaping (JSON) throws -> Entity,
@@ -31,7 +32,7 @@ private func _fetch<Entity>(using jsonData: Data?,
         }
         
         Alamofire
-            .request(baseURL.appendingPathComponent(apiQuery))
+            .request(baseURL.appendingPathComponent(apiQuery), parameters: parameters)
             .validate(statusCode: 200 ..< 300)
             .validate(contentType: ["application/json"])
             .responseData(queue: dispatchQueue) { response in
@@ -65,12 +66,14 @@ private func _fetch<Entity>(using jsonData: Data?,
 internal func fetch<Entity : JSONRepresentable & TimetableEntity>(
     using jsonData: Data?,
     apiQuery: String,
+    parameters: Parameters? = nil,
     dispatchQueue: DispatchQueue?,
     timetable: Timetable?,
     completion: @escaping (Result<Entity>) -> Void) {
     
     _fetch(using: jsonData,
            apiQuery: apiQuery,
+           parameters: parameters,
            dispatchQueue: dispatchQueue,
            timetable: timetable,
            map: map) { (result: Result<Entity>) in
@@ -101,12 +104,14 @@ internal func fetch<Entity : JSONRepresentable & TimetableEntity>(
 internal func fetch<Entity : JSONRepresentable & TimetableEntity>(
     using jsonData: Data?,
     apiQuery: String,
+    parameters: Parameters? = nil,
     dispatchQueue: DispatchQueue?,
     timetable: Timetable?,
     completion: @escaping (Result<[Entity]>) -> Void) {
     
     _fetch(using: jsonData,
            apiQuery: apiQuery,
+           parameters: parameters,
            dispatchQueue: dispatchQueue,
            timetable: timetable,
            map: map) { (result: Result<[Entity]>) in

@@ -9,6 +9,7 @@
 import Foundation
 import SwiftyJSON
 
+/// The information about a day in a `Billboard`.
 public final class BillboardDay : JSONRepresentable, TimetableEntity {
     
     /// The Timetable this entity was fetched from. `nil` if it was initialized from a custom JSON object.

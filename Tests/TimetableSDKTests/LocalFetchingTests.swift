@@ -50,8 +50,10 @@ class LocalFetchingTests: XCTestCase {
         var receivedError: Error?
         
         // When
-        sut.fetchDivisions(using: jsonData) { error in
-            receivedError = error
+        sut.fetchDivisions(using: jsonData) { result in
+            if case .failure(let error) = result {
+                receivedError = error
+            }
         }
         
         // Then
@@ -90,8 +92,10 @@ class LocalFetchingTests: XCTestCase {
         var receivedError: Error?
         
         // When
-        division.fetchStudyLevels(using: jsonData) { error in
-            receivedError = error
+        division.fetchStudyLevels(using: jsonData) { result in
+            if case .failure(let error) = result {
+                receivedError = error
+            }
         }
         
         // Then
@@ -134,8 +138,10 @@ class LocalFetchingTests: XCTestCase {
         var receivedError: Error?
 
         // When
-        admissionYear.fetchStudentGroups(using: jsonData) { error in
-            receivedError = error
+        admissionYear.fetchStudentGroups(using: jsonData) { result in
+            if case .failure(let error) = result {
+                receivedError = error
+            }
         }
         
         // Then
@@ -166,7 +172,7 @@ class LocalFetchingTests: XCTestCase {
         XCTAssertTrue(completionCalled)
     }
     
-    func testFetchCurrentWeekLocallyFromInorrectJSONData() {
+    func testFetchCurrentWeekLocallyFromIncorrectJSONData() {
         
         // Given
         let incorrectJSONData = getTestingResource(fromFile: "divisions", ofType: "json")!
@@ -178,15 +184,17 @@ class LocalFetchingTests: XCTestCase {
         var receivedError: Error?
 
         // When
-        studentGroup.fetchCurrentWeek(using: incorrectJSONData) { error in
-            receivedError = error
+        studentGroup.fetchCurrentWeek(using: incorrectJSONData) { result in
+            if case .failure(let error) = result {
+                receivedError = error
+            }
         }
         
         // Then
         XCTAssertNotNil(receivedError)
         XCTAssertNil(studentGroup.currentWeek)
     }
-    
+        
     func testFetchBillboardLocallyFromCorrectJSONData() {
         
         // Given
@@ -212,8 +220,10 @@ class LocalFetchingTests: XCTestCase {
         var receivedError: Error?
         
         // When
-        sut.fetchBillboard(using: jsonData) { error in
-            receivedError = error
+        sut.fetchBillboard(using: jsonData) { result in
+            if case .failure(let error) = result {
+                receivedError = error
+            }
         }
         
         // Then

@@ -149,8 +149,8 @@ class JSONTests: XCTestCase {
         dateFomatter.dateFormat = "yyyy-MM-dd"
         let timeFormatter = DateFormatter()
         timeFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
-        let expectedWeek = Week(previousWeekMonday: dateFomatter.date(from: "2016-11-14")!,
-                                nextWeekMonday: dateFomatter.date(from: "2016-11-28")!,
+        let expectedWeek = Week(previousWeekFirstDay: dateFomatter.date(from: "2016-11-14")!,
+                                nextWeekFirstDay: dateFomatter.date(from: "2016-11-28")!,
                                 isPreviousWeekReferenceAvailable: true,
                                 isNextWeekReferenceAvailable: true,
                                 isCurrentWeekReferenceAvailable: false,
@@ -202,7 +202,7 @@ class JSONTests: XCTestCase {
                                         ])
             ],
                                 viewName: "Primary",
-                                monday: dateFomatter.date(from: "2016-11-21")!,
+                                firstDay: dateFomatter.date(from: "2016-11-21")!,
                                 studentGroupID: 10014,
                                 studentGroupDisplayName: "Группа 351 (14.Б10-мм)",
                                 timetableDisplayName: "Все занятия")

@@ -20,6 +20,10 @@ public enum TimetableError: Error {
     /// Returned when a `Timetable` object is deallocated prior to fetching.
     case timetableIsDeallocated
     
+    /// Returned when attempting to fetch a next or previous week with the current week's
+    /// `studentGroup` property is not set.
+    case unknownStudentGroup
+    
     private static func incorrectJSONDescription<T>(for type: T.Type) -> String {
         return "Could not convert JSON to \(type)"
     }
