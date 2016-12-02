@@ -136,17 +136,19 @@ class LocalFetchingTests: XCTestCase {
                                           name: "2016",
                                           number: 2016)
         var receivedError: Error?
-
+        
         // When
-        admissionYear.fetchStudentGroups(using: jsonData) { result in
-            if case .failure(let error) = result {
-                receivedError = error
-            }
+        let exp = expectation(description: "testFetchStudentGroupsLocallyFromIncorrectJSONData")
+        admissionYear.fetchStudentGroups(using: jsonData).catch { error in
+            receivedError = error
+            exp.fulfill()
         }
         
         // Then
-        XCTAssertNotNil(receivedError)
-        XCTAssertNil(admissionYear.studentGroups)
+        waitForExpectations(timeout: 1) { _ in
+            XCTAssertNotNil(receivedError)
+            XCTAssertNil(admissionYear.studentGroups)
+        }
     }
     
     func testFetchCurrentWeekLocallyFromCorrectJSONData() {
@@ -182,7 +184,7 @@ class LocalFetchingTests: XCTestCase {
                                         profiles: "",
                                         divisionAlias: "MATH")
         var receivedError: Error?
-
+        
         // When
         studentGroup.fetchCurrentWeek(using: incorrectJSONData) { result in
             if case .failure(let error) = result {
@@ -194,7 +196,7 @@ class LocalFetchingTests: XCTestCase {
         XCTAssertNotNil(receivedError)
         XCTAssertNil(studentGroup.currentWeek)
     }
-        
+    
     func testFetchBillboardLocallyFromCorrectJSONData() {
         
         // Given

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import PromiseKit
 import enum Alamofire.Result
 import SwiftyJSON
 import DefaultStringConvertible
@@ -88,6 +89,15 @@ public final class StudentGroup : JSONRepresentable, TimetableEntity {
         }
     }
     
+    /// Fetches the current week schedule for the student group.
+    ///
+    /// - Parameter jsonData: If this is not `nil`, then instead of networking uses provided json data as mock
+    ///                     data. May be useful for testing locally. Default value is `nil`.
+    /// - Returns: A promise.
+    public func fetchCurrentWeek(using jsonData: Data? = nil) -> Promise<Week> {
+        return makePromise({ fetchCurrentWeek(using: jsonData, completion: $0) })
+    }
+    
     /// Fetches the week that begins with the specified `day` for the student group.
     ///
     /// - Parameters:
@@ -119,6 +129,17 @@ public final class StudentGroup : JSONRepresentable, TimetableEntity {
                 
                 completion(result)
         }
+    }
+    
+    /// Fetches the week that begins with the specified `day` for the student group.
+    ///
+    /// - Parameters:
+    ///   - day:        The day the week begins.
+    ///   - jsonData:   If this is not `nil`, then instead of networking uses provided json data as mock
+    ///                     data. May be useful for testing locally. Default value is `nil`.
+    /// - Returns:      A promise.
+    public func fetchWeek(beginningWithDay day: Date, using jsonData: Data? = nil) -> Promise<Week> {
+        return makePromise({ fetchWeek(beginningWithDay: day, using: jsonData, completion: $0) })
     }
 }
 

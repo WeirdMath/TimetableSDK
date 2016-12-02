@@ -8,6 +8,7 @@
 
 import Foundation
 import SwiftyJSON
+import PromiseKit
 import enum Alamofire.Result
 import DefaultStringConvertible
 
@@ -136,6 +137,15 @@ public final class Week : JSONRepresentable, TimetableEntity {
     
     /// Fetches the week that follows `self`.
     ///
+    /// - Parameter jsonData:   If this is not `nil`, then instead of networking uses provided json data as mock
+    ///                         data. May be useful for testing locally. Default value is `nil`.
+    /// - Returns:              A promise.
+    public func fetchNextWeek(using jsonData: Data? = nil) -> Promise<Week> {
+        return makePromise({ fetchNextWeek(using: jsonData, completion: $0) })
+    }
+    
+    /// Fetches the week that precedes `self`.
+    ///
     /// - Parameters:
     ///   - jsonData:       If this is not `nil`, then instead of networking uses provided json data as mock
     ///                     data. May be useful for testing locally. Default value is `nil`.
@@ -169,6 +179,15 @@ public final class Week : JSONRepresentable, TimetableEntity {
                 
                 completion(result)
         }
+    }
+    
+    /// Fetches the week that precedes `self`.
+    ///
+    /// - Parameter jsonData:   If this is not `nil`, then instead of networking uses provided json data as mock
+    ///                         data. May be useful for testing locally. Default value is `nil`.
+    /// - Returns:              A promise.
+    public func fetchPreviousWeek(using jsonData: Data? = nil) -> Promise<Week> {
+        return makePromise({ fetchPreviousWeek(using: jsonData, completion: $0) })
     }
     
     private var weekAPIQuery: String? {

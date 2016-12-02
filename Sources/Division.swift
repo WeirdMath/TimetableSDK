@@ -8,6 +8,7 @@
 
 import Foundation
 import SwiftyJSON
+import PromiseKit
 import enum Alamofire.Result
 import DefaultStringConvertible
 
@@ -77,6 +78,16 @@ public final class Division : JSONRepresentable, TimetableEntity {
                 
                 completion(result)
         }
+    }
+    
+    /// Fetches the study levels available for the division.
+    ///
+    /// - Parameter jsonData: If this is not `nil`, then instead of networking uses provided json data as mock
+    ///                     data. May be useful for testing locally. Default value is `nil`.
+    /// - Returns: A promise.
+    public func fetchStudyLevels(using jsonData: Data? = nil) -> Promise<[StudyLevel]> {
+        
+        return makePromise({ fetchStudyLevels(using: jsonData, completion: $0) })
     }
 }
 

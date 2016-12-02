@@ -8,6 +8,7 @@
 
 import Foundation
 import SwiftyJSON
+import PromiseKit
 import enum Alamofire.Result
 
 /// A pivot point for fetching data from the Timetable service.
@@ -76,6 +77,16 @@ public final class Timetable {
         }
     }
     
+    /// Fetches the divisions of the University. In case of success saves the divisions into the
+    /// `divisions` property.
+    ///
+    /// - Parameter jsonData:   If this is not `nil`, then instead of networking uses provided json data as mock
+    ///                         data. May be useful for testing locally. Default value is `nil`.
+    /// - Returns:              A promise.
+    public func fetchDivisions(using jsonData: Data? = nil) -> Promise<[Division]> {
+        return makePromise({ fetchDivisions(using: jsonData, completion: $0) })
+    }
+    
     /// Fetches the billboard. In case of success saves the billboard into the
     /// `billboard` property.
     ///
@@ -104,5 +115,15 @@ public final class Timetable {
                 
                 completion(result)
         }
+    }
+    
+    /// Fetches the billboard. In case of success saves the billboard into the
+    /// `billboard` property.
+    ///
+    /// - Parameter jsonData:   If this is not `nil`, then instead of networking uses provided json data as mock
+    ///                         data. May be useful for testing locally. Default value is `nil`.
+    /// - Returns:              A promise.
+    public func fetchBillboard(using jsonData: Data? = nil) -> Promise<Billboard> {
+        return makePromise({ fetchBillboard(using: jsonData, completion: $0) })
     }
 }

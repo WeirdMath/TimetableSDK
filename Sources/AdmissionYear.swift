@@ -10,6 +10,7 @@ import Foundation
 import enum Alamofire.Result
 import SwiftyJSON
 import DefaultStringConvertible
+import PromiseKit
 
 /// The information about an admission year for a particular `Specialization`.
 public final class AdmissionYear : JSONRepresentable, TimetableEntity {
@@ -86,6 +87,16 @@ public final class AdmissionYear : JSONRepresentable, TimetableEntity {
                 
                 completion(result)
         }
+    }
+    
+    /// Fetches the sudent groups formed in the admission year.
+    ///
+    /// - Parameters:
+    ///   - jsonData:       If this is not `nil`, then instead of networking uses provided json data as mock
+    ///                     data. May be useful for testing locally. Default value is `nil`.
+    /// - Returns:          A promise.
+    public func fetchStudentGroups(using jsonData: Data? = nil) -> Promise<[StudentGroup]> {
+        return makePromise({ fetchStudentGroups(using: jsonData, completion: $0) })
     }
 }
 
