@@ -235,14 +235,14 @@ class WWWFetchingTests: XCTestCase {
         }
     }
     
-    func testFetchBillboardFromWWW() {
+    func testFetchBillboardForCurrentWeekFromWWW() {
         
         // Given
         XCTAssertNil(sut.billboard)
         var returnedError: Error?
         
         // When
-        let exp = expectation(description: "fetching billboard")
+        let exp = expectation(description: "fetching billboard for current week")
         sut.fetchBillboard().then { _ in
             exp.fulfill()
         }.catch { error in
@@ -255,6 +255,25 @@ class WWWFetchingTests: XCTestCase {
             XCTAssertNotNil(self.sut.billboard)
             XCTAssertNotNil(self.sut.billboard?.timetable)
             XCTAssertNil(returnedError)
+        }
+    }
+    
+    func testFetchBillboardForArbitraryWeekFromWWW() {
+        
+        // Given
+        var returnedBillblard: Billboard?
+        let day = Date().addingTimeInterval(-60*60*24*7)
+        
+        // When
+        let exp = expectation(description: "fetching billboard for arbitrary week")
+        _ = sut.fetchBillboard(from: day).then { billboard in
+            returnedBillblard = billboard
+            exp.fulfill()
+        }
+        
+        // Then
+        waitForExpectations(timeout: 10) { _ in
+            XCTAssertNotNil(returnedBillblard)
         }
     }
 }

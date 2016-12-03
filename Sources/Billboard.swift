@@ -16,7 +16,7 @@ public final class Billboard : JSONRepresentable, TimetableEntity {
     /// The Timetable this entity was fetched from. `nil` if it was initialized from a custom JSON object.
     public weak var timetable: Timetable?
     
-    fileprivate static let dateFormatter: DateFormatter = {
+    internal static let dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         return dateFormatter
