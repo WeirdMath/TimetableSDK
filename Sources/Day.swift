@@ -1,5 +1,5 @@
 //
-//  StudyDay.swift
+//  Day.swift
 //  TimetableSDK
 //
 //  Created by Sergej Jaskiewicz on 22.11.2016.
@@ -11,7 +11,7 @@ import SwiftyJSON
 import DefaultStringConvertible
 
 /// The information about a day in a `Week`.
-public final class StudyDay : JSONRepresentable, TimetableEntity {
+public final class Day : JSONRepresentable, TimetableEntity {
     
     /// The Timetable this entity was fetched from. `nil` if it was initialized from a custom JSON object.
     public weak var timetable: Timetable?
@@ -24,9 +24,9 @@ public final class StudyDay : JSONRepresentable, TimetableEntity {
     
     public let date: Date
     public let name: String
-    public let events: [StudyEvent]
+    public let events: [Event]
     
-    internal init(date: Date, name: String, events: [StudyEvent]) {
+    internal init(date: Date, name: String, events: [Event]) {
         self.date   = date
         self.name   = name
         self.events = events
@@ -38,16 +38,22 @@ public final class StudyDay : JSONRepresentable, TimetableEntity {
     /// - Throws: `TimetableError.incorrectJSONFormat`
     public init(from json: JSON) throws {
         do {
-            date    = try map(json["Day"], transformation: StudyDay.dateFormatter.date(from:))
+            date    = try map(json["Day"], transformation: Day.dateFormatter.date(from:))
             name    = try map(json["DayString"])
-            events  = try map(json["DayStudyEvents"])
+            
+            // In different parts of the API days are serialized similarly, but have different json keys.
+            do {
+                events = try map(json["DayStudyEvents"])
+            } catch {
+                events = try map(json["DayEvents"])
+            }
         } catch {
-            throw TimetableError.incorrectJSON(json, whenConverting: StudyDay.self)
+            throw TimetableError.incorrectJSON(json, whenConverting: Day.self)
         }
     }
 }
 
-extension StudyDay: Equatable {
+extension Day: Equatable {
     
     /// Returns a Boolean value indicating whether two values are equal.
     ///
@@ -57,7 +63,7 @@ extension StudyDay: Equatable {
     /// - Parameters:
     ///   - lhs: A value to compare.
     ///   - rhs: Another value to compare.
-    public static func ==(lhs: StudyDay, rhs: StudyDay) -> Bool{
+    public static func ==(lhs: Day, rhs: Day) -> Bool{
         return
             lhs.date    == rhs.date     &&
             lhs.name    == rhs.name     &&
@@ -65,4 +71,4 @@ extension StudyDay: Equatable {
     }
 }
 
-extension StudyDay: CustomStringConvertible {}
+extension Day: CustomStringConvertible {}

@@ -39,7 +39,7 @@ public final class Week : JSONRepresentable, TimetableEntity {
     public let isNextWeekReferenceAvailable: Bool
     public let isCurrentWeekReferenceAvailable: Bool
     public let weekDisplayText: String
-    public let days: [StudyDay]
+    public let days: [Day]
     public let viewName: String
     public let firstDay: Date
     public let studentGroupID: Int
@@ -52,7 +52,7 @@ public final class Week : JSONRepresentable, TimetableEntity {
                   isNextWeekReferenceAvailable: Bool,
                   isCurrentWeekReferenceAvailable: Bool,
                   weekDisplayText: String,
-                  days: [StudyDay],
+                  days: [Day],
                   viewName: String,
                   firstDay: Date,
                   studentGroupID: Int,

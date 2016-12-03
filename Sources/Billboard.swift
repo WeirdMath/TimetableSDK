@@ -23,8 +23,8 @@ public final class Billboard : JSONRepresentable, TimetableEntity {
     }()
     
     public let alias: String
-    public let days: [BillboardDay]
-    public let earlierEvents: [BillboardEvent]
+    public let days: [Day]
+    public let earlierEvents: [Event]
     public let hasEventsToShow: Bool
     public let isCurrentWeekReferenceAvailable: Bool
     public let isNextWeekReferenceAvailable: Bool
@@ -64,8 +64,8 @@ public final class Billboard : JSONRepresentable, TimetableEntity {
     }
     
     internal init(alias: String,
-                  days: [BillboardDay],
-                  earlierEvents: [BillboardEvent],
+                  days: [Day],
+                  earlierEvents: [Event],
                   hasEventsToShow: Bool,
                   isCurrentWeekReferenceAvailable: Bool,
                   isNextWeekReferenceAvailable: Bool,

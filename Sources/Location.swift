@@ -92,11 +92,10 @@ extension Location: Equatable {
     ///   - rhs: Another value to compare.
     public static func ==(lhs: Location, rhs: Location) -> Bool {
         
-        return lhs.educatorsDisplayText     == rhs.educatorsDisplayText                     &&
+        return
+            lhs.educatorsDisplayText        == rhs.educatorsDisplayText                     &&
             lhs.hasEducators                == rhs.hasEducators                             &&
-            lhs.educatorIDs == nil && rhs.educatorIDs == nil ||
-            (lhs.educatorIDs != nil && rhs.educatorIDs != nil &&
-            zip(lhs.educatorIDs!, rhs.educatorIDs!).reduce(true, { $0 && $1.0 == $1.1 }))   &&
+            lhs.educatorIDs                 == rhs.educatorIDs                              &&
             lhs.isEmpty                     == rhs.isEmpty                                  &&
             lhs.displayName                 == rhs.displayName                              &&
             lhs.hasGeographicCoordinates    == rhs.hasGeographicCoordinates                 &&
