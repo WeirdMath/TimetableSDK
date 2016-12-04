@@ -22,11 +22,13 @@ public final class Day : JSONRepresentable, TimetableEntity {
         return dateFormatter
     }()
     
-    public let date: Date
+    public let number: Int?
+    public let date: Date?
     public let name: String
     public let events: [Event]
     
-    internal init(date: Date, name: String, events: [Event]) {
+    internal init(number: Int?, date: Date?, name: String, events: [Event]) {
+        self.number = number
         self.date   = date
         self.name   = name
         self.events = events
@@ -37,11 +39,19 @@ public final class Day : JSONRepresentable, TimetableEntity {
     /// - Parameter json: The JSON representation of the entity.
     /// - Throws: `TimetableError.incorrectJSONFormat`
     public init(from json: JSON) throws {
+        
+        // In different parts of the API days are serialized similarly, but have different json keys.
         do {
-            date    = try map(json["Day"], transformation: Day.dateFormatter.date(from:))
+            do {
+                date   = try map(json["Day"], transformation: Day.dateFormatter.date(from:)) as Date
+                number = nil
+            } catch {
+                number = try map(json["Day"]) as Int
+                date = nil
+            }
+            
             name    = try map(json["DayString"])
             
-            // In different parts of the API days are serialized similarly, but have different json keys.
             do {
                 events = try map(json["DayStudyEvents"])
             } catch {
@@ -65,6 +75,7 @@ extension Day: Equatable {
     ///   - rhs: Another value to compare.
     public static func ==(lhs: Day, rhs: Day) -> Bool{
         return
+            lhs.number  == rhs.number   &&
             lhs.date    == rhs.date     &&
             lhs.name    == rhs.name     &&
             lhs.events  == rhs.events

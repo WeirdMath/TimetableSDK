@@ -156,12 +156,15 @@ class JSONTests: XCTestCase {
                                 isCurrentWeekReferenceAvailable: false,
                                 weekDisplayText: "21 ноября – 27 ноября",
                                 days: [
-                                    Day(date: timeFormatter.date(from: "2016-11-21T00:00:00")!,
+                                    Day(number: nil,
+                                        date: timeFormatter.date(from: "2016-11-21T00:00:00")!,
                                         name: "понедельник, 21 ноября",
                                         events: [
                                             Event(allDay: false,
                                                   contingentUnitsDisplayText: nil,
+                                                  contingentUnitNames: nil,
                                                   dateWithTimeIntervalString: "21 ноября 9:30-11:05",
+                                                  dates: nil,
                                                   displayDateAndTimeIntervalString: "21 ноября 9:30-11:05",
                                                   divisionAlias: nil,
                                                   educatorsDisplayText: "Евард М. Е., доцент",
@@ -169,20 +172,20 @@ class JSONTests: XCTestCase {
                                                   fromDate: nil,
                                                   fromDateString: nil,
                                                   fullDateWithTimeIntervalString: nil,
-                                                  hasAgenda: false,
+                                                  hasAgenda: nil,
                                                   hasEducators: true,
                                                   hasTheSameTimeAsPreviousItem: false,
                                                   id: nil,
                                                   isCancelled: false,
-                                                  isEmpty: false,
-                                                  isRecurrence: false,
-                                                  isShowImmediateHidden: false,
+                                                  isEmpty: nil,
+                                                  isRecurrence: nil,
+                                                  isShowImmediateHidden: nil,
                                                   isStudy: false,
                                                   location: nil,
                                                   locationsDisplayText: "Университетский просп., д. 28, 1510",
                                                   orderIndex: nil,
-                                                  showImmediate: false,
-                                                  showYear: false,
+                                                  showImmediate: nil,
+                                                  showYear: nil,
                                                   start: timeFormatter.date(from: "2016-11-21T09:30:00")!,
                                                   subject: "Механика деформируемого твердого тела, " +
                                                 "практическое занятие, факультатив",
@@ -240,14 +243,17 @@ class JSONTests: XCTestCase {
         let expectedExtracurricular =
             Extracurricular(alias: "Billboard",
                             days: [
-                                Day(date: timeFormatter.date(from: "2016-11-28T00:00:00")!,
+                                Day(number: nil,
+                                    date: timeFormatter.date(from: "2016-11-28T00:00:00")!,
                                     name: "понедельник, 28 ноября",
                                     events: [])
                 ],
                             earlierEvents: [
                                 Event(allDay: true,
                                       contingentUnitsDisplayText: "",
+                                      contingentUnitNames: nil,
                                       dateWithTimeIntervalString: "15.09 - 30.03",
+                                      dates: nil,
                                       displayDateAndTimeIntervalString: "15.09 - 30.03",
                                       divisionAlias: "Billboard",
                                       educatorsDisplayText: "",
@@ -291,10 +297,10 @@ class JSONTests: XCTestCase {
                                       educatorIDs: nil,
                                       contingentUnitCourse: nil,
                                       contingentUnitDivision: nil,
-                                      isAssigned: false,
-                                      timeWasChanged: false,
-                                      locationsWereChanged: false,
-                                      educatorsWereReassigned: false)
+                                      isAssigned: nil,
+                                      timeWasChanged: nil,
+                                      locationsWereChanged: nil,
+                                      educatorsWereReassigned: nil)
                 ],
                             hasEventsToShow: true,
                             isCurrentWeekReferenceAvailable: false,
@@ -330,7 +336,9 @@ class JSONTests: XCTestCase {
                                       events: [
                                         Event(allDay: false,
                                               contingentUnitsDisplayText: "",
+                                              contingentUnitNames: nil,
                                               dateWithTimeIntervalString: "16.11 9:00-11:00",
+                                              dates: nil,
                                               displayDateAndTimeIntervalString: "16.11 9:00-11:00",
                                               divisionAlias: "Science",
                                               educatorsDisplayText: "",
@@ -374,10 +382,10 @@ class JSONTests: XCTestCase {
                                               educatorIDs: nil,
                                               contingentUnitCourse: nil,
                                               contingentUnitDivision: nil,
-                                              isAssigned: false,
-                                              timeWasChanged: false,
-                                              locationsWereChanged: false,
-                                              educatorsWereReassigned: false)
+                                              isAssigned: nil,
+                                              timeWasChanged: nil,
+                                              locationsWereChanged: nil,
+                                              educatorsWereReassigned: nil)
                             ])
                 ],
                     hasEventsToShow: true,
@@ -417,5 +425,106 @@ class JSONTests: XCTestCase {
         
         // Then
         XCTAssertEqual(expectedEducator, returnedEducator)
+    }
+    
+    func testInitializeEducatorScheduleFromJSON() {
+        
+        // Given
+        let jsonData = getTestingResource(fromFile: "Educators_2888_events", ofType: "json")!
+        let json = JSON(data: jsonData)
+        let dateFomatter = DateFormatter()
+        dateFomatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        let timeFormatter = DateFormatter()
+        timeFormatter.dateFormat = "HH:mm:ss"
+        let expectedSchedule = EducatorSchedule(autumnTermLinkAvailable: false,
+                                                dateRangeDisplayText: "1 августа 2016 - 1 февраля 2017",
+                                                educatorDisplayText: "Романовский И. В.",
+                                                educatorEventsDays: [
+                                                    Day(number: 1,
+                                                        date: nil,
+                                                        name: "Понедельник",
+                                                        events: [
+                                                            Event(allDay: nil,
+                                                                  contingentUnitsDisplayText: nil,
+                                                                  contingentUnitNames: [
+                                                                    ("102 (16.Б02.0-мм)",
+                                                                     "Математико-механический факультет, 1 курс")
+                                                                ],
+                                                                  dateWithTimeIntervalString: nil,
+                                                                  dates: ["16.1"],
+                                                                  displayDateAndTimeIntervalString: nil,
+                                                                  divisionAlias: nil,
+                                                                  educatorsDisplayText:
+                                                                "Романовский И. В., профессор",
+                                                                  end: timeFormatter.date(from: "14:00:00")!,
+                                                                  fromDate: nil,
+                                                                  fromDateString: nil,
+                                                                  fullDateWithTimeIntervalString: nil,
+                                                                  hasAgenda: nil,
+                                                                  hasEducators: nil,
+                                                                  hasTheSameTimeAsPreviousItem: nil,
+                                                                  id: nil,
+                                                                  isCancelled: false,
+                                                                  isEmpty: nil,
+                                                                  isRecurrence: nil,
+                                                                  isShowImmediateHidden: nil,
+                                                                  isStudy: nil,
+                                                                  location: nil,
+                                                                  locationsDisplayText: nil,
+                                                                  orderIndex: nil,
+                                                                  showImmediate: nil,
+                                                                  showYear: nil,
+                                                                  start: timeFormatter.date(from: "10:00:00")!,
+                                                                  subject: "Теоретическая информатика, экзамен",
+                                                                  subkindDisplayName: nil,
+                                                                  timeIntervalString: "10:00-14:00",
+                                                                  viewKind: nil,
+                                                                  withinTheSameDay: nil,
+                                                                  year: nil,
+                                                                  locations: [
+                                                                    Location(educatorsDisplayText:
+                                                                        "Романовский И. В., профессор",
+                                                                             hasEducators: true,
+                                                                             educatorIDs: [
+                                                                                (2888,
+                                                                                 "Романовский И. В., профессор")
+                                                                        ],
+                                                                             isEmpty: false,
+                                                                             displayName:
+                                                                        "В.О., 14 линия, д. 29, 34",
+                                                                             hasGeographicCoordinates: true,
+                                                                             latitude: 59.93863,
+                                                                             longitude: 30.270649,
+                                                                             latitudeValue: "59.93863",
+                                                                             longitudeValue: "30.270649")
+                                                                ],
+                                                                  kind: .attestation,
+                                                                  contingentUnitName: nil,
+                                                                  educatorIDs: [
+                                                                    (2888, "Романовский И. В., профессор")
+                                                                ],
+                                                                  contingentUnitCourse: nil,
+                                                                  contingentUnitDivision: nil,
+                                                                  isAssigned: nil,
+                                                                  timeWasChanged: nil,
+                                                                  locationsWereChanged: nil,
+                                                                  educatorsWereReassigned: nil)
+                                                        ])
+            ],
+                                                educatorLongDisplayText: "Романовский Иосиф Владимирович",
+                                                educatorID: 2888,
+                                                from: dateFomatter.date(from: "2016-08-01T00:00:00")!,
+                                                hasEvents: true,
+                                                isSpringTerm: false,
+                                                next: nil,
+                                                springTermLinkAvailable: true,
+                                                title: "Расписание преподавателя: Романовский Иосиф Владимирович",
+                                                to: dateFomatter.date(from: "2017-02-01T00:00:00")!)
+        
+        // When
+        let returnedScedule = try? EducatorSchedule(from: json)
+        
+        // Then
+        XCTAssertEqual(expectedSchedule, returnedScedule)
     }
 }

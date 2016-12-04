@@ -13,7 +13,7 @@ import DefaultStringConvertible
 public final class Educator : JSONRepresentable, TimetableEntity {
     
     /// The Timetable this entity was fetched from. `nil` if it was initialized from a custom JSON object.
-    public var timetable: Timetable?
+    public weak var timetable: Timetable?
     
     public let displayName: String
     public let employments: [Employment]

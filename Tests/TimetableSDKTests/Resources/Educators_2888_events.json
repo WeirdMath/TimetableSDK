@@ -1,0 +1,112 @@
+{
+  "AutumnTermLinkAvailable":
+  false,
+  "Breadcrumb":
+  [],
+  "DateRangeDisplayText":
+  "1 августа 2016 - 1 февраля 2017",
+  "EducatorDisplayText":
+  "Романовский И. В.",
+  "EducatorEventsDays":
+  [
+    {
+      "Day":
+      1,
+      "DayString":
+      "Понедельник",
+      "DayStudyEvents":
+      [
+        {
+          "ContingentUnitNames":
+          [
+            {
+              "Item1":
+              "102 (16.Б02.0-мм)",
+              "Item2":
+              "Математико-механический факультет, 1 курс"
+            }
+          ],
+          "Dates":
+          [
+            "16.1"
+          ],
+          "EducatorIds":
+          [
+            {
+              "Item1":
+              2888,
+              "Item2":
+              "Романовский И. В., профессор"
+            }
+          ],
+          "EducatorsDisplayText":
+          "Романовский И. В., профессор",
+          "End":
+          "14:00:00",
+          "EventLocations":
+          [
+            {
+              "DisplayName":
+              "В.О., 14 линия, д. 29, 34",
+              "EducatorIds":
+              [
+                {
+                  "Item1":
+                  2888,
+                  "Item2":
+                  "Романовский И. В., профессор"
+                }
+              ],
+              "EducatorsDisplayText":
+              "Романовский И. В., профессор",
+              "HasEducators":
+              true,
+              "HasGeographicCoordinates":
+              true,
+              "IsEmpty":
+              false,
+              "Latitude":
+              59.93863,
+              "LatitudeValue":
+              "59.93863",
+              "Longitude":
+              30.270649,
+              "LongitudeValue":
+              "30.270649"
+            }
+          ],
+          "IsCanceled":
+          false,
+          "Start":
+          "10:00:00",
+          "StudyEventsTimeTableKindCode":
+          2,
+          "Subject":
+          "Теоретическая информатика, экзамен",
+          "TimeIntervalString":
+          "10:00-14:00"
+        }
+      ],
+      "DayStudyEventsCount":
+      2
+    }
+  ],
+  "EducatorLongDisplayText":
+  "Романовский Иосиф Владимирович",
+  "EducatorMasterId":
+  2888,
+  "From":
+  "2016-08-01T00:00:00",
+  "HasEvents":
+  true,
+  "IsSpringTerm":
+  false,
+  "Next":
+  null,
+  "SpringTermLinkAvailable":
+  true,
+  "Title":
+  "Расписание преподавателя: Романовский Иосиф Владимирович",
+  "To":
+  "2017-02-01T00:00:00"
+}

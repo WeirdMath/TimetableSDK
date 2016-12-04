@@ -28,37 +28,48 @@ public struct Event : JSONRepresentable, TimetableEntity {
         return fullDateFormatter
     }()
     
+    fileprivate static let timeFormatter: DateFormatter = {
+        let timeFormatter = DateFormatter()
+        timeFormatter.dateFormat = "HH:mm:ss"
+        return timeFormatter
+    }()
     
-    public let allDay: Bool
+    public let allDay: Bool?
     public let contingentUnitsDisplayText: String?
-    public let dateWithTimeIntervalString: String
-    public let displayDateAndTimeIntervalString: String
+    public let contingentUnitNames: [(String, String)]?
+    public let dateWithTimeIntervalString: String?
+    public let dates: [String]?
+    public let displayDateAndTimeIntervalString: String?
     public let divisionAlias: String?
     public let educatorsDisplayText: String
+    
+    /// For an educator's schedule represents only time.
     public let end: Date
     public let fromDate: Date?
     public let fromDateString: String?
     public let fullDateWithTimeIntervalString: String?
-    public let hasAgenda: Bool
-    public let hasEducators: Bool
-    public let hasTheSameTimeAsPreviousItem: Bool
+    public let hasAgenda: Bool?
+    public let hasEducators: Bool?
+    public let hasTheSameTimeAsPreviousItem: Bool?
     public let id: Int?
-    public let isCancelled: Bool
-    public let isEmpty: Bool
-    public let isRecurrence: Bool
-    public let isShowImmediateHidden: Bool
-    public let isStudy: Bool
+    public let isCancelled: Bool?
+    public let isEmpty: Bool?
+    public let isRecurrence: Bool?
+    public let isShowImmediateHidden: Bool?
+    public let isStudy: Bool?
     public let location: Location?
-    public let locationsDisplayText: String
+    public let locationsDisplayText: String?
     public let orderIndex: Int?
-    public let showImmediate: Bool
-    public let showYear: Bool
+    public let showImmediate: Bool?
+    public let showYear: Bool?
+    
+    /// For an educator's schedule represents only time.
     public let start: Date
     public let subject: String
     public let subkindDisplayName: String?
     public let timeIntervalString: String
     public let viewKind: Int?
-    public let withinTheSameDay: Bool
+    public let withinTheSameDay: Bool?
     public let year: Int?
     public let locations: [Location]?
     public let kind: Kind?
@@ -66,40 +77,43 @@ public struct Event : JSONRepresentable, TimetableEntity {
     public let educatorIDs: [(Int, String)]?
     public let contingentUnitCourse: String?
     public let contingentUnitDivision: String?
-    public let isAssigned: Bool
-    public let timeWasChanged: Bool
-    public let locationsWereChanged: Bool
-    public let educatorsWereReassigned: Bool
+    public let isAssigned: Bool?
+    public let timeWasChanged: Bool?
+    public let locationsWereChanged: Bool?
+    public let educatorsWereReassigned: Bool?
     
-    internal init(allDay: Bool,
+    internal init(allDay: Bool?,
                   contingentUnitsDisplayText: String?,
-                  dateWithTimeIntervalString: String,
-                  displayDateAndTimeIntervalString: String,
+                  contingentUnitNames: [(String, String)]?,
+                  dateWithTimeIntervalString: String?,
+                  dates: [String]?,
+                  displayDateAndTimeIntervalString: String?,
                   divisionAlias: String?,
                   educatorsDisplayText: String,
                   end: Date,
                   fromDate: Date?,
                   fromDateString: String?,
                   fullDateWithTimeIntervalString: String?,
-                  hasAgenda: Bool,
-                  hasEducators: Bool,
-                  hasTheSameTimeAsPreviousItem: Bool,
-                  id: Int?, isCancelled: Bool,
-                  isEmpty: Bool,
-                  isRecurrence: Bool,
-                  isShowImmediateHidden: Bool,
-                  isStudy: Bool,
+                  hasAgenda: Bool?,
+                  hasEducators: Bool?,
+                  hasTheSameTimeAsPreviousItem: Bool?,
+                  id: Int?,
+                  isCancelled: Bool?,
+                  isEmpty: Bool?,
+                  isRecurrence: Bool?,
+                  isShowImmediateHidden: Bool?,
+                  isStudy: Bool?,
                   location: Location?,
-                  locationsDisplayText: String,
+                  locationsDisplayText: String?,
                   orderIndex: Int?,
-                  showImmediate: Bool,
-                  showYear: Bool,
+                  showImmediate: Bool?,
+                  showYear: Bool?,
                   start: Date,
                   subject: String,
                   subkindDisplayName: String?,
                   timeIntervalString: String,
                   viewKind: Int?,
-                  withinTheSameDay: Bool,
+                  withinTheSameDay: Bool?,
                   year: Int?,
                   locations: [Location]?,
                   kind: Kind?,
@@ -107,13 +121,15 @@ public struct Event : JSONRepresentable, TimetableEntity {
                   educatorIDs: [(Int, String)]?,
                   contingentUnitCourse: String?,
                   contingentUnitDivision: String?,
-                  isAssigned: Bool,
-                  timeWasChanged: Bool,
-                  locationsWereChanged: Bool,
-                  educatorsWereReassigned: Bool) {
+                  isAssigned: Bool?,
+                  timeWasChanged: Bool?,
+                  locationsWereChanged: Bool?,
+                  educatorsWereReassigned: Bool?) {
         self.allDay                           = allDay
         self.contingentUnitsDisplayText       = contingentUnitsDisplayText
+        self.contingentUnitNames              = contingentUnitNames
         self.dateWithTimeIntervalString       = dateWithTimeIntervalString
+        self.dates                            = dates
         self.displayDateAndTimeIntervalString = displayDateAndTimeIntervalString
         self.divisionAlias                    = divisionAlias
         self.educatorsDisplayText             = educatorsDisplayText
@@ -154,8 +170,6 @@ public struct Event : JSONRepresentable, TimetableEntity {
         self.educatorsWereReassigned          = educatorsWereReassigned
     }
     
-    
-    
     /// Creates a new entity from its JSON representation.
     ///
     /// - Parameter json: The JSON representation of the entity.
@@ -164,32 +178,48 @@ public struct Event : JSONRepresentable, TimetableEntity {
         do {
             allDay                              = try map(json["AllDay"])
             contingentUnitsDisplayText          = try map(json["ContingentUnitsDisplayTest"])
+            contingentUnitNames                 = try map(json["ContingentUnitNames"])
             dateWithTimeIntervalString          = try map(json["DateWithTimeIntervalString"])
+            dates                               = try map(json["Dates"])
             displayDateAndTimeIntervalString    = try map(json["DisplayDateAndTimeIntervalString"])
             divisionAlias                       = try map(json["DivisionAlias"])
             educatorsDisplayText                = try map(json["EducatorsDisplayText"])
-            end                                 = try map(json["End"],
+            do {
+                end                             = try map(json["End"],
                                                           transformation: Event.fullDateFormatter.date(from:))
+            } catch {
+                end                             = try map(json["End"],
+                                                          transformation: Event.timeFormatter.date(from:))
+            }
             fromDate                            = try map(json["FromDate"],
                                                           transformation: Event.fullDateFormatter.date(from:))
             fromDateString                      = try map(json["FromDateString"])
             fullDateWithTimeIntervalString      = try map(json["FullDateWithTimeIntervalString"])
-            hasAgenda                           = (try? map(json["HasAgenda"])) ?? false
+            hasAgenda                           = try map(json["HasAgenda"])
             hasEducators                        = try map(json["HasEducators"])
             hasTheSameTimeAsPreviousItem        = try map(json["HasTheSameTimeAsPreviousItem"])
             id                                  = try map(json["Id"])
-            isCancelled                         = try map(json["IsCancelled"])
-            isEmpty                             = (try? map(json["IsEmpty"])) ?? false
-            isRecurrence                        = (try? map(json["IsRecurrence"])) ?? false
-            isShowImmediateHidden               = (try? map(json["IsShowImmediateHidden"])) ?? false
+            do {
+                isCancelled                     = try map(json["IsCancelled"]) as Bool
+            } catch {
+                isCancelled                     = try map(json["IsCanceled"])
+            }
+            isEmpty                             = try map(json["IsEmpty"])
+            isRecurrence                        = try map(json["IsRecurrence"])
+            isShowImmediateHidden               = try map(json["IsShowImmediateHidden"])
             isStudy                             = try map(json["IsStudy"])
             location                            = try map(json["Location"])
             locationsDisplayText                = try map(json["LocationsDisplayText"])
             orderIndex                          = try map(json["OrderIndex"])
-            showImmediate                       = (try? map(json["ShowImmediate"])) ?? false
-            showYear                            = (try? map(json["ShowYear"])) ?? false
-            start                               = try map(json["Start"],
+            showImmediate                       = try map(json["ShowImmediate"])
+            showYear                            = try map(json["ShowYear"])
+            do {
+                start                           = try map(json["Start"],
                                                           transformation: Event.fullDateFormatter.date(from:))
+            } catch {
+                start                           = try map(json["Start"],
+                                                          transformation: Event.timeFormatter.date(from:))
+            }
             subject                             = try map(json["Subject"])
             subkindDisplayName                  = try map(json["SubkindDisplayName"])
             timeIntervalString                  = try map(json["TimeIntervalString"])
@@ -197,16 +227,21 @@ public struct Event : JSONRepresentable, TimetableEntity {
             withinTheSameDay                    = try map(json["WithinTheSameDay"])
             year                                = try map(json["Year"])
             locations                           = try map(json["EventLocations"])
-            kind                                = try map(json["EventsTimeTableKindCode"],
+            do {
+                kind                            = try map(json["EventsTimeTableKindCode"],
+                                                          transformation: Kind.init) as Kind
+            } catch {
+                kind                            = try map(json["StudyEventsTimeTableKindCode"],
                                                           transformation: Kind.init)
+            }
             contingentUnitName                  = try map(json["ContingentUnitName"])
             educatorIDs                         = try map(json["EducatorIds"])
             contingentUnitCourse                = try map(json["ContingentUnitCourse"])
             contingentUnitDivision              = try map(json["ContingentUnitDivision"])
-            isAssigned                          = (try? map(json["IsAssigned"])) ?? false
-            timeWasChanged                      = (try? map(json["TimeWasChanged"])) ?? false
-            locationsWereChanged                = (try? map(json["LocationsWereChanged"])) ?? false
-            educatorsWereReassigned             = (try? map(json["EducatorsWereReassigned"])) ?? false
+            isAssigned                          = try map(json["IsAssigned"])
+            timeWasChanged                      = try map(json["TimeWasChanged"])
+            locationsWereChanged                = try map(json["LocationsWereChanged"])
+            educatorsWereReassigned             = try map(json["EducatorsWereReassigned"])
         } catch {
             throw TimetableError.incorrectJSON(json, whenConverting: Event.self)
         }
@@ -231,11 +266,13 @@ extension Event: Equatable {
     ///   - lhs: A value to compare.
     ///   - rhs: Another value to compare.
     public static func ==(lhs: Event, rhs: Event) -> Bool {
-
+        
         return
             lhs.allDay                              == rhs.allDay                           &&
             lhs.contingentUnitsDisplayText          == rhs.contingentUnitsDisplayText       &&
+            lhs.contingentUnitNames                 == rhs.contingentUnitNames              &&
             lhs.dateWithTimeIntervalString          == rhs.dateWithTimeIntervalString       &&
+            lhs.dates                               == rhs.dates                            &&
             lhs.displayDateAndTimeIntervalString    == rhs.displayDateAndTimeIntervalString &&
             lhs.divisionAlias                       == rhs.divisionAlias                    &&
             lhs.educatorsDisplayText                == rhs.educatorsDisplayText             &&
