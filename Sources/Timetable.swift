@@ -33,19 +33,27 @@ public final class Timetable {
     }
     
     /// The divisions of the University. Initially is `nil`. Use
-    /// the `fetchDivisions(using:dispatchQueue:completion:)` methods in order to get divisions.
+    /// the `fetchDivisions(using:dispatchQueue:completion:)` method in order to get divisions.
     public var divisions: [Division]?
     
     internal var divisionsAPIQuery: String {
         return "divisions"
     }
     
-    /// The billboard. Initially is `nil`. Use
-    /// the `fetchBillboard(using:dispatchQueue:completion:)` methods in order to get divisions.
+    /// The billboard for the current week. Initially is `nil`. Use
+    /// the `fetchBillboard(using:dispatchQueue:completion:)` method in order to get the billboard.
     public fileprivate(set) var billboard: Billboard?
     
     internal var billboardAPIQuery: String {
         return "Billboard/events"
+    }
+    
+    /// Science events for the current week. Initially is `nil`. Use
+    /// the `fetchScience(using:dispatchQueue:completion:)` method in order to get science events.
+    public fileprivate(set) var science: Science?
+    
+    internal var scienceAPIQuery: String {
+        return "Science/events"
     }
     
     /// Fetches the divisions of the University. In case of success saves the divisions into the
@@ -162,5 +170,82 @@ public final class Timetable {
     /// - Returns:      A promise.
     public func fetchBillboard(from date: Date, using jsonData: Data? = nil) -> Promise<Billboard> {
         return makePromise({ fetchBillboard(from: date, using: jsonData, completion: $0) })
+    }
+    
+    /// Fetches science events. In case of success saves them into the
+    /// `science` property.
+    ///
+    /// - Parameters:
+    ///   - jsonData:       If this is not `nil`, then instead of networking uses provided json data as mock
+    ///                     data. May be useful for testing locally. Default value is `nil`.
+    ///   - dispatchQueue:  If this is `nil`, uses `DispatchQueue.main` as a queue to asyncronously
+    ///                     execute a completion handler on. Otherwise uses the specified queue.
+    ///                     If `jsonData` is not `nil`, setting this
+    ///                     makes no change as in this case fetching happens syncronously in the current queue.
+    ///                     Default value is `nil`.
+    ///   - completion:     A closure that is called after a responce is received.
+    public func fetchScience(using jsonData: Data? = nil,
+                             dispatchQueue: DispatchQueue? = nil,
+                             completion: @escaping (Result<Science>) -> Void) {
+        
+        fetch(using: jsonData,
+              apiQuery: scienceAPIQuery,
+              dispatchQueue: dispatchQueue,
+              timetable: self) { [weak self] (result: Result<Science>) in
+                
+                if case .success(let value) = result {
+                    self?.science = value
+                }
+                
+                completion(result)
+        }
+    }
+    
+    /// Fetches science events. In case of success saves them into the
+    /// `science` property.
+    ///
+    /// - Parameter jsonData:   If this is not `nil`, then instead of networking uses provided json data as mock
+    ///                         data. May be useful for testing locally. Default value is `nil`.
+    /// - Returns:              A promise.
+    public func fetchScience(using jsonData: Data? = nil) -> Promise<Science> {
+        return makePromise({ fetchScience(using: jsonData, completion: $0) })
+    }
+    
+    /// Fetches science events listed from provided `date`.
+    ///
+    /// - Parameters:
+    ///   - date            The day of the week to fetch events for.
+    ///   - jsonData:       If this is not `nil`, then instead of networking uses provided json data as mock
+    ///                     data. May be useful for testing locally. Default value is `nil`.
+    ///   - dispatchQueue:  If this is `nil`, uses `DispatchQueue.main` as a queue to asyncronously
+    ///                     execute a completion handler on. Otherwise uses the specified queue.
+    ///                     If `jsonData` is not `nil`, setting this
+    ///                     makes no change as in this case fetching happens syncronously in the current queue.
+    ///                     Default value is `nil`.
+    ///   - completion:     A closure that is called after a responce is received.
+    public func fetchScience(from date: Date,
+                             using jsonData: Data? = nil,
+                             dispatchQueue: DispatchQueue? = nil,
+                             completion: @escaping (Result<Science>) -> Void) {
+        
+        let dateString = Science.dateFormatter.string(from: date)
+        
+        fetch(using: jsonData,
+              apiQuery: scienceAPIQuery,
+              parameters: ["fromDate" : dateString],
+              dispatchQueue: dispatchQueue,
+              timetable: self,
+              completion: completion)
+    }
+    
+    /// Fetches science events listed from provided `date`.
+    ///
+    /// - Parameters:
+    ///   - date:       The day of the week to fetch events for.
+    ///   - jsonData:   If this is not `nil`, then instead of networking uses provided json data as mock
+    ///                 data. May be useful for testing locally. Default value is `nil`.
+    /// - Returns:      A promise.
+    public func fetchScience(from date: Date, using jsonData: Data? = nil) -> Promise<Science> {
+        return makePromise({ fetchScience(from: date, using: jsonData, completion: $0) })
     }
 }

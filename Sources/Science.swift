@@ -1,5 +1,5 @@
 //
-//  ScienceBillboard.swift
+//  Science.swift
 //  TimetableSDK
 //
 //  Created by Sergej Jaskiewicz on 04.12.2016.
@@ -10,7 +10,7 @@ import Foundation
 import SwiftyJSON
 
 /// The information about various scientific events taking place in the Univeristy.
-public final class ScienceBillboard : JSONRepresentable, TimetableEntity {
+public final class Science : JSONRepresentable, TimetableEntity {
     
     /// The Timetable this entity was fetched from. `nil` if it was initialized from a custom JSON object.
     public weak var timetable: Timetable?
@@ -68,21 +68,21 @@ public final class ScienceBillboard : JSONRepresentable, TimetableEntity {
             hasEventsToShow                  = try map(json["HasEventsToShow"])
             isCurrentMonthReferenceAvailable = try map(json["IsCurrentMonthReferenceAvailable"])
             nextMonth                        = try map(json["NextMonthDate"],
-                                                       transformation: ScienceBillboard.dateFormatter.date(from:))
+                                                       transformation: Science.dateFormatter.date(from:))
             nextMonthDisplayText             = try map(json["NextMonthDisplayText"])
             previousMonth                    = try map(json["PreviousMonthDate"],
-                                                       transformation: ScienceBillboard.dateFormatter.date(from:))
+                                                       transformation: Science.dateFormatter.date(from:))
             previousMonthDisplayText         = try map(json["PreviousMonthDisplayText"])
             showGroupingCaptions             = try map(json["ShowGroupingCaptions"])
             title                            = try map(json["Title"])
             viewName                         = try map(json["ViewName"])
         } catch {
-            throw TimetableError.incorrectJSON(json, whenConverting: ScienceBillboard.self)
+            throw TimetableError.incorrectJSON(json, whenConverting: Science.self)
         }
     }
 }
 
-extension ScienceBillboard : Equatable {
+extension Science : Equatable {
     
     /// Returns a Boolean value indicating whether two values are equal.
     ///
@@ -92,7 +92,7 @@ extension ScienceBillboard : Equatable {
     /// - Parameters:
     ///   - lhs: A value to compare.
     ///   - rhs: Another value to compare.
-    public static func ==(lhs: ScienceBillboard, rhs: ScienceBillboard) -> Bool {
+    public static func ==(lhs: Science, rhs: Science) -> Bool {
         return
             lhs.alias                               == rhs.alias                            &&
             lhs.chosenMonthDisplayText              == rhs.chosenMonthDisplayText           &&

@@ -276,4 +276,46 @@ class WWWFetchingTests: XCTestCase {
             XCTAssertNotNil(returnedBillblard)
         }
     }
+    
+    func testFetchScienceForCurrentWeekFromWWW() {
+        
+        // Given
+        XCTAssertNil(sut.science)
+        var returnedError: Error?
+        
+        // When
+        let exp = expectation(description: "fetching science for current week")
+        sut.fetchScience().then { _ in
+            exp.fulfill()
+        }.catch { error in
+            returnedError = error
+        }
+        
+        // Then
+        waitForExpectations(timeout: 10) { _ in
+            
+            XCTAssertNotNil(self.sut.science)
+            XCTAssertNotNil(self.sut.science?.timetable)
+            XCTAssertNil(returnedError)
+        }
+    }
+    
+    func testFetchScienceForArbitraryWeekFromWWW() {
+        
+        // Given
+        var returnedScience: Science?
+        let day = Date().addingTimeInterval(-60*60*24*7)
+        
+        // When
+        let exp = expectation(description: "fetching science for arbitrary week")
+        _ = sut.fetchScience(from: day).then { science in
+            returnedScience = science
+            exp.fulfill()
+        }
+        
+        // Then
+        waitForExpectations(timeout: 10) { _ in
+            XCTAssertNotNil(returnedScience)
+        }
+    }
 }

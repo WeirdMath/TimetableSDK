@@ -314,7 +314,7 @@ class JSONTests: XCTestCase {
         XCTAssertEqual(expectedBillboard, returnedBillboard)
     }
     
-    func testInitializeScienceBillboardFromJSON() {
+    func testInitializeScienceFromJSON() {
         
         // Given
         let jsonData = getTestingResource(fromFile: "Science_events", ofType: "json")!
@@ -322,8 +322,8 @@ class JSONTests: XCTestCase {
         dateFomatter.dateFormat = "yyyy-MM-dd"
         let timeFormatter = DateFormatter()
         timeFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
-        let expectedScienceBillboard =
-            ScienceBillboard(alias: "Science",
+        let expectedScience =
+            Science(alias: "Science",
                              chosenMonthDisplayText: "Ноябрь 2016",
                              eventGroupings: [
                                 EventGrouping(caption: "Ученые, диссертационные советы",
@@ -391,9 +391,9 @@ class JSONTests: XCTestCase {
                              viewName: "IndexMonth")
         
         // When
-        let returnedScienceBillboard = try? ScienceBillboard(from: jsonData)
+        let returnedScience = try? Science(from: jsonData)
         
         // Then
-        XCTAssertEqual(expectedScienceBillboard, returnedScienceBillboard)
+        XCTAssertEqual(expectedScience, returnedScience)
     }
 }
