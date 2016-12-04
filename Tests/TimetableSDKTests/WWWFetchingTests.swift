@@ -318,4 +318,46 @@ class WWWFetchingTests: XCTestCase {
             XCTAssertNotNil(returnedScience)
         }
     }
+    
+    func testFetchPEForCurrentWeekFromWWW() {
+        
+        // Given
+        XCTAssertNil(sut.physicalEducation)
+        var returnedError: Error?
+        
+        // When
+        let exp = expectation(description: "fetching physical education for current week")
+        sut.fetchPhysicalEducation().then { _ in
+            exp.fulfill()
+        }.catch { error in
+                returnedError = error
+        }
+        
+        // Then
+        waitForExpectations(timeout: 10) { _ in
+            
+            XCTAssertNotNil(self.sut.physicalEducation)
+            XCTAssertNotNil(self.sut.physicalEducation?.timetable)
+            XCTAssertNil(returnedError)
+        }
+    }
+    
+    func testFetchPEForArbitraryWeekFromWWW() {
+        
+        // Given
+        var returnedPE: Extracurricular?
+        let day = Date().addingTimeInterval(-60*60*24*7)
+        
+        // When
+        let exp = expectation(description: "fetching physical education for arbitrary week")
+        _ = sut.fetchPhysicalEducation(from: day).then { physicalEducation in
+            returnedPE = physicalEducation
+            exp.fulfill()
+        }
+        
+        // Then
+        waitForExpectations(timeout: 10) { _ in
+            XCTAssertNotNil(returnedPE)
+        }
+    }
 }

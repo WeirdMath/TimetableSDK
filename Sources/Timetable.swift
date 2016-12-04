@@ -56,6 +56,14 @@ public final class Timetable {
         return "Science/events"
     }
     
+    /// Physical training events for the current week. Initially is `nil`. Use
+    /// the `fetchPhysicalEducation(using:dispatchQueue:completion:)` method in order to get science events.
+    public fileprivate(set) var physicalEducation: Extracurricular?
+    
+    internal var physicalEducationAPIQuery: String {
+        return "PhysTraining/events"
+    }
+    
     /// Fetches the divisions of the University. In case of success saves the divisions into the
     /// `divisions` property.
     ///
@@ -147,9 +155,9 @@ public final class Timetable {
     ///                     Default value is `nil`.
     ///   - completion:     A closure that is called after a responce is received.
     public func fetchBillboard(from date: Date,
-                        using jsonData: Data? = nil,
-                        dispatchQueue: DispatchQueue? = nil,
-                        completion: @escaping (Result<Extracurricular>) -> Void) {
+                               using jsonData: Data? = nil,
+                               dispatchQueue: DispatchQueue? = nil,
+                               completion: @escaping (Result<Extracurricular>) -> Void) {
         
         let dateString = Extracurricular.dateFormatter.string(from: date)
         
@@ -247,5 +255,82 @@ public final class Timetable {
     /// - Returns:      A promise.
     public func fetchScience(from date: Date, using jsonData: Data? = nil) -> Promise<Science> {
         return makePromise({ fetchScience(from: date, using: jsonData, completion: $0) })
+    }
+    
+    /// Fetches physical training events. In case of success saves them into the
+    /// `physicalTraining` property.
+    ///
+    /// - Parameters:
+    ///   - jsonData:       If this is not `nil`, then instead of networking uses provided json data as mock
+    ///                     data. May be useful for testing locally. Default value is `nil`.
+    ///   - dispatchQueue:  If this is `nil`, uses `DispatchQueue.main` as a queue to asyncronously
+    ///                     execute a completion handler on. Otherwise uses the specified queue.
+    ///                     If `jsonData` is not `nil`, setting this
+    ///                     makes no change as in this case fetching happens syncronously in the current queue.
+    ///                     Default value is `nil`.
+    ///   - completion:     A closure that is called after a responce is received.
+    public func fetchPhysicalEducation(using jsonData: Data? = nil,
+                                       dispatchQueue: DispatchQueue? = nil,
+                                       completion: @escaping (Result<Extracurricular>) -> Void) {
+        
+        fetch(using: jsonData,
+              apiQuery: physicalEducationAPIQuery,
+              dispatchQueue: dispatchQueue,
+              timetable: self) { [weak self] (result: Result<Extracurricular>) in
+                
+                if case .success(let value) = result {
+                    self?.physicalEducation = value
+                }
+                
+                completion(result)
+        }
+    }
+    
+    /// Fetches physical training events. In case of success saves them into the
+    /// `physicalTraining` property.
+    ///
+    /// - Parameter jsonData:   If this is not `nil`, then instead of networking uses provided json data as mock
+    ///                         data. May be useful for testing locally. Default value is `nil`.
+    /// - Returns:              A promise.
+    public func fetchPhysicalEducation(using jsonData: Data? = nil) -> Promise<Extracurricular> {
+        return makePromise({ fetchPhysicalEducation(using: jsonData, completion: $0) })
+    }
+    
+    /// Fetches physical training events listed from provided `date`.
+    ///
+    /// - Parameters:
+    ///   - date:           The day of the week to fetch events for.
+    ///   - jsonData:       If this is not `nil`, then instead of networking uses provided json data as mock
+    ///                     data. May be useful for testing locally. Default value is `nil`.
+    ///   - dispatchQueue:  If this is `nil`, uses `DispatchQueue.main` as a queue to asyncronously
+    ///                     execute a completion handler on. Otherwise uses the specified queue.
+    ///                     If `jsonData` is not `nil`, setting this
+    ///                     makes no change as in this case fetching happens syncronously in the current queue.
+    ///                     Default value is `nil`.
+    ///   - completion:     A closure that is called after a responce is received.
+    public func fetchPhysicalEducation(from date: Date,
+                                       using jsonData: Data? = nil,
+                                       dispatchQueue: DispatchQueue? = nil,
+                                       completion: @escaping (Result<Extracurricular>) -> Void) {
+        
+        let dateString = Extracurricular.dateFormatter.string(from: date)
+        
+        fetch(using: jsonData,
+              apiQuery: physicalEducationAPIQuery,
+              parameters: ["fromDate" : dateString],
+              dispatchQueue: dispatchQueue,
+              timetable: self,
+              completion: completion)
+    }
+    
+    /// Fetches physical training events listed from provided `date`.
+    ///
+    /// - Parameters:
+    ///   - date:       The day of the week to fetch a billboard for.
+    ///   - jsonData:   If this is not `nil`, then instead of networking uses provided json data as mock
+    ///                 data. May be useful for testing locally. Default value is `nil`.
+    /// - Returns:      A promise.
+    public func fetchPhysicalEducation(from date: Date, using jsonData: Data? = nil) -> Promise<Extracurricular> {
+        return makePromise({ fetchPhysicalEducation(from: date, using: jsonData, completion: $0) })
     }
 }

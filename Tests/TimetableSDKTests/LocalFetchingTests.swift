@@ -266,6 +266,42 @@ class LocalFetchingTests: XCTestCase {
         
         // Then
         XCTAssertNotNil(receivedError)
-        XCTAssertNil(sut.billboard)
+        XCTAssertNil(sut.science)
+    }
+    
+    func testFetchPELocallyFromCorrectJSONData() {
+        
+        // Given
+        let jsonData = getTestingResource(fromFile: "PhysTraining_events", ofType: "json")!
+        var completionCalled = false
+        
+        XCTAssertNil(sut.physicalEducation)
+        
+        // When
+        sut.fetchPhysicalEducation(using: jsonData) { _ in
+            completionCalled = true
+        }
+        
+        // Then
+        XCTAssertTrue(completionCalled)
+        XCTAssertNotNil(sut.physicalEducation)
+    }
+    
+    func testFetchPELocallyFromIncorrectJSONData() {
+        
+        // Given
+        let jsonData = getTestingResource(fromFile: "MATH_studyprograms", ofType: "json")!
+        var receivedError: Error?
+        
+        // When
+        sut.fetchPhysicalEducation(using: jsonData) { result in
+            if case .failure(let error) = result {
+                receivedError = error
+            }
+        }
+        
+        // Then
+        XCTAssertNotNil(receivedError)
+        XCTAssertNil(sut.physicalEducation)
     }
 }
