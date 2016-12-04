@@ -1,5 +1,5 @@
 //
-//  Billboard.swift
+//  Extracurricular.swift
 //  TimetableSDK
 //
 //  Created by Sergej Jaskiewicz on 28.11.2016.
@@ -11,7 +11,7 @@ import SwiftyJSON
 import DefaultStringConvertible
 
 /// The information about various events taking place in the Univeristy.
-public final class Billboard : JSONRepresentable, TimetableEntity {
+public final class Extracurricular : JSONRepresentable, TimetableEntity {
     
     /// The Timetable this entity was fetched from. `nil` if it was initialized from a custom JSON object.
     public weak var timetable: Timetable?
@@ -50,16 +50,22 @@ public final class Billboard : JSONRepresentable, TimetableEntity {
             isNextWeekReferenceAvailable        = try map(json["IsNextWeekReferenceAvailable"])
             isPreviousWeekReferenceAvailable    = try map(json["IsPreviousWeekReferenceAvailable"])
             nextWeekMonday                      = try map(json["NextWeekMonday"],
-                                                          transformation: Billboard.dateFormatter.date(from:))
+                                                          transformation: Extracurricular
+                                                            .dateFormatter
+                                                            .date(from:))
             previousWeekMonday                  = try map(json["PreviousWeekMonday"],
-                                                          transformation: Billboard.dateFormatter.date(from:))
+                                                          transformation: Extracurricular
+                                                            .dateFormatter
+                                                            .date(from:))
             title                               = try map(json["Title"])
             viewName                            = try map(json["ViewName"])
             weekDisplayText                     = try map(json["WeekDisplayText"])
             weekMonday                          = try map(json["WeekMonday"],
-                                                          transformation: Billboard.dateFormatter.date(from:))
+                                                          transformation: Extracurricular
+                                                            .dateFormatter
+                                                            .date(from:))
         } catch {
-            throw TimetableError.incorrectJSON(json, whenConverting: Billboard.self)
+            throw TimetableError.incorrectJSON(json, whenConverting: Extracurricular.self)
         }
     }
     
@@ -93,7 +99,7 @@ public final class Billboard : JSONRepresentable, TimetableEntity {
     }
 }
 
-extension Billboard: Equatable {
+extension Extracurricular: Equatable {
     
     /// Returns a Boolean value indicating whether two values are equal.
     ///
@@ -103,7 +109,7 @@ extension Billboard: Equatable {
     /// - Parameters:
     ///   - lhs: A value to compare.
     ///   - rhs: Another value to compare.
-    public static func ==(lhs: Billboard, rhs: Billboard) -> Bool {
+    public static func ==(lhs: Extracurricular, rhs: Extracurricular) -> Bool {
         return
             lhs.alias                               == rhs.alias                            &&
             lhs.days                                == rhs.days                             &&
@@ -121,4 +127,4 @@ extension Billboard: Equatable {
     }
 }
 
-extension Billboard: CustomStringConvertible {}
+extension Extracurricular: CustomStringConvertible {}

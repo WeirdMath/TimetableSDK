@@ -261,7 +261,7 @@ class WWWFetchingTests: XCTestCase {
     func testFetchBillboardForArbitraryWeekFromWWW() {
         
         // Given
-        var returnedBillblard: Billboard?
+        var returnedBillblard: Extracurricular?
         let day = Date().addingTimeInterval(-60*60*24*7)
         
         // When

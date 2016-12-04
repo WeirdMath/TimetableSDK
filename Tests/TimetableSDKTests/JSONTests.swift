@@ -229,7 +229,7 @@ class JSONTests: XCTestCase {
         
     }
     
-    func testInitializeBillboardFromJSON() {
+    func testInitializeExtracurricularFromJSON() {
         
         // Given
         let jsonData = getTestingResource(fromFile: "Billboard_events", ofType: "json")!
@@ -237,8 +237,8 @@ class JSONTests: XCTestCase {
         dateFormatter.dateFormat = "yyyy-MM-dd"
         let timeFormatter = DateFormatter()
         timeFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
-        let expectedBillboard =
-            Billboard(alias: "Billboard",
+        let expectedExtracurricular =
+            Extracurricular(alias: "Billboard",
                       days: [
                         Day(date: timeFormatter.date(from: "2016-11-28T00:00:00")!,
                             name: "понедельник, 28 ноября",
@@ -308,10 +308,10 @@ class JSONTests: XCTestCase {
                       weekMonday: dateFormatter.date(from: "2016-11-28")!)
         
         // When
-        let returnedBillboard = try? Billboard(from: jsonData)
+        let returnedExtracurricular = try? Extracurricular(from: jsonData)
         
         // Then
-        XCTAssertEqual(expectedBillboard, returnedBillboard)
+        XCTAssertEqual(expectedExtracurricular, returnedExtracurricular)
     }
     
     func testInitializeScienceFromJSON() {

@@ -42,7 +42,7 @@ public final class Timetable {
     
     /// The billboard for the current week. Initially is `nil`. Use
     /// the `fetchBillboard(using:dispatchQueue:completion:)` method in order to get the billboard.
-    public fileprivate(set) var billboard: Billboard?
+    public fileprivate(set) var billboard: Extracurricular?
     
     internal var billboardAPIQuery: String {
         return "Billboard/events"
@@ -109,12 +109,12 @@ public final class Timetable {
     ///   - completion:     A closure that is called after a responce is received.
     public func fetchBillboard(using jsonData: Data? = nil,
                                dispatchQueue: DispatchQueue? = nil,
-                               completion: @escaping (Result<Billboard>) -> Void) {
+                               completion: @escaping (Result<Extracurricular>) -> Void) {
         
         fetch(using: jsonData,
               apiQuery: billboardAPIQuery,
               dispatchQueue: dispatchQueue,
-              timetable: self) { [weak self] (result: Result<Billboard>) in
+              timetable: self) { [weak self] (result: Result<Extracurricular>) in
                 
                 if case .success(let value) = result {
                     self?.billboard = value
@@ -130,7 +130,7 @@ public final class Timetable {
     /// - Parameter jsonData:   If this is not `nil`, then instead of networking uses provided json data as mock
     ///                         data. May be useful for testing locally. Default value is `nil`.
     /// - Returns:              A promise.
-    public func fetchBillboard(using jsonData: Data? = nil) -> Promise<Billboard> {
+    public func fetchBillboard(using jsonData: Data? = nil) -> Promise<Extracurricular> {
         return makePromise({ fetchBillboard(using: jsonData, completion: $0) })
     }
     
@@ -149,9 +149,9 @@ public final class Timetable {
     public func fetchBillboard(from date: Date,
                         using jsonData: Data? = nil,
                         dispatchQueue: DispatchQueue? = nil,
-                        completion: @escaping (Result<Billboard>) -> Void) {
+                        completion: @escaping (Result<Extracurricular>) -> Void) {
         
-        let dateString = Billboard.dateFormatter.string(from: date)
+        let dateString = Extracurricular.dateFormatter.string(from: date)
         
         fetch(using: jsonData,
               apiQuery: billboardAPIQuery,
@@ -168,7 +168,7 @@ public final class Timetable {
     ///   - jsonData:   If this is not `nil`, then instead of networking uses provided json data as mock
     ///                 data. May be useful for testing locally. Default value is `nil`.
     /// - Returns:      A promise.
-    public func fetchBillboard(from date: Date, using jsonData: Data? = nil) -> Promise<Billboard> {
+    public func fetchBillboard(from date: Date, using jsonData: Data? = nil) -> Promise<Extracurricular> {
         return makePromise({ fetchBillboard(from: date, using: jsonData, completion: $0) })
     }
     
