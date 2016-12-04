@@ -10,7 +10,7 @@ import Foundation
 import SwiftyJSON
 import DefaultStringConvertible
 
-/// The information about a day in a `Week`.
+/// The information about a day with `Event`s in it.
 public final class Day : JSONRepresentable, TimetableEntity {
     
     /// The Timetable this entity was fetched from. `nil` if it was initialized from a custom JSON object.

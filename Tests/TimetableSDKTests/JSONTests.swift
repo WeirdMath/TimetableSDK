@@ -313,4 +313,87 @@ class JSONTests: XCTestCase {
         // Then
         XCTAssertEqual(expectedBillboard, returnedBillboard)
     }
+    
+    func testInitializeScienceBillboardFromJSON() {
+        
+        // Given
+        let jsonData = getTestingResource(fromFile: "Science_events", ofType: "json")!
+        let dateFomatter = DateFormatter()
+        dateFomatter.dateFormat = "yyyy-MM-dd"
+        let timeFormatter = DateFormatter()
+        timeFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        let expectedScienceBillboard =
+            ScienceBillboard(alias: "Science",
+                             chosenMonthDisplayText: "Ноябрь 2016",
+                             eventGroupings: [
+                                EventGrouping(caption: "Ученые, диссертационные советы",
+                                              events: [
+                                                Event(allDay: false,
+                                                      contingentUnitsDisplayText: "",
+                                                      dateWithTimeIntervalString: "16.11 9:00-11:00",
+                                                      displayDateAndTimeIntervalString: "16.11 9:00-11:00",
+                                                      divisionAlias: "Science",
+                                                      educatorsDisplayText: "",
+                                                      end: timeFormatter.date(from: "2016-11-16T11:00:00")!,
+                                                      fromDate: timeFormatter.date(from: "2016-11-01T00:00:00")!,
+                                                      fromDateString: "2016-11-01",
+                                                      fullDateWithTimeIntervalString: "16 ноября 9:00-11:00",
+                                                      hasAgenda: false,
+                                                      hasEducators: false,
+                                                      hasTheSameTimeAsPreviousItem: false,
+                                                      id: 502364,
+                                                      isCancelled: false,
+                                                      isEmpty: false,
+                                                      isRecurrence: false,
+                                                      isShowImmediateHidden: false,
+                                                      isStudy: false,
+                                                      location: Location(educatorsDisplayText: nil,
+                                                                         hasEducators: false,
+                                                                         educatorIDs: nil,
+                                                                         isEmpty: false,
+                                                                         displayName: "В.О., 6 линия, д. 15, 121",
+                                                                         hasGeographicCoordinates: true,
+                                                                         latitude: 59.940863,
+                                                                         longitude: 30.271639,
+                                                                         latitudeValue: "59.940863",
+                                                                         longitudeValue: "30.271639"),
+                                                      locationsDisplayText: "В.О., 6 линия, д. 15, 121",
+                                                      orderIndex: 75375075375,
+                                                      showImmediate: false,
+                                                      showYear: false,
+                                                      start: timeFormatter.date(from: "2016-11-16T09:00:00")!,
+                                                      subject: "Иные мероприятия",
+                                                      subkindDisplayName: "Ученые, диссертационные советы",
+                                                      timeIntervalString: "9:00–11:00",
+                                                      viewKind: 1,
+                                                      withinTheSameDay: true,
+                                                      year: 2016,
+                                                      locations: nil,
+                                                      kind: nil,
+                                                      contingentUnitName: nil,
+                                                      educatorIDs: nil,
+                                                      contingentUnitCourse: nil,
+                                                      contingentUnitDivision: nil,
+                                                      isAssigned: false,
+                                                      timeWasChanged: false,
+                                                      locationsWereChanged: false,
+                                                      educatorsWereReassigned: false)
+                                    ])
+                ],
+                             hasEventsToShow: true,
+                             isCurrentMonthReferenceAvailable: true,
+                             nextMonth: dateFomatter.date(from: "2016-12-01")!,
+                             nextMonthDisplayText: "Декабрь 2016 »",
+                             previousMonth: dateFomatter.date(from: "2016-10-01")!,
+                             previousMonthDisplayText: "« Октябрь 2016",
+                             showGroupingCaptions: true,
+                             title: "Научные мероприятия",
+                             viewName: "IndexMonth")
+        
+        // When
+        let returnedScienceBillboard = try? ScienceBillboard(from: jsonData)
+        
+        // Then
+        XCTAssertEqual(expectedScienceBillboard, returnedScienceBillboard)
+    }
 }

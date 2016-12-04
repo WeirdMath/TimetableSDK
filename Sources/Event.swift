@@ -267,7 +267,7 @@ extension Event: Equatable {
             lhs.locations                           == rhs.locations                        &&
             lhs.kind                                == rhs.kind                             &&
             lhs.contingentUnitName                  == rhs.contingentUnitName               &&
-            lhs.educatorIDs                         ==  rhs.educatorIDs                     &&
+            lhs.educatorIDs                         == rhs.educatorIDs                      &&
             lhs.contingentUnitCourse                == rhs.contingentUnitCourse             &&
             lhs.contingentUnitDivision              == rhs.contingentUnitCourse             &&
             lhs.isAssigned                          == rhs.isAssigned                       &&

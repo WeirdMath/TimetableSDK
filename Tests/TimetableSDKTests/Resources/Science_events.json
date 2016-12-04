@@ -1,0 +1,117 @@
+{
+  "Alias":
+  "Science",
+  "Breadcrumb":
+  [],
+  "ChosenMonthDisplayText":
+  "Ноябрь 2016",
+  "EventGroupings":
+  [
+    {
+      "Caption":
+      "Ученые, диссертационные советы",
+      "Events":
+      [
+        {
+          "AllDay":
+          false,
+          "ContingentUnitsDisplayTest":
+          "",
+          "DateWithTimeIntervalString":
+          "16.11 9:00-11:00",
+          "DisplayDateAndTimeIntervalString":
+          "16.11 9:00-11:00",
+          "DivisionAlias":
+          "Science",
+          "EducatorsDisplayText":
+          "",
+          "End":
+          "2016-11-16T11:00:00",
+          "FromDate":
+          "2016-11-01T00:00:00",
+          "FromDateString":
+          "2016-11-01",
+          "FullDateWithTimeIntervalString":
+          "16 ноября 9:00-11:00",
+          "HasAgenda":
+          false,
+          "HasEducators":
+          false,
+          "HasTheSameTimeAsPreviousItem":
+          false,
+          "Id":
+          502364,
+          "IsCancelled":
+          false,
+          "IsEmpty":
+          false,
+          "IsRecurrence":
+          false,
+          "IsShowImmediateHidden":
+          false,
+          "IsStudy":
+          false,
+          "Location":
+          {
+            "DisplayName":
+            "В.О., 6 линия, д. 15, 121",
+            "HasGeographicCoordinates":
+            true,
+            "IsEmpty":
+            false,
+            "Latitude":
+            59.940863,
+            "LatitudeValue":
+            "59.940863",
+            "Longitude":
+            30.271639,
+            "LongitudeValue":
+            "30.271639"
+          },
+          "LocationsDisplayText":
+          "В.О., 6 линия, д. 15, 121",
+          "OrderIndex":
+          75375075375,
+          "RecurrenceIndex":
+          null,
+          "ShowImmediate":
+          false,
+          "ShowYear":
+          false,
+          "Start":
+          "2016-11-16T09:00:00",
+          "Subject":
+          "Иные мероприятия",
+          "SubkindDisplayName":
+          "Ученые, диссертационные советы",
+          "TimeIntervalString":
+          "9:00–11:00",
+          "ViewKind":
+          1,
+          "WithinTheSameDay":
+          true,
+          "Year":
+          2016
+        }
+      ]
+    }
+  ],
+  "HasEventsToShow":
+  true,
+  "IsCurrentMonthReferenceAvailable":
+  true,
+  "NextMonthDate":
+  "2016-12-01",
+  "NextMonthDisplayText":
+  "Декабрь 2016 »",
+  "PreviousMonthDate":
+  "2016-10-01",
+  "PreviousMonthDisplayText":
+  "« Октябрь 2016",
+  "ShowGroupingCaptions":
+  true,
+  "Title":
+  "Научные мероприятия",
+  "ViewName":
+  "IndexMonth"
+}
