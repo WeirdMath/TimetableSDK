@@ -13,6 +13,7 @@ import SwiftyJSON
 private func _fetch<Entity>(using jsonData: Data?,
                     apiQuery: String,
                     parameters: Parameters?,
+                    jsonPath: @escaping (JSON) -> JSON,
                     dispatchQueue: DispatchQueue?,
                     timetable: Timetable?,
                     map: @escaping (JSON) throws -> Entity,
@@ -20,7 +21,7 @@ private func _fetch<Entity>(using jsonData: Data?,
     
     if let jsonData = jsonData {
         do {
-            completion(.success(try map(JSON(data: jsonData))))
+            completion(.success(try map(jsonPath(JSON(data: jsonData)))))
         } catch {
             completion(.failure(error))
         }
@@ -39,7 +40,7 @@ private func _fetch<Entity>(using jsonData: Data?,
                 switch response.result {
                 case .success(let data):
                     do {
-                        completion(.success(try map(JSON(data: data))))
+                        completion(.success(try map(jsonPath(JSON(data: data)))))
                     } catch {
                         completion(.failure(error))
                     }
@@ -56,6 +57,8 @@ private func _fetch<Entity>(using jsonData: Data?,
 ///   - jsonData:           If this is not `nil`, then instead of networking uses provided json data as mock
 ///                         data. May be useful for testing locally.
 ///   - apiQuery:           An API method to request.
+///   - parameters:         The parameters for the query.
+///   - jsonPath:           The function that steps through the JSON hierarchy.
 ///   - dispatchQueue:      If this is `nil`, uses `DispatchQueue.main` as a queue to asyncronously
 ///                         execute a networking request on. Otherwise uses the specified queue.
 ///                         If `jsonData` is not `nil`, setting this
@@ -67,6 +70,7 @@ internal func fetch<Entity : JSONRepresentable & TimetableEntity>(
     using jsonData: Data?,
     apiQuery: String,
     parameters: Parameters? = nil,
+    jsonPath: @escaping (JSON) -> JSON = { $0 },
     dispatchQueue: DispatchQueue?,
     timetable: Timetable?,
     completion: @escaping (Result<Entity>) -> Void) {
@@ -74,6 +78,7 @@ internal func fetch<Entity : JSONRepresentable & TimetableEntity>(
     _fetch(using: jsonData,
            apiQuery: apiQuery,
            parameters: parameters,
+           jsonPath: jsonPath,
            dispatchQueue: dispatchQueue,
            timetable: timetable,
            map: map) { (result: Result<Entity>) in
@@ -94,6 +99,8 @@ internal func fetch<Entity : JSONRepresentable & TimetableEntity>(
 ///   - jsonData:           If this is not `nil`, then instead of networking uses provided json data as mock
 ///                         data. May be useful for testing locally.
 ///   - apiQuery:           An API method to request.
+///   - parameters:         The parameters for the query.
+///   - jsonPath:           The function that steps through the JSON hierarchy.
 ///   - dispatchQueue:      If this is `nil`, uses `DispatchQueue.main` as a queue to asyncronously
 ///                         execute a networking request on. Otherwise uses the specified queue.
 ///                         If `jsonData` is not `nil`, setting this
@@ -105,6 +112,7 @@ internal func fetch<Entity : JSONRepresentable & TimetableEntity>(
     using jsonData: Data?,
     apiQuery: String,
     parameters: Parameters? = nil,
+    jsonPath: @escaping (JSON) -> JSON = { $0 },
     dispatchQueue: DispatchQueue?,
     timetable: Timetable?,
     completion: @escaping (Result<[Entity]>) -> Void) {
@@ -112,6 +120,7 @@ internal func fetch<Entity : JSONRepresentable & TimetableEntity>(
     _fetch(using: jsonData,
            apiQuery: apiQuery,
            parameters: parameters,
+           jsonPath: jsonPath,
            dispatchQueue: dispatchQueue,
            timetable: timetable,
            map: map) { (result: Result<[Entity]>) in

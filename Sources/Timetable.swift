@@ -64,6 +64,10 @@ public final class Timetable {
         return "PhysTraining/events"
     }
     
+    internal var educatorsAPIQuery: String {
+        return "educators"
+    }
+    
     /// Fetches the divisions of the University. In case of success saves the divisions into the
     /// `divisions` property.
     ///
@@ -332,5 +336,43 @@ public final class Timetable {
     /// - Returns:      A promise.
     public func fetchPhysicalEducation(from date: Date, using jsonData: Data? = nil) -> Promise<Extracurricular> {
         return makePromise({ fetchPhysicalEducation(from: date, using: jsonData, completion: $0) })
+    }
+    
+    /// Searches for educators by provided `lastName`.
+    ///
+    /// - Parameters:
+    ///   - lastName:       The last name of the educator being searched. If `jsonData` is not `nil`,
+    ///                     setting this argument does not affect the result.
+    ///   - jsonData:       If this is not `nil`, then instead of networking uses provided json data as mock
+    ///                     data. May be useful for testing locally. Default value is `nil`.
+    ///   - dispatchQueue:  If this is `nil`, uses `DispatchQueue.main` as a queue to asyncronouslyx
+    ///                     execute a completion handler on. Otherwise uses the specified queue.
+    ///                     If `jsonData` is not `nil`, setting this
+    ///                     makes no change as in this case fetching happens syncronously in the current queue.
+    ///                     Default value is `nil`.
+    ///   - completion:     A closure that is called after a responce is received.
+    public func fetchEducators(byLastName lastName: String,
+                               using jsonData: Data? = nil,
+                               dispatchQueue: DispatchQueue? = nil,
+                               completion: @escaping (Result<[Educator]>) -> Void) {
+        fetch(using: jsonData,
+              apiQuery: educatorsAPIQuery,
+              parameters: ["q" : lastName],
+              jsonPath: { $0["Educators"] },
+              dispatchQueue: dispatchQueue,
+              timetable: self,
+              completion: completion)
+    }
+    
+    /// Searches for educators by provided `lastName`.
+    ///
+    /// - Parameters:
+    ///   - lastName: The last name of the educator being searched. If `jsonData` is not `nil`,
+    ///               setting this argument does not affect the result.
+    ///   - jsonData: If this is not `nil`, then instead of networking uses provided json data as mock
+    ///               data. May be useful for testing locally. Default value is `nil`.
+    /// - Returns: A promise.
+    public func fetchEducators(byLastName lastName: String, using jsonData: Data? = nil) -> Promise<[Educator]> {
+        return makePromise({ fetchEducators(byLastName: lastName, using: jsonData, completion: $0) })
     }
 }

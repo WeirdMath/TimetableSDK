@@ -1,0 +1,49 @@
+{
+  "Breadcrumb":
+  [],
+  "EducatorLastNameQuery":
+  "Романовский",
+  "Educators":
+  [
+    {
+      "DisplayName":
+      "Романовский И. В.",
+      "Employments":
+      [
+        {
+          "Department":
+          "Кафедра исследования операций",
+          "Position":
+          "профессор"
+        },
+        {
+          "Department":
+          "ДГПХ",
+          "Position":
+          ""
+        }
+      ],
+      "FullName":
+      "Романовский Иосиф Владимирович",
+      "Id":
+      2888
+    },
+    {
+      "DisplayName":
+      "Романовский Ю. Р.",
+      "Employments":
+      [
+        {
+          "Department":
+          "Кафедра высшей геометрии",
+          "Position":
+          "старший преподаватель"
+        }
+      ],
+      "FullName":
+      "Романовский Юрий Рэмович",
+      "Id":
+      2890
+    }
+  ]
+}

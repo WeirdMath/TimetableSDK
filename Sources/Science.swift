@@ -8,6 +8,7 @@
 
 import Foundation
 import SwiftyJSON
+import DefaultStringConvertible
 
 /// The information about various scientific events taking place in the Univeristy.
 public final class Science : JSONRepresentable, TimetableEntity {
@@ -60,7 +61,11 @@ public final class Science : JSONRepresentable, TimetableEntity {
         self.viewName                         = viewName
     }
     
-    internal init(from json: JSON) throws {
+    /// Creates a new entity from its JSON representation.
+    ///
+    /// - Parameter json: The JSON representation of the entity.
+    /// - Throws: `TimetableError.incorrectJSONFormat`
+    public init(from json: JSON) throws {
         do {
             alias                            = try map(json["Alias"])
             chosenMonthDisplayText           = try map(json["ChosenMonthDisplayText"])
@@ -108,3 +113,5 @@ extension Science : Equatable {
             lhs.viewName                            == rhs.viewName
     }
 }
+
+extension Science : CustomStringConvertible {}

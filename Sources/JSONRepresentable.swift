@@ -9,7 +9,7 @@
 import Foundation
 import SwiftyJSON
 
-internal protocol JSONRepresentable {
+public protocol JSONRepresentable {
     
     /// Creates a new entity from its JSON representation.
     ///
@@ -18,9 +18,9 @@ internal protocol JSONRepresentable {
     init(from json: JSON) throws
 }
 
-internal extension JSONRepresentable {
+public extension JSONRepresentable {
     
-    internal init(from jsonData: Data) throws {
+    public init(from jsonData: Data) throws {
         let json = JSON(data: jsonData)
         try self.init(from: json)
     }
@@ -28,7 +28,7 @@ internal extension JSONRepresentable {
 
 // MARK: - Standard type extensions
 extension Double : JSONRepresentable {
-    init(from json: JSON) throws {
+    public init(from json: JSON) throws {
         if let double = json.double {
             self.init(double)
         } else {
@@ -38,7 +38,7 @@ extension Double : JSONRepresentable {
 }
 
 extension Int : JSONRepresentable {
-    init(from json: JSON) throws {
+    public init(from json: JSON) throws {
         if let int = json.int {
             self.init(int)
         } else {
@@ -48,7 +48,7 @@ extension Int : JSONRepresentable {
 }
 
 extension String : JSONRepresentable {
-    init(from json: JSON) throws {
+    public init(from json: JSON) throws {
         if let string = json.string {
             self.init(string.characters)
         } else {
@@ -58,7 +58,7 @@ extension String : JSONRepresentable {
 }
 
 extension Bool : JSONRepresentable {
-    init(from json: JSON) throws {
+    public init(from json: JSON) throws {
         if let bool = json.bool {
             self.init(bool)
         } else {

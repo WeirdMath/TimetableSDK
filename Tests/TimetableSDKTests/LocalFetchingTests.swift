@@ -304,4 +304,38 @@ class LocalFetchingTests: XCTestCase {
         XCTAssertNotNil(receivedError)
         XCTAssertNil(sut.physicalEducation)
     }
+    
+    func testFetchEducatorsLocallyFromCorrectJSONData() {
+        
+        // Given
+        let jsonData = getTestingResource(fromFile: "Educators", ofType: "json")!
+        var returnedEducators: [Educator]?
+        
+        // When
+        sut.fetchEducators(byLastName: "", using: jsonData) { result in
+            if case .success(let educators) = result {
+                returnedEducators = educators
+            }
+        }
+        
+        // Then
+        XCTAssertEqual(returnedEducators?.count, 2)
+    }
+    
+    func testFetchEducatorsLocallyFromIncorrectJSONData() {
+        
+        // Given
+        let jsonData = getTestingResource(fromFile: "MATH_studyprograms", ofType: "json")!
+        var receivedError: Error?
+        
+        // When
+        sut.fetchEducators(byLastName: "", using: jsonData) { result in
+            if case .failure(let error) = result {
+                receivedError = error
+            }
+        }
+        
+        // Then
+        XCTAssertNotNil(receivedError)
+    }
 }

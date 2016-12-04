@@ -360,4 +360,22 @@ class WWWFetchingTests: XCTestCase {
             XCTAssertNotNil(returnedPE)
         }
     }
+    
+    func testFetchEducatorsFromWWW() {
+        
+        // Given
+        var returnedEducators: [Educator]?
+        
+        // When
+        let exp = expectation(description: "fetching educators with provided last name")
+        _ = sut.fetchEducators(byLastName: "Иванов").then { educators in
+            returnedEducators = educators
+            exp.fulfill()
+        }
+        
+        // Then
+        waitForExpectations(timeout: 10) { _ in
+            XCTAssertFalse(returnedEducators?.isEmpty ?? true)
+        }
+    }
 }
