@@ -378,4 +378,31 @@ class WWWFetchingTests: XCTestCase {
             XCTAssertFalse(returnedEducators?.isEmpty ?? true)
         }
     }
+    
+    func testFetchEducatorIDFromWW() {
+        
+        // Given
+        let educator = Educator(displayName: "", employments: [], fullName: "", id: 2888)
+        educator.timetable = sut
+        var returnedScheduleForCurrentTerm: EducatorSchedule?
+        var returnedScheduleForNextTerm: EducatorSchedule?
+        
+        // When
+        let exp = expectation(description: "fetching educator schedule")
+        _ = educator.fetchSchedule(forNextTerm: false).then { schedule -> Promise<EducatorSchedule> in
+            returnedScheduleForCurrentTerm = schedule
+            return educator.fetchSchedule(forNextTerm: true)
+        }.then { schedule in
+            returnedScheduleForNextTerm = schedule
+            exp.fulfill()
+        }
+        
+        // Then
+        waitForExpectations(timeout: 10) { _ in
+            XCTAssertNotNil(returnedScheduleForCurrentTerm)
+            XCTAssertNotNil(returnedScheduleForNextTerm)
+            XCTAssertNotEqual(returnedScheduleForCurrentTerm?.educatorEventsDays ?? [],
+                              returnedScheduleForNextTerm?.educatorEventsDays ?? [])
+        }
+    }
 }

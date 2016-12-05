@@ -375,4 +375,54 @@ public final class Timetable {
     public func fetchEducators(byLastName lastName: String, using jsonData: Data? = nil) -> Promise<[Educator]> {
         return makePromise({ fetchEducators(byLastName: lastName, using: jsonData, completion: $0) })
     }
+    
+    /// Fetches an educator's schedule.
+    ///
+    /// - Parameters:
+    ///   - id:             An educator's id. If `jsonData` is not `nil`,
+    ///                     setting this argument does not affect the result.
+    ///   - forNextTerm:    If `false`, fetches the schedule for the current term, otherwise — for the next term.
+    ///                     Default is `false`.
+    ///   - jsonData:       If this is not `nil`, then instead of networking uses provided json data as mock
+    ///                     data. May be useful for testing locally. Default value is `nil`.
+    ///   - dispatchQueue:  If this is `nil`, uses `DispatchQueue.main` as a queue to asyncronouslyx
+    ///                     execute a completion handler on. Otherwise uses the specified queue.
+    ///                     If `jsonData` is not `nil`, setting this
+    ///                     makes no change as in this case fetching happens syncronously in the current queue.
+    ///                     Default value is `nil`.
+    ///   - completion:     A closure that is called after a responce is received.
+    public func fetchEducatorSchedule(byEducatorID id: Int,
+                                      forNextTerm: Bool = false,
+                                      using jsonData: Data? = nil,
+                                      dispatchQueue: DispatchQueue? = nil,
+                                      completion: @escaping (Result<EducatorSchedule>) -> Void) {
+        
+        let next = forNextTerm ? 1 : 0
+        
+        fetch(using: jsonData,
+              apiQuery: Educator.educatorScheduleAPIQuery(id: id),
+              parameters: ["next" : next],
+              dispatchQueue: dispatchQueue,
+              timetable: self,
+              completion: completion)
+    }
+    
+    /// Fetches an educator's schedule.
+    ///
+    /// - Parameters:
+    ///   - id:             An educator's id. If `jsonData` is not `nil`,
+    ///                     setting this argument does not affect the result.
+    ///   - forNextTerm:    If `false`, fetches the schedule for the current term, otherwise — for the next term.
+    ///                     Default is `false`.
+    ///   - jsonData:       If this is not `nil`, then instead of networking uses provided json data as mock
+    ///                     data. May be useful for testing locally. Default value is `nil`.
+    /// - Returns:          A promise.
+    public func fetchEducatorSchedule(byEducatorID id: Int,
+                                      forNextTerm: Bool = false,
+                                      using jsonData: Data? = nil) -> Promise<EducatorSchedule> {
+        return makePromise({ fetchEducatorSchedule(byEducatorID: id,
+                                                   forNextTerm: forNextTerm,
+                                                   using: jsonData,
+                                                   completion: $0) })
+    }
 }
