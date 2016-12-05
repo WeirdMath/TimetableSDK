@@ -50,9 +50,9 @@ let timetable = Timetable()
 timetable.fetchDivisions() { result in
     
     switch result {
-    case .success(let value):
+    case .success(let divisions):
         
-        let physics = timetable.divisions![19]
+        let physics = divisions[19]
         
         print(physics.name)
         // "Физика"
@@ -60,9 +60,9 @@ timetable.fetchDivisions() { result in
         physics.fetchStudyLevels(){ result in
             
             switch result {
-            case .success(let value):
+            case .success(let studyLevels):
                 
-                print(physics.studyLevels![0].specializations[0].name)
+                print(studyLevels[0].specializations[0].name)
                 // "Информационные технологии и численные методы"
                 
             case .failure(let error):
@@ -87,7 +87,7 @@ let timetable = Timetable()
 let url = Bundle.main.url(forResource: "divisions", withExtension: "json")!
 let jsonData = try! Data(contentsOf: url)
 
-timetable.fetchDivisions(using: jsonData) { error in
+timetable.fetchDivisions(using: jsonData) { result in
     // ...
 }
 ```
@@ -98,7 +98,7 @@ You can specify a dispatch queue if you need to:
 import Dispatch
 import TimetableSDK
 
-timetable.fetchDivisions(dispatchQueue: .global(qos: .background)) { error in
+timetable.fetchDivisions(dispatchQueue: .global(qos: .background)) { result in
     // ...
 }
 ```
