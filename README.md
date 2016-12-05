@@ -43,30 +43,34 @@ You can use the SDK for getting data directly from [timetable.spbu.ru](http://ti
 
 ```swift
 import TimetableSDK
+import enum Alamofire.Result
 
 let timetable = Timetable()
 
-timetable.fetchDivisions { error in
-
-    if let error = error {
-        print(error)
-        return
-    }
-
-    let physics = timetable.divisions![19]
-
-    print(physics.name)
-    // Prints "Физика"
-
-    timetable.fetchStudyLevels(for: physics) { error in
-
-        if let error = error {
-            print(error)
-            return
+timetable.fetchDivisions() { result in
+    
+    switch result {
+    case .success(let value):
+        
+        let physics = timetable.divisions![19]
+        
+        print(physics.name)
+        // "Физика"
+        
+        physics.fetchStudyLevels(){ result in
+            
+            switch result {
+            case .success(let value):
+                
+                print(physics.studyLevels![0].specializations[0].name)
+                // "Информационные технологии и численные методы"
+                
+            case .failure(let error):
+                print(error)
+            }
         }
-
-        print(physics.studyLevels![0].specializations[0].name)
-        // Prints "Информационные технологии и численные методы"
+    case .failure(let error):
+        print(error)
     }
 }
 ```
@@ -89,12 +93,40 @@ timetable.fetchDivisions(using: jsonData) { error in
 ```
 
 You can specify a dispatch queue if you need to:
+
 ```swift
 import Dispatch
 import TimetableSDK
 
 timetable.fetchDivisions(dispatchQueue: .global(qos: .background)) { error in
     // ...
+}
+```
+
+You can use promises!
+
+```swift
+import TimetableSDK
+import PromiseKit
+
+let timetable = Timetable()
+
+timetable.fetchDivisions().then { divisions -> Promise<[StudyLevel]> in
+    
+    let physics = divisions[19]
+    
+    print(physics.name)
+    // "Физика"
+    
+    return physics.fetchStudyLevels()
+    
+}.then { studyLevels in
+
+    print(studyLevels[0].specializations[0].name)
+    // "Информационные технологии и численные методы"
+    
+}.catch { error in
+    print(error)
 }
 ```
 
