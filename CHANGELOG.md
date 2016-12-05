@@ -9,6 +9,7 @@
 - Some properties of `Event` have been made optional in order to generalize this entity so that it fits more API responses.
 - Most of the entities have been made classes instead of structs.
 - Fetching methods are now not only members of the `Timetable` class.
+- Support for promises using [PromiseKit](http://promisekit.org).
 - Massive refactoring for object mapping and other internals. Compiles faster, code coverage increased.
 
 ## [1.0.0](https://github.com/WeirdMath/TimetableSDK/tree/1.0.0) (2016-11-25)
