@@ -14,7 +14,11 @@ import DefaultStringConvertible
 public final class StudyLevel : JSONRepresentable, TimetableEntity {
     
     /// The Timetable this entity was fetched from. `nil` if it was initialized from a custom JSON object.
-    public weak var timetable: Timetable?
+    public weak var timetable: Timetable? {
+        didSet {
+            specializations.forEach { $0.timetable = timetable }
+        }
+    }
     
     public let name: String
     public var specializations: [Specialization]

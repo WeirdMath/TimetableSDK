@@ -97,6 +97,8 @@ class WWWFetchingTests: XCTestCase {
             
             XCTAssertNotNil(division.studyLevels)
             XCTAssertNotNil(division.studyLevels?.first?.timetable)
+            XCTAssertNotNil(division.studyLevels?.first?.specializations.first?.timetable)
+            XCTAssertNotNil(division.studyLevels?.first?.specializations.first?.admissionYears.first?.timetable)
             XCTAssertNil(returnedError)
         }
     }

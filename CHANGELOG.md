@@ -1,5 +1,11 @@
 # Change Log
 
+## [2.0.1](https://github.com/WeirdMath/TimetableSDK/tree/2.0.1) (2017-03-04)
+
+**Issues resolved:**
+
+- After fetching `StudyLevel`s each of the containing `Specialization`'s `timetable` property had not been set. Same thing for `AdmissionYear`'s `timetable`. It has been fixed in this patch.
+
 ## [2.0.0](https://github.com/WeirdMath/TimetableSDK/tree/2.0.0) (2016-12-05)
 
 **Implemented features:**
