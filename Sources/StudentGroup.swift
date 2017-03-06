@@ -15,7 +15,7 @@ import DefaultStringConvertible
 /// The information about a student group formed in an `AdmissionYear`.
 public final class StudentGroup : JSONRepresentable, TimetableEntity {
     
-    /// The Timetable this entity was fetched from. `nil` if it was initialized from a custom JSON object.
+    /// The Timetable this entity was fetched from or bound to.
     public weak var timetable: Timetable?
     
     public let id: Int
@@ -23,6 +23,10 @@ public final class StudentGroup : JSONRepresentable, TimetableEntity {
     public let studyForm: String
     public let profiles: String
     public let divisionAlias: String
+
+    /// This property is not `nil` only if the student group has been initialized
+    /// using `init(from:)`.
+    private var _json: JSON?
     
     /// The current week schedule for this student group. Initially is `nil`. Use
     /// the `fetchCurrentWeek(for:using:dispatchQueue:completion:)` method of a `Timetable` instance
@@ -46,25 +50,53 @@ public final class StudentGroup : JSONRepresentable, TimetableEntity {
     
     /// Creates a new entity from its JSON representation.
     ///
-    /// - Parameter json: The JSON representation of the entity.
+    /// - Parameters:
+    ///   - json: The JSON representation of the entity.
+    ///   - timetable: The timetable object to bind to. Default is `nil`.
+    ///                Set this to non-`nil` value if you want to use the
+    ///                `fetchCurrentWeek` and `fetchWeek` methods.
     /// - Throws: `TimetableError.incorrectJSONFormat`
-    public init(from json: JSON) throws {
+    public init(from json: JSON, bindingTo timetable: Timetable?) throws {
         do {
             id              = try map(json["StudentGroupId"])
             name            = try map(json["StudentGroupName"])
             studyForm       = try map(json["StudentGroupStudyForm"])
             profiles        = try map(json["StudentGroupProfiles"])
             divisionAlias   = try map(json["PublicDivisionAlias"])
+
+            _json = json
+            self.timetable = timetable
         } catch {
             throw TimetableError.incorrectJSON(json, whenConverting: StudentGroup.self)
         }
+    }
+
+    /// Creates a new entity from its JSON representation.
+    ///
+    /// - Parameters:
+    ///   - json: The JSON representation of the entity.
+    ///   - timetable: The timetable object to bind to. Default is `nil`.
+    ///                Set this to non-`nil` value if you want to use the
+    ///                `fetchCurrentWeek` and `fetchWeek` methods.
+    /// - Throws: `TimetableError.incorrectJSONFormat`
+    public convenience init(from jsonData: Data, bindingTo timetable: Timetable?) throws {
+        try self.init(from: jsonData)
+        self.timetable = timetable
+    }
+
+    /// Creates a new entity from its JSON representation.
+    ///
+    /// - Parameter json: The JSON representation of the entity.
+    /// - Throws: `TimetableError.incorrectJSONFormat`
+    public convenience init(from json: JSON) throws {
+        try self.init(from: json, bindingTo: nil)
     }
     
     /// Fetches the current week schedule for the student group.
     ///
     /// - Parameters:
-    ///   - jsonData:       If this is not `nil`, then instead of networking uses provided json data as mock
-    ///                     data. May be useful for testing locally. Default value is `nil`.
+    ///   - jsonData:       If this is not `nil`, then instead of networking uses provided json data.
+    ///                     May be useful for deserializing from a local storage. Default value is `nil`.
     ///   - dispatchQueue:  If this is `nil`, uses `DispatchQueue.main` as a queue to asyncronously
     ///                     execute a networking request on. Otherwise uses the specified queue.
     ///                     If `jsonData` is not `nil`, setting this
@@ -91,8 +123,8 @@ public final class StudentGroup : JSONRepresentable, TimetableEntity {
     
     /// Fetches the current week schedule for the student group.
     ///
-    /// - Parameter jsonData: If this is not `nil`, then instead of networking uses provided json data as mock
-    ///                     data. May be useful for testing locally. Default value is `nil`.
+    /// - Parameter jsonData: If this is not `nil`, then instead of networking uses provided json data.
+    ///                     May be useful for deserializing from a local storage. Default value is `nil`.
     /// - Returns: A promise.
     public func fetchCurrentWeek(using jsonData: Data? = nil) -> Promise<Week> {
         return makePromise({ fetchCurrentWeek(using: jsonData, completion: $0) })
@@ -102,8 +134,8 @@ public final class StudentGroup : JSONRepresentable, TimetableEntity {
     ///
     /// - Parameters:
     ///   - day             The day the week begins.
-    ///   - jsonData:       If this is not `nil`, then instead of networking uses provided json data as mock
-    ///                     data. May be useful for testing locally. Default value is `nil`.
+    ///   - jsonData:       If this is not `nil`, then instead of networking uses provided json data.
+    ///                     May be useful for deserializing from a local storage. Default value is `nil`.
     ///   - dispatchQueue:  If this is `nil`, uses `DispatchQueue.main` as a queue to asyncronously
     ///                     execute a completion handler on. Otherwise uses the specified queue.
     ///                     If `jsonData` is not `nil`, setting this
@@ -135,11 +167,21 @@ public final class StudentGroup : JSONRepresentable, TimetableEntity {
     ///
     /// - Parameters:
     ///   - day:        The day the week begins.
-    ///   - jsonData:   If this is not `nil`, then instead of networking uses provided json data as mock
-    ///                     data. May be useful for testing locally. Default value is `nil`.
+    ///   - jsonData:   If this is not `nil`, then instead of networking uses provided json data.
+    ///                     May be useful for deserializing from a local storage. Default value is `nil`.
     /// - Returns:      A promise.
     public func fetchWeek(beginningWithDay day: Date, using jsonData: Data? = nil) -> Promise<Week> {
         return makePromise({ fetchWeek(beginningWithDay: day, using: jsonData, completion: $0) })
+    }
+
+    /// Serializes a student group to JSON. This can be useful for storing
+    /// it on disk and then deserializing it without performing any network requests.
+    ///
+    /// The returned JSON can be deserialized using the `deserialize(from:)` static method.
+    ///
+    /// - Returns: The serialized student group.
+    public func serialize() -> Data {
+        return try! _json!.rawData()
     }
 }
 

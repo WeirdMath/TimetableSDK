@@ -527,4 +527,40 @@ class JSONTests: XCTestCase {
         // Then
         XCTAssertEqual(expectedSchedule, returnedScedule)
     }
+
+    func testSerializeDeserializeStudentGroup() {
+
+        // Given
+        let jsonData = getTestingResource(fromFile: "MATH_studyprogram_5466_studentGroups", ofType: "json")!
+        let timetable = Timetable()
+        let initialJSON = JSON(data: jsonData)
+
+        // When
+        let deserializedObject = try? StudentGroup(from: initialJSON[0], bindingTo: timetable)
+        let serializedJSON = deserializedObject.flatMap { JSON(data: $0.serialize()) }
+
+        // Then
+        XCTAssertNotNil(deserializedObject)
+        XCTAssertNotNil(serializedJSON)
+        XCTAssert(deserializedObject?.timetable === timetable)
+        XCTAssertEqual(initialJSON[0], serializedJSON)
+    }
+
+    func testSerializeDeserializeWeek() {
+
+        // Given
+        let jsonData = getTestingResource(fromFile: "MATH_studentGroup_10014_events", ofType: "json")!
+        let timetable = Timetable()
+        let initialJSON = JSON(data: jsonData)
+
+        // When
+        let deserializedObject = try? Week(from: initialJSON, bindingTo: timetable)
+        let serializedJSON = deserializedObject.flatMap { JSON(data: $0.serialize()) }
+
+        // Then
+        XCTAssertNotNil(deserializedObject)
+        XCTAssertNotNil(serializedJSON)
+        XCTAssert(deserializedObject?.timetable === timetable)
+        XCTAssertEqual(initialJSON, serializedJSON)
+    }
 }

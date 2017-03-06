@@ -15,7 +15,7 @@ import DefaultStringConvertible
 /// The information about a study week for a `StudentGroup`.
 public final class Week : JSONRepresentable, TimetableEntity {
     
-    /// The Timetable this entity was fetched from. `nil` if it was initialized from a custom JSON object.
+    /// The Timetable this entity was fetched from or bound to.
     public weak var timetable: Timetable?
     
     /// The student group this week contains information for.
@@ -26,6 +26,10 @@ public final class Week : JSONRepresentable, TimetableEntity {
     
     /// The week preceding `self`.
     public weak var previous: Week?
+
+    /// This property is not `nil` only if the week has been initialized
+    /// using `init(from:)`.
+    private var _json: JSON?
     
     internal static let dateForatter: DateFormatter = {
         let dateFormatter = DateFormatter()
@@ -71,12 +75,16 @@ public final class Week : JSONRepresentable, TimetableEntity {
         self.studentGroupDisplayName          = studentGroupDisplayName
         self.timetableDisplayName             = timetableDisplayName
     }
-    
+
     /// Creates a new entity from its JSON representation.
     ///
-    /// - Parameter json: The JSON representation of the entity.
+    /// - Parameters:
+    ///   - json: The JSON representation of the entity.
+    ///   - timetable: The timetable object to bind to. Default is `nil`.
+    ///                Set this to non-`nil` value if you want to use the
+    ///                `fetchNextWeek` and `fetchPreviousWeek` methods.
     /// - Throws: `TimetableError.incorrectJSONFormat`
-    public init(from json: JSON) throws {
+    public init(from json: JSON, bindingTo timetable: Timetable?) throws {
         do {
             previousWeekFirstDay             = try map(json["PreviousWeekMonday"],
                                                        transformation: Week.dateForatter.date(from:))
@@ -93,9 +101,33 @@ public final class Week : JSONRepresentable, TimetableEntity {
             studentGroupID                   = try map(json["StudentGroupId"])
             studentGroupDisplayName          = try map(json["StudentGroupDisplayName"])
             timetableDisplayName             = try map(json["TimeTableDisplayName"])
+
+            _json = json
+            self.timetable = timetable
         } catch {
             throw TimetableError.incorrectJSON(json, whenConverting: Week.self)
         }
+    }
+
+    /// Creates a new entity from its JSON representation.
+    ///
+    /// - Parameters:
+    ///   - json: The JSON representation of the entity.
+    ///   - timetable: The timetable object to bind to. Default is `nil`.
+    ///                Set this to non-`nil` value if you want to use the
+    ///                `fetchNextWeek` and `fetchPreviousWeek` methods.
+    /// - Throws: `TimetableError.incorrectJSONFormat`
+    public convenience init(from jsonData: Data, bindingTo timetable: Timetable?) throws {
+        try self.init(from: jsonData)
+        self.timetable = timetable
+    }
+
+    /// Creates a new entity from its JSON representation.
+    ///
+    /// - Parameter json: The JSON representation of the entity.
+    /// - Throws: `TimetableError.incorrectJSONFormat`
+    public convenience init(from json: JSON) throws {
+        try self.init(from: json, bindingTo: nil)
     }
     
     /// Fetches the week that follows `self`.
@@ -196,6 +228,16 @@ public final class Week : JSONRepresentable, TimetableEntity {
         } else {
             return nil
         }
+    }
+
+    /// Serializes a student group to JSON. This can be useful for storing
+    /// it on disk and then deserializing it without performing any network requests.
+    ///
+    /// The returned JSON can be deserialized using the `deserialize(from:)` static method.
+    ///
+    /// - Returns: The serialized student group.
+    public func serialize() -> Data {
+        return try! _json!.rawData()
     }
 }
 

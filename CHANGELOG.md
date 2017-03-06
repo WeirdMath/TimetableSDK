@@ -1,5 +1,12 @@
 # Change Log
 
+## [2.1.0](https://github.com/WeirdMath/TimetableSDK/tree/2.1.0) (2017-03-06)
+
+**Implemented features:**
+
+- Serializing `StudentGroup`s and `Week`s using JSON. This is useful when you don't want to fetch them every time you need them.
+- Initializing `StudentGroup`s and `Week`s from JSON with binding to a `Timetable` object so you can invoke their `fetch[...]` methods safely.
+
 ## [2.0.1](https://github.com/WeirdMath/TimetableSDK/tree/2.0.1) (2017-03-04)
 
 **Issues resolved:**
