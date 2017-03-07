@@ -1,5 +1,15 @@
 # Change Log
 
+## [2.2.0](https://github.com/WeirdMath/TimetableSDK/tree/2.2.0) (2017-03-08)
+
+**Implemented features:**
+
+- Created `Address` and `Room` entities.
+- `Location` can now fetch the room that it refers to, if one can be found (which is not guaranteed even if there actually is such room, but its address does not match exactly to the location's address).
+- Some docs fixed.
+- Fixed not setting the `timetable` property for some entities.
+- `Event` and `Location` were made classes.
+
 ## [2.1.0](https://github.com/WeirdMath/TimetableSDK/tree/2.1.0) (2017-03-06)
 
 **Implemented features:**
