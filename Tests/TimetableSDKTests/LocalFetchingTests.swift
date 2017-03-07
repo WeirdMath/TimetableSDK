@@ -374,4 +374,84 @@ class LocalFetchingTests: XCTestCase {
         // Then
         XCTAssertNotNil(receivedError)
     }
+
+    func testFetchAddressesLocallyFromCorrectJSONData() {
+
+        // Given
+        let jsonData = getTestingResource(fromFile: "addresses", ofType: "json")!
+        var completionCalled = false
+
+        XCTAssertNil(sut.addresses)
+
+        // When
+        sut.fetchAllAddresses(using: jsonData) { _ in
+            completionCalled = true
+        }
+
+        // Then
+        XCTAssertTrue(completionCalled)
+        XCTAssertEqual(sut.addresses?.count, 126)
+    }
+
+    func testFetchAddressesLocallyFromIncorrectJSONData() {
+
+        // Given
+        let jsonData = getTestingResource(fromFile: "MATH_studyprograms", ofType: "json")!
+        var receivedError: Error?
+
+        // When
+        sut.fetchAddresses(using: jsonData) { result in
+            if case .failure(let error) = result {
+                receivedError = error
+            }
+        }
+
+        // Then
+        XCTAssertNotNil(receivedError)
+        XCTAssertNil(sut.addresses)
+    }
+
+    func testFetchRoomsLocallyFromCorrectJSONData() {
+
+        // Given
+        let jsonData = getTestingResource(fromFile: "address_baf0eed7-4ef8-4e37-8dfb-df91d9021bd4_locations", ofType: "json")!
+        let address = Address(name: "Университетский просп., д. 28",
+                              matches: 112,
+                              wantingEquipment: nil,
+                              oid: "baf0eed7-4ef8-4e37-8dfb-df91d9021bd4")
+        var completionCalled = false
+
+        XCTAssertNil(address.rooms)
+
+        // When
+        address.fetchAllRooms(using: jsonData) { _ in
+            completionCalled = true
+        }
+
+        // Then
+        XCTAssertTrue(completionCalled)
+        XCTAssertEqual(address.rooms?.count, 112)
+    }
+
+    func testFetchRoomsLocallyFromIncorrectJSONData() {
+
+        // Given
+        let jsonData = getTestingResource(fromFile: "MATH_studyprograms", ofType: "json")!
+        let address = Address(name: "Университетский просп., д. 28",
+                              matches: 112,
+                              wantingEquipment: nil,
+                              oid: "baf0eed7-4ef8-4e37-8dfb-df91d9021bd4")
+        var receivedError: Error?
+
+        // When
+        address.fetchAllRooms(using: jsonData) { result in
+            if case .failure(let error) = result {
+                receivedError = error
+            }
+        }
+
+        // Then
+        XCTAssertNotNil(receivedError)
+        XCTAssertNil(address.rooms)
+    }
 }

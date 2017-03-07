@@ -84,7 +84,7 @@ public final class Address : JSONRepresentable, TimetableEntity {
         try self.init(from: json, bindintTo: nil)
     }
 
-    /// Fetches all the rooms available in this address.
+    /// Fetches all the rooms available in this address and saves them into the `rooms` property.
     ///
     /// - Parameters:
     ///   - jsonData:       If this is not `nil`, then instead of networking uses provided json data as mock
@@ -171,9 +171,9 @@ public final class Address : JSONRepresentable, TimetableEntity {
     ///   - jsonData:  If this is not `nil`, then instead of networking uses provided json data as mock
     ///                data. May be useful for deserializing from a local storage. Default value is `nil`.
     /// - Returns:     A promise.
-    public func fetchRooms(seating: Room.Seating?,
-                           capacity: Int?,
-                           equipment: String?,
+    public func fetchRooms(seating: Room.Seating? = nil,
+                           capacity: Int? = nil,
+                           equipment: String? = nil,
                            using jsonData: Data? = nil) -> Promise<[Room]> {
         return makePromise({ fetchRooms(seating: seating,
                                         capacity: capacity,

@@ -31,14 +31,14 @@ public final class Room : JSONRepresentable, TimetableEntity {
     public let seating: Seating
     public let capacity: Int
     public let additionalInfo: String
-    public let wantingEquipment: String
+    public let wantingEquipment: String?
     public let oid: String
 
     internal init(name: String,
                   seating: Seating,
                   capacity: Int,
                   additionalInfo: String,
-                  wantingEquipment: String,
+                  wantingEquipment: String?,
                   oid: String) {
         self.name = name
         self.seating = seating

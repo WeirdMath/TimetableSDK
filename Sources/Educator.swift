@@ -23,7 +23,11 @@ public final class Educator : JSONRepresentable, TimetableEntity {
     }
     
     /// The Timetable this entity was fetched from. `nil` if it was initialized from a custom JSON object.
-    public weak var timetable: Timetable?
+    public weak var timetable: Timetable? {
+        didSet {
+            employments.forEach { $0.timetable = timetable }
+        }
+    }
     
     public let displayName: String
     public let employments: [Employment]

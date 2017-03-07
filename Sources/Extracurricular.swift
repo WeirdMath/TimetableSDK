@@ -14,7 +14,12 @@ import DefaultStringConvertible
 public final class Extracurricular : JSONRepresentable, TimetableEntity {
     
     /// The Timetable this entity was fetched from. `nil` if it was initialized from a custom JSON object.
-    public weak var timetable: Timetable?
+    public weak var timetable: Timetable? {
+        didSet {
+            days.forEach { $0.timetable = timetable }
+            earlierEvents.forEach { $0.timetable = timetable }
+        }
+    }
     
     internal static let dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()

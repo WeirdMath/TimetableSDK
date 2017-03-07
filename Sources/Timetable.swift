@@ -57,7 +57,7 @@ public final class Timetable {
     }
     
     /// Physical training events for the current week. Initially is `nil`. Use
-    /// the `fetchPhysicalEducation(using:dispatchQueue:completion:)` method in order to get science events.
+    /// the `fetchPhysicalEducation(using:dispatchQueue:completion:)` method in order to get PE events.
     public fileprivate(set) var physicalEducation: Extracurricular?
     
     internal var physicalEducationAPIQuery: String {
@@ -66,6 +66,14 @@ public final class Timetable {
     
     internal var educatorsAPIQuery: String {
         return "educators"
+    }
+
+    /// Addresses of all the buildings of the University. Initially is `nil`. Use
+    /// the `fetchAllAddresses(using:dispatchQueue:completion:)` method in order to get addresses.
+    public fileprivate(set) var addresses: [Address]?
+
+    internal var addressesAPIQuery: String {
+        return "addresses"
     }
     
     /// Fetches the divisions of the University. In case of success saves the divisions into the
@@ -424,5 +432,99 @@ public final class Timetable {
                                                    forNextTerm: forNextTerm,
                                                    using: jsonData,
                                                    completion: $0) })
+    }
+
+    /// Fetches the addresses of buildings. In case of success saves the divisions into the
+    /// `addresses` property.
+    ///
+    /// - Parameters:
+    ///   - jsonData:       If this is not `nil`, then instead of networking uses provided json data as mock
+    ///                     data. May be useful for testing locally. Default value is `nil`.
+    ///   - dispatchQueue:  If this is `nil`, uses `DispatchQueue.main` as a queue to asyncronously
+    ///                     execute a completion handler on. Otherwise uses the specified queue.
+    ///                     If `jsonData` is not `nil`, setting this
+    ///                     makes no change as in this case fetching happens syncronously in the current queue.
+    ///                     Default value is `nil`.
+    ///   - completion:     A closure that is called after a responce is received.
+    public func fetchAllAddresses(using jsonData: Data? = nil,
+                                  dispatchQueue: DispatchQueue? = nil,
+                                  completion: @escaping (Result<[Address]>) -> Void) {
+
+        fetch(using: jsonData,
+              apiQuery: addressesAPIQuery,
+              dispatchQueue: dispatchQueue,
+              timetable: self) { [weak self] (result: Result<[Address]>) in
+
+                if case .success(let addresses) = result {
+                    self?.addresses = addresses
+                }
+
+                completion(result)
+        }
+    }
+
+    /// Fetches the addresses of buildings. In case of success saves the divisions into the
+    /// `addresses` property.
+    ///
+    /// - Parameter jsonData:   If this is not `nil`, then instead of networking uses provided json data as mock
+    ///                         data. May be useful for testing locally. Default value is `nil`.
+    /// - Returns:              A promise.
+    public func fetchAllAddresses(using jsonData: Data? = nil) -> Promise<[Address]> {
+        return makePromise({ fetchAllAddresses(using: jsonData, completion: $0) })
+    }
+
+    /// Fetches the addresses of buildings that satisfy the provided `parameters`.
+    ///
+    /// - Parameters:
+    ///   - seating:        The type of seating.
+    ///   - capacisty:      The capacity of a room in the address.
+    ///   - equipment:      The equipment needed.
+    ///   - jsonData:       If this is not `nil`, then instead of networking uses provided json data as mock
+    ///                     data. May be useful for testing locally. Default value is `nil`.
+    ///   - dispatchQueue:  If this is `nil`, uses `DispatchQueue.main` as a queue to asyncronously
+    ///                     execute a completion handler on. Otherwise uses the specified queue.
+    ///                     If `jsonData` is not `nil`, setting this
+    ///                     makes no change as in this case fetching happens syncronously in the current queue.
+    ///                     Default value is `nil`.
+    ///   - completion:     A closure that is called after a responce is received.
+    public func fetchAddresses(seating: Room.Seating? = nil,
+                               capacity: Int? = nil,
+                               equipment: String? = nil,
+                               using jsonData: Data? = nil,
+                               dispatchQueue: DispatchQueue? = nil,
+                               completion: @escaping (Result<[Address]>) -> Void) {
+
+        var parameters: [String : Any] = [:]
+
+        parameters["seating"] = seating?.rawValue
+        parameters["capacity"] = capacity
+        parameters["equipment"] = equipment
+
+        fetch(using: jsonData,
+              apiQuery: addressesAPIQuery,
+              parameters: parameters,
+              dispatchQueue: dispatchQueue,
+              timetable: self,
+              completion: completion)
+    }
+
+    /// Fetches the addresses of buildings that satisfy the provided `parameters`.
+    ///
+    /// - Parameters:
+    ///   - seating:        The type of seating.
+    ///   - capacisty:      The capacity of a room in the address.
+    ///   - equipment:      The equipment needed.
+    ///   - jsonData:       If this is not `nil`, then instead of networking uses provided json data as mock
+    ///                     data. May be useful for testing locally. Default value is `nil`.
+    public func fetchAddresses(seating: Room.Seating? = nil,
+                               capacity: Int? = nil,
+                               equipment: String? = nil,
+                               using jsonData: Data? = nil) -> Promise<[Address]> {
+
+        return makePromise({ fetchAddresses(seating: seating,
+                                            capacity: capacity,
+                                            equipment: equipment,
+                                            using: jsonData,
+                                            completion: $0) })
     }
 }

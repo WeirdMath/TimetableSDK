@@ -20,7 +20,11 @@ public final class EducatorSchedule : JSONRepresentable, TimetableEntity {
     }()
     
     /// The Timetable this entity was fetched from. `nil` if it was initialized from a custom JSON object.
-    public weak var timetable: Timetable?
+    public weak var timetable: Timetable? {
+        didSet {
+            educatorEventsDays.forEach { $0.timetable = timetable }
+        }
+    }
     
     public let autumnTermLinkAvailable: Bool
     public let dateRangeDisplayText: String

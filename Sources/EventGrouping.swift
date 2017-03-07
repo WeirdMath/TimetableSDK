@@ -13,7 +13,11 @@ import DefaultStringConvertible
 public final class EventGrouping: JSONRepresentable, TimetableEntity {
     
     /// The Timetable this entity was fetched from. `nil` if it was initialized from a custom JSON object.
-    public weak var timetable: Timetable?
+    public weak var timetable: Timetable? {
+        didSet {
+            events.forEach { $0.timetable = timetable }
+        }
+    }
     
     public let caption: String
     public let events: [Event]

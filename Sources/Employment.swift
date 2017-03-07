@@ -11,7 +11,7 @@ import DefaultStringConvertible
 import Foundation
 
 /// The information about an educator's employment.
-public struct Employment : JSONRepresentable, TimetableEntity {
+public final class Employment : JSONRepresentable, TimetableEntity {
     
     /// The Timetable this entity was fetched from. `nil` if it was initialized from a custom JSON object.
     public weak var timetable: Timetable?

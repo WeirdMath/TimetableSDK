@@ -4,6 +4,8 @@ import DefaultStringConvertible
 @testable import TimetableSDK
 
 class JSONTests: XCTestCase {
+
+    // MARK: - Initializing
     
     func testInitializeDivisionFromJSON() {
         
@@ -527,6 +529,45 @@ class JSONTests: XCTestCase {
         // Then
         XCTAssertEqual(expectedSchedule, returnedScedule)
     }
+
+    func testInitializeAddressFromJSON() {
+
+        // Given
+        let jsonData = getTestingResource(fromFile: "addresses", ofType: "json")!
+        let json = JSON(data: jsonData)
+        let expectedAddress = Address(name: "Университетский просп., д. 28",
+                                      matches: 112,
+                                      wantingEquipment: nil,
+                                      oid: "baf0eed7-4ef8-4e37-8dfb-df91d9021bd4")
+
+        // When
+        let returnedAddress = try? Address(from: json[2])
+
+        // Then
+        XCTAssertEqual(expectedAddress, returnedAddress)
+    }
+
+    func testInitializeRoomFromJSON() {
+
+        // Given
+        let jsonData = getTestingResource(fromFile: "address_baf0eed7-4ef8-4e37-8dfb-df91d9021bd4_locations",
+                                          ofType: "json")!
+        let json = JSON(data: jsonData)
+        let expectedRoom = Room(name: "2412",
+                                seating: .theater,
+                                capacity: 10,
+                                additionalInfo: "Проектор, экран, аудио, Компьютерный класс ( 11 ПК )",
+                                wantingEquipment: nil,
+                                oid: "9939b803-25fa-4840-a066-08154738b47b")
+
+        // When
+        let returnedRoom = try? Room(from: json[3])
+
+        // Then
+        XCTAssertEqual(expectedRoom, returnedRoom)
+    }
+
+    // MARK: - Serialize-Deserialize
 
     func testSerializeDeserializeStudentGroup() {
 

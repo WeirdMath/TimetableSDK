@@ -156,6 +156,9 @@ class WWWFetchingTests: XCTestCase {
             
             XCTAssertNotNil(studentGroup.currentWeek)
             XCTAssertNotNil(studentGroup.currentWeek?.timetable)
+            XCTAssertNotNil(studentGroup.currentWeek?.days.first?.timetable)
+            XCTAssertNotNil(studentGroup.currentWeek?.days.first?.events.first?.timetable)
+            XCTAssertNotNil(studentGroup.currentWeek?.days.first?.events.first?.locations?.first?.timetable)
             XCTAssertNil(returnedError)
         }
     }
@@ -183,6 +186,10 @@ class WWWFetchingTests: XCTestCase {
         waitForExpectations(timeout: 10) { _ in
             
             XCTAssertNotNil(returnedWeek)
+            XCTAssertNotNil(returnedWeek?.timetable)
+            XCTAssertNotNil(returnedWeek?.days.first?.timetable)
+            XCTAssertNotNil(returnedWeek?.days.first?.events.first?.timetable)
+            XCTAssertNotNil(returnedWeek?.days.first?.events.first?.locations?.first?.timetable)
         }
     }
     
@@ -230,6 +237,14 @@ class WWWFetchingTests: XCTestCase {
             XCTAssertNotNil(current)
             XCTAssertNotNil(next)
             XCTAssertNotNil(previous)
+            XCTAssertNotNil(next?.timetable)
+            XCTAssertNotNil(next?.days.first?.timetable)
+            XCTAssertNotNil(next?.days.first?.events.first?.timetable)
+            XCTAssertNotNil(next?.days.first?.events.first?.locations?.first?.timetable)
+            XCTAssertNotNil(previous?.timetable)
+            XCTAssertNotNil(previous?.days.first?.timetable)
+            XCTAssertNotNil(previous?.days.first?.events.first?.timetable)
+            XCTAssertNotNil(previous?.days.first?.events.first?.locations?.first?.timetable)
             XCTAssertEqual(current?.next, next)
             XCTAssertEqual(next?.previous, current)
             XCTAssertEqual(previous?.next, current)
@@ -256,6 +271,11 @@ class WWWFetchingTests: XCTestCase {
             
             XCTAssertNotNil(self.sut.billboard)
             XCTAssertNotNil(self.sut.billboard?.timetable)
+            XCTAssertNotNil(self.sut.billboard?.days.first?.timetable)
+            XCTAssertNotNil(self.sut.billboard?.days.first?.events.first?.timetable)
+            XCTAssertNotNil(self.sut.billboard?.days.first?.events.first?.location?.timetable)
+            XCTAssertNotNil(self.sut.billboard?.earlierEvents.first?.timetable)
+            XCTAssertNotNil(self.sut.billboard?.earlierEvents.first?.location?.timetable)
             XCTAssertNil(returnedError)
         }
     }
@@ -276,6 +296,12 @@ class WWWFetchingTests: XCTestCase {
         // Then
         waitForExpectations(timeout: 10) { _ in
             XCTAssertNotNil(returnedBillblard)
+            XCTAssertNotNil(returnedBillblard?.timetable)
+            XCTAssertNotNil(returnedBillblard?.days.first?.timetable)
+            XCTAssertNotNil(returnedBillblard?.days.first?.events.first?.timetable)
+            XCTAssertNotNil(returnedBillblard?.days.first?.events.first?.location?.timetable)
+            XCTAssertNotNil(returnedBillblard?.earlierEvents.first?.timetable)
+            XCTAssertNotNil(returnedBillblard?.earlierEvents.first?.location?.timetable)
         }
     }
     
@@ -298,6 +324,9 @@ class WWWFetchingTests: XCTestCase {
             
             XCTAssertNotNil(self.sut.science)
             XCTAssertNotNil(self.sut.science?.timetable)
+            XCTAssertNotNil(self.sut.science?.eventGroupings.first?.timetable)
+            XCTAssertNotNil(self.sut.science?.eventGroupings.first?.events.first?.timetable)
+            XCTAssertNotNil(self.sut.science?.eventGroupings.first?.events.first?.location?.timetable)
             XCTAssertNil(returnedError)
         }
     }
@@ -318,6 +347,7 @@ class WWWFetchingTests: XCTestCase {
         // Then
         waitForExpectations(timeout: 10) { _ in
             XCTAssertNotNil(returnedScience)
+            XCTAssertNotNil(returnedScience?.timetable)
         }
     }
     
@@ -340,6 +370,9 @@ class WWWFetchingTests: XCTestCase {
             
             XCTAssertNotNil(self.sut.physicalEducation)
             XCTAssertNotNil(self.sut.physicalEducation?.timetable)
+            XCTAssertNotNil(self.sut.physicalEducation?.days.first?.timetable)
+            XCTAssertNotNil(self.sut.physicalEducation?.days.first?.events.first?.timetable)
+            XCTAssertNotNil(self.sut.physicalEducation?.days.first?.events.first?.location?.timetable)
             XCTAssertNil(returnedError)
         }
     }
@@ -360,6 +393,10 @@ class WWWFetchingTests: XCTestCase {
         // Then
         waitForExpectations(timeout: 10) { _ in
             XCTAssertNotNil(returnedPE)
+            XCTAssertNotNil(returnedPE?.timetable)
+            XCTAssertNotNil(returnedPE?.days.first?.timetable)
+            XCTAssertNotNil(returnedPE?.days.first?.events.first?.timetable)
+            XCTAssertNotNil(returnedPE?.days.first?.events.first?.location?.timetable)
         }
     }
     
@@ -378,10 +415,12 @@ class WWWFetchingTests: XCTestCase {
         // Then
         waitForExpectations(timeout: 10) { _ in
             XCTAssertFalse(returnedEducators?.isEmpty ?? true)
+            XCTAssertNotNil(returnedEducators?.first?.timetable)
+            XCTAssertNotNil(returnedEducators?.first?.employments.first?.timetable)
         }
     }
     
-    func testFetchEducatorIDFromWW() {
+    func testFetchEducatorIDFromWWW() {
         
         // Given
         let educator = Educator(displayName: "", employments: [], fullName: "", id: 2888)
@@ -402,9 +441,119 @@ class WWWFetchingTests: XCTestCase {
         // Then
         waitForExpectations(timeout: 10) { _ in
             XCTAssertNotNil(returnedScheduleForCurrentTerm)
+            XCTAssertNotNil(returnedScheduleForCurrentTerm?.timetable)
+            XCTAssertNotNil(returnedScheduleForCurrentTerm?.educatorEventsDays.first?.timetable)
+            XCTAssertNotNil(returnedScheduleForCurrentTerm?.educatorEventsDays.first?.events.first?.timetable)
+            XCTAssertNotNil(returnedScheduleForCurrentTerm?.educatorEventsDays.first?.events.first?.locations?.first?.timetable)
             XCTAssertNotNil(returnedScheduleForNextTerm)
             XCTAssertNotEqual(returnedScheduleForCurrentTerm?.educatorEventsDays ?? [],
                               returnedScheduleForNextTerm?.educatorEventsDays ?? [])
+        }
+    }
+
+    func testFetchAllAdressesFromWWW() {
+
+        // Given
+        XCTAssertNil(sut.addresses)
+        var returnedError: Error?
+
+        // When
+        let exp = expectation(description: "fetching all addresses")
+        sut.fetchAllAddresses().then { _ in
+            exp.fulfill()
+        }.catch { error in
+            returnedError = error
+        }
+
+        // Then
+        waitForExpectations(timeout: 10) { _ in
+
+            XCTAssertNotNil(self.sut.addresses)
+            XCTAssertNotNil(self.sut.addresses?.first?.timetable)
+            XCTAssertNil(returnedError)
+        }
+    }
+
+    func testFetchAddressesWithParametersFromWWW() {
+
+        // Given
+        var returnedAddresses: [Address]?
+
+        // When
+        let exp = expectation(description: "fetching addresses with provided parameters")
+        _ = sut.fetchAddresses(seating: .amphitheater,
+                               capacity: 10,
+                               equipment: nil).then { addresses in
+
+            returnedAddresses = addresses
+            exp.fulfill()
+        }
+
+        // Then
+        waitForExpectations(timeout: 10) { _ in
+            XCTAssertNotNil(returnedAddresses)
+            XCTAssertNotNil(returnedAddresses?.first?.timetable)
+        }
+    }
+
+    func testFetchAllRoomsFromWWW() {
+
+        // Given
+        let address = Address(name: "Университетский просп., д. 28",
+                              matches: 112,
+                              wantingEquipment: nil,
+                              oid: "baf0eed7-4ef8-4e37-8dfb-df91d9021bd4")
+        address.timetable = sut
+        XCTAssertNil(address.rooms)
+        var returnedError: Error?
+
+        // When
+        let exp = expectation(description: "fetching all rooms")
+        address.fetchAllRooms().then { _ in
+            exp.fulfill()
+        }.catch { error in
+            returnedError = error
+        }
+
+        // Then
+        waitForExpectations(timeout: 10) { _ in
+
+            XCTAssertNotNil(address.rooms)
+            XCTAssertNotNil(address.rooms?.first?.timetable)
+            XCTAssert(address.rooms?.first?.address === address)
+            XCTAssertNil(returnedError)
+        }
+    }
+
+    func testFetchRoomsWithParametersFromWWW() {
+
+        // Given
+        let address = Address(name: " Университетская наб., д. 11",
+                              matches: 196,
+                              wantingEquipment: nil,
+                              oid: "6572bd45-973c-4075-9d23-9dc728b37828")
+        address.timetable = sut
+        XCTAssertNil(address.rooms)
+        var returnedError: Error?
+        var returnedRooms: [Room]?
+
+        // When
+        let exp = expectation(description: "fetching all rooms")
+        address.fetchRooms(seating: .theater,
+                           capacity: 30,
+                           equipment: nil).then { rooms in
+            returnedRooms = rooms
+            exp.fulfill()
+        }.catch { error in
+            returnedError = error
+        }
+
+        // Then
+        waitForExpectations(timeout: 10) { _ in
+
+            XCTAssertNotNil(returnedRooms)
+            XCTAssertNotNil(returnedRooms?.first?.timetable)
+            XCTAssertNil(returnedError)
         }
     }
 }
