@@ -454,4 +454,67 @@ class LocalFetchingTests: XCTestCase {
         XCTAssertNotNil(receivedError)
         XCTAssertNil(address.rooms)
     }
+
+    func testFetchRoomForLocationLocallyFromCorrectJSONData() {
+
+        // Given
+        let addressesData = getTestingResource(fromFile: "addresses", ofType: "json")!
+        let roomsData = getTestingResource(fromFile: "address_baf0eed7-4ef8-4e37-8dfb-df91d9021bd4_locations",
+                                               ofType: "json")!
+
+        let location = Location(educatorsDisplayText: "Евард М. Е., доцент",
+                                hasEducators: true,
+                                educatorIDs: [(2643, "Евард М. Е., доцент")],
+                                isEmpty: false,
+                                displayName: "Университетский просп., д. 28, 1510",
+                                hasGeographicCoordinates: true,
+                                latitude: 59.879785,
+                                longitude: 29.829026,
+                                latitudeValue: "59.879785",
+                                longitudeValue: "29.829026")
+        location.timetable = sut
+
+        var completionCalled = false
+
+        XCTAssertNil(location.room)
+
+        // When
+        location.fetchRoom(addressesData: addressesData, roomsData: roomsData) { _ in
+            completionCalled = true
+        }
+
+        // Then
+        XCTAssertTrue(completionCalled)
+        XCTAssertEqual(location.room?.name, "1510")
+        XCTAssertEqual(location.room?.address?.name, "Университетский просп., д. 28")
+    }
+
+    func testFetchRoomForLocationLocallyFromIncorrectJSONData() {
+
+        // Given
+        let jsonData = getTestingResource(fromFile: "MATH_studyprograms", ofType: "json")!
+        let location = Location(educatorsDisplayText: "Евард М. Е., доцент",
+                                hasEducators: true,
+                                educatorIDs: [(2643, "Евард М. Е., доцент")],
+                                isEmpty: false,
+                                displayName: "Университетский просп., д. 28, 1510",
+                                hasGeographicCoordinates: true,
+                                latitude: 59.879785,
+                                longitude: 29.829026,
+                                latitudeValue: "59.879785",
+                                longitudeValue: "29.829026")
+        location.timetable = sut
+        var receivedError: Error?
+
+        // When
+        location.fetchRoom(addressesData: jsonData, roomsData: jsonData) { result in
+            if case .failure(let error) = result {
+                receivedError = error
+            }
+        }
+
+        // Then
+        XCTAssertNotNil(receivedError)
+        XCTAssertNil(location.room)
+    }
 }

@@ -140,7 +140,7 @@ public final class Week : JSONRepresentable, TimetableEntity {
     ///   - jsonData:       If this is not `nil`, then instead of networking uses provided json data as mock
     ///                     data. May be useful for testing locally. Default value is `nil`.
     ///   - dispatchQueue:  If this is `nil`, uses `DispatchQueue.main` as a queue to asyncronously
-    ///                     execute a networking request on. Otherwise uses the specified queue.
+    ///                     execute a completion handler on. Otherwise uses the specified queue.
     ///                     If `jsonData` is not `nil`, setting this
     ///                     makes no change as in this case fetching happens syncronously in the current queue.
     ///                     Default value is `nil`.

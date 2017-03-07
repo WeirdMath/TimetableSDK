@@ -556,4 +556,42 @@ class WWWFetchingTests: XCTestCase {
             XCTAssertNil(returnedError)
         }
     }
+
+    func testFetchRoomForLocationFromWWW() {
+
+        // Given
+        let location = Location(educatorsDisplayText: "Евард М. Е., доцент",
+                                hasEducators: true,
+                                educatorIDs: [(2643, "Евард М. Е., доцент")],
+                                isEmpty: false,
+                                displayName: "Университетский просп., д. 28, 1510",
+                                hasGeographicCoordinates: true,
+                                latitude: 59.879785,
+                                longitude: 29.829026,
+                                latitudeValue: "59.879785",
+                                longitudeValue: "29.829026")
+        location.timetable = sut
+        XCTAssertNil(location.room)
+
+        var returnedError: Error?
+
+        // When
+        let exp = expectation(description: "fetching the room for location")
+        location.fetchRoom().then { _ in
+            exp.fulfill()
+        }.catch { error in
+            returnedError = error
+        }
+
+
+        // Then
+        waitForExpectations(timeout: 10) { _ in
+
+            XCTAssertNotNil(location.room)
+            XCTAssertNotNil(location.room?.address)
+            XCTAssertNotNil(location.room?.timetable)
+            XCTAssertNotNil(location.room?.address?.timetable)
+            XCTAssertNil(returnedError)
+        }
+    }
 }

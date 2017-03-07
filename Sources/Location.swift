@@ -7,7 +7,9 @@
 //
 
 import SwiftyJSON
+import enum Alamofire.Result
 import DefaultStringConvertible
+import PromiseKit
 import Foundation
 
 /// The information about a location that an `Event` may take place in.
@@ -15,6 +17,10 @@ public final class Location : JSONRepresentable, TimetableEntity {
     
     /// The Timetable this entity was fetched from. `nil` if it was initialized from a custom JSON object.
     public weak var timetable: Timetable?
+
+    /// The room that the current location refers to, if available.
+    /// Use
+    public var room: Room?
     
     public let educatorsDisplayText: String?
     public let hasEducators: Bool
@@ -77,6 +83,109 @@ public final class Location : JSONRepresentable, TimetableEntity {
         } catch {
             throw TimetableError.incorrectJSON(json, whenConverting: Location.self)
         }
+    }
+
+    /// Fetches the room that the current location refers to, if available. Saves it to the `room` property.
+    /// 
+    /// - Important: `timetable` property must be set.
+    ///
+    /// - Warning: This functionality is unstable, i. e. it is not guaranteed that the needed `Room` for this
+    ///            location will actually be found. That's not my fault. It's Timetable ¯\\_(ツ)_/¯
+    ///
+    /// - Parameters:
+    ///   - addressesData:  If this is not `nil`, then instead of networking uses provided json data for
+    ///                     the list of addresses to search in.
+    ///                     May be useful for deserializing from a local storage. Default value is `nil`.
+    ///   - roomsData:      If this is not `nil`, then instead of networking uses provided json data for
+    ///                     the list of rooms to search in.
+    ///                     May be useful for deserializing from a local storage. Default value is `nil`.
+    ///   - dispatchQueue:  If this is `nil`, uses `DispatchQueue.main` as a queue to asyncronously
+    ///                     execute a completion handler on. Otherwise uses the specified queue.
+    ///                     If `jsonData` is not `nil`, setting this
+    ///                     makes no change as in this case fetching happens syncronously in the current queue.
+    ///                     Default value is `nil`.
+    ///   - completion:     A closure that is called after a responce is received.
+    public func fetchRoom(addressesData: Data? = nil,
+                          roomsData: Data? = nil,
+                          dispatchQueue: DispatchQueue? = nil,
+                          completion: @escaping (Result<Room>) -> Void) {
+
+        guard let timetable = timetable else {
+            completion(.failure(TimetableError.timetableIsDeallocated))
+            return
+        }
+
+        timetable
+            .fetchAllAddresses(using: addressesData, dispatchQueue: dispatchQueue) { result in
+
+                switch result {
+                case .success(let addresses):
+
+                    let selfName = self.displayName.lowercased()
+
+                    guard let matchingAddress = addresses
+                        .first(where: { selfName.contains($0.name.lowercased()) }) else {
+                            completion(.failure(TimetableError.couldntFindRoomForLocation))
+                            return
+                    }
+
+                    let addressPart = matchingAddress.name.lowercased()
+                    let roomPart = selfName.replacingOccurrences(of: addressPart, with: "")
+
+                    matchingAddress.fetchAllRooms(using: roomsData,
+                                                  dispatchQueue: dispatchQueue) { result in
+
+                        switch result {
+                        case .success(let rooms):
+
+                            // Find the longest room name that contains in the roomPart.
+                            var matchingRoom: Room?
+                            var maxRoomNameLength = 0
+
+                            for room in rooms {
+
+                                let roomNameLength = room.name.characters.count
+
+                                if roomNameLength > maxRoomNameLength &&
+                                    roomPart.contains(room.name.lowercased()) {
+
+                                    matchingRoom = room
+                                    maxRoomNameLength = roomNameLength
+                                }
+                            }
+
+                            if let matchingRoom = matchingRoom {
+                                self.room = matchingRoom
+                                completion(.success(matchingRoom))
+                            } else {
+                                completion(.failure(TimetableError.couldntFindRoomForLocation))
+                            }
+
+                        case .failure(let error):
+                            completion(.failure(error))
+                        }
+                    }
+
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+        }
+    }
+
+    /// Fetches the room that the current location refers to, if available. Saves it to the `room` property.
+    ///
+    /// - Important: `timetable` property must be set.
+    ///
+    /// - Parameters:
+    ///   - addressesData:  If this is not `nil`, then instead of networking uses provided json data for
+    ///                     the list of addresses to search in.
+    ///                     May be useful for deserializing from a local storage. Default value is `nil`.
+    ///   - roomsData:      If this is not `nil`, then instead of networking uses provided json data for
+    ///                     the list of rooms to search in.
+    ///                     May be useful for deserializing from a local storage. Default value is `nil`.
+    /// - Returns: A promise.
+    public func fetchRoom(addressesData: Data? = nil, roomsData: Data? = nil) -> Promise<Room> {
+        return makePromise { fetchRoom(addressesData: addressesData, roomsData: roomsData, completion: $0) }
     }
 }
 
