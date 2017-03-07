@@ -14,7 +14,11 @@ import DefaultStringConvertible
 public final class Day : JSONRepresentable, TimetableEntity {
     
     /// The Timetable this entity was fetched from. `nil` if it was initialized from a custom JSON object.
-    public weak var timetable: Timetable?
+    public weak var timetable: Timetable? {
+        didSet {
+            events.forEach { $0.timetable = timetable }
+        }
+    }
     
     fileprivate static let dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
@@ -25,7 +29,7 @@ public final class Day : JSONRepresentable, TimetableEntity {
     public let number: Int?
     public let date: Date?
     public let name: String
-    public let events: [Event]
+    public private(set) var events: [Event]
     
     internal init(number: Int?, date: Date?, name: String, events: [Event]) {
         self.number = number

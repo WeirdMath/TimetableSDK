@@ -16,7 +16,11 @@ import DefaultStringConvertible
 public final class Week : JSONRepresentable, TimetableEntity {
     
     /// The Timetable this entity was fetched from or bound to.
-    public weak var timetable: Timetable?
+    public weak var timetable: Timetable? {
+        didSet {
+            days.forEach { $0.timetable = timetable }
+        }
+    }
     
     /// The student group this week contains information for.
     public weak var studentGroup: StudentGroup?
@@ -230,14 +234,24 @@ public final class Week : JSONRepresentable, TimetableEntity {
         }
     }
 
-    /// Serializes a student group to JSON. This can be useful for storing
+    /// Serializes a week to JSON. This can be useful for storing
     /// it on disk and then deserializing it without performing any network requests.
     ///
     /// The returned JSON can be deserialized using the `deserialize(from:)` static method.
     ///
-    /// - Returns: The serialized student group.
+    /// - Returns: The serialized week.
     public func serialize() -> Data {
-        return try! _json!.rawData()
+        return try! serialize().rawData()
+    }
+
+    /// Serializes a week to JSON. This can be useful for storing
+    /// it on disk and then deserializing it without performing any network requests.
+    ///
+    /// The returned JSON can be deserialized using the `deserialize(from:)` static method.
+    ///
+    /// - Returns: The serialized week.
+    public func serialize() -> JSON {
+        return _json!
     }
 }
 

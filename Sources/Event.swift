@@ -11,10 +11,15 @@ import SwiftyJSON
 import DefaultStringConvertible
 
 /// An event. May represent lectures, workshops, exams, activities, etc.
-public struct Event : JSONRepresentable, TimetableEntity {
+public final class Event : JSONRepresentable, TimetableEntity {
     
     /// The Timetable this entity was fetched from. `nil` if it was initialized from a custom JSON object.
-    public weak var timetable: Timetable?
+    public weak var timetable: Timetable? {
+        didSet {
+            location?.timetable = timetable
+            locations?.forEach { $0.timetable = timetable }
+        }
+    }
     
     fileprivate static let defaultDateFormatter: DateFormatter = {
         let defaultDateFormatter = DateFormatter()
@@ -57,7 +62,7 @@ public struct Event : JSONRepresentable, TimetableEntity {
     public let isRecurrence: Bool?
     public let isShowImmediateHidden: Bool?
     public let isStudy: Bool?
-    public let location: Location?
+    public private(set) var location: Location?
     public let locationsDisplayText: String?
     public let orderIndex: Int?
     public let showImmediate: Bool?
@@ -71,7 +76,7 @@ public struct Event : JSONRepresentable, TimetableEntity {
     public let viewKind: Int?
     public let withinTheSameDay: Bool?
     public let year: Int?
-    public let locations: [Location]?
+    public private(set) var locations: [Location]?
     public let kind: Kind?
     public let contingentUnitName: String?
     public let educatorIDs: [(Int, String)]?

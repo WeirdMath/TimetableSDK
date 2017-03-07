@@ -11,7 +11,7 @@ import DefaultStringConvertible
 import Foundation
 
 /// The information about a location that an `Event` may take place in.
-public struct Location : JSONRepresentable, TimetableEntity {
+public final class Location : JSONRepresentable, TimetableEntity {
     
     /// The Timetable this entity was fetched from. `nil` if it was initialized from a custom JSON object.
     public weak var timetable: Timetable?

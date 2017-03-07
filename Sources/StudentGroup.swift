@@ -181,7 +181,17 @@ public final class StudentGroup : JSONRepresentable, TimetableEntity {
     ///
     /// - Returns: The serialized student group.
     public func serialize() -> Data {
-        return try! _json!.rawData()
+        return try! serialize().rawData()
+    }
+
+    /// Serializes a student group to JSON. This can be useful for storing
+    /// it on disk and then deserializing it without performing any network requests.
+    ///
+    /// The returned JSON can be deserialized using the `deserialize(from:)` static method.
+    ///
+    /// - Returns: The serialized student group.
+    public func serialize() -> JSON {
+        return _json!
     }
 }
 

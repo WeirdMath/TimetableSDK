@@ -25,8 +25,7 @@ public final class AdmissionYear : JSONRepresentable, TimetableEntity {
     public let number: Int
     
     /// The sudent groups formed in this year. Initially is `nil`. Use
-    /// the `fetchStudentGroups(for:using:dispatchQueue:completion:)` method of a `Timetable` instance
-    /// in order to get student groups.
+    /// the `fetchStudentGroups(for:using:dispatchQueue:completion:)` method in order to get student groups.
     public internal(set) var studentGroups: [StudentGroup]?
     internal var studentGroupsAPIQuery: String {
         return "\(divisionAlias)/studyprogram/\(studyProgramID)/studentgroups"
@@ -113,10 +112,10 @@ extension AdmissionYear: Equatable {
     public static func ==(lhs: AdmissionYear, rhs: AdmissionYear) -> Bool{
         return
             lhs.isEmpty         == rhs.isEmpty          &&
-                lhs.divisionAlias   == rhs.divisionAlias    &&
-                lhs.studyProgramID  == rhs.studyProgramID   &&
-                lhs.name            == rhs.name             &&
-                lhs.number          == rhs.number
+            lhs.divisionAlias   == rhs.divisionAlias    &&
+            lhs.studyProgramID  == rhs.studyProgramID   &&
+            lhs.name            == rhs.name             &&
+            lhs.number          == rhs.number
     }
 }
 
