@@ -32,7 +32,7 @@ Add TimetableSDK as a dependency to your `Package.swift`. For example:
 let package = Package(
     name: "YourPackageName",
     dependencies: [
-        .Package(url: "https://github.com/WeirdMath/TimetableSDK.git", majorVersion: 2)
+        .Package(url: "https://github.com/WeirdMath/TimetableSDK.git", majorVersion: 3)
     ]
 )
 ```
@@ -43,7 +43,6 @@ You can use the SDK for getting data directly from [timetable.spbu.ru](http://ti
 
 ```swift
 import TimetableSDK
-import enum Alamofire.Result
 
 let timetable = Timetable()
 
