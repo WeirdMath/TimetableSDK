@@ -8,7 +8,6 @@
 
 import Foundation
 import SwiftyJSON
-import DefaultStringConvertible
 
 /// The information about an educator's schedule.
 public final class EducatorSchedule : JSONRepresentable, TimetableEntity {
@@ -122,5 +121,3 @@ extension EducatorSchedule : Equatable {
             lhs.to                      == rhs.to
     }
 }
-
-extension EducatorSchedule : CustomStringConvertible {}

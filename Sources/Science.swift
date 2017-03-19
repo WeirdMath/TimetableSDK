@@ -8,7 +8,6 @@
 
 import Foundation
 import SwiftyJSON
-import DefaultStringConvertible
 
 /// The information about various scientific events taking place in the Univeristy.
 public final class Science : JSONRepresentable, TimetableEntity {
@@ -117,5 +116,3 @@ extension Science : Equatable {
             lhs.viewName                            == rhs.viewName
     }
 }
-
-extension Science : CustomStringConvertible {}

@@ -7,7 +7,6 @@
 //
 
 import SwiftyJSON
-import DefaultStringConvertible
 import Foundation
 
 /// The information about an educator's employment.
@@ -54,5 +53,3 @@ extension Employment : Equatable {
             rhs.position   == rhs.position
     }
 }
-
-extension Employment : CustomStringConvertible {}

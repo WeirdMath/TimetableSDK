@@ -8,7 +8,6 @@
 
 import Foundation
 import SwiftyJSON
-import DefaultStringConvertible
 
 /// An event. May represent lectures, workshops, exams, activities, etc.
 public final class Event : JSONRepresentable, TimetableEntity {
@@ -318,5 +317,3 @@ extension Event: Equatable {
             lhs.educatorsWereReassigned             == rhs.educatorsWereReassigned
     }
 }
-
-extension Event: CustomStringConvertible {}

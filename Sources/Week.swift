@@ -9,8 +9,6 @@
 import Foundation
 import SwiftyJSON
 import PromiseKit
-import enum Alamofire.Result
-import DefaultStringConvertible
 
 /// The information about a study week for a `StudentGroup`.
 public final class Week : JSONRepresentable, TimetableEntity {
@@ -281,6 +279,3 @@ extension Week: Equatable {
                 lhs.timetableDisplayName             == rhs.timetableDisplayName
     }
 }
-
-// FIXME: https://github.com/jessesquires/DefaultStringConvertible/issues/9
-// extension Week: CustomStringConvertible {}

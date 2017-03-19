@@ -9,7 +9,6 @@
 import Foundation
 import SwiftyJSON
 import PromiseKit
-import enum Alamofire.Result
 
 /// A pivot point for fetching data from the Timetable service.
 public final class Timetable {

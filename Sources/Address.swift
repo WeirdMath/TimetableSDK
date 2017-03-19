@@ -7,9 +7,7 @@
 //
 
 import Foundation
-import enum Alamofire.Result
 import SwiftyJSON
-import DefaultStringConvertible
 import PromiseKit
 
 /// The information about an address of a building.
@@ -201,5 +199,3 @@ extension Address : Equatable {
             lhs.oid                 == rhs.oid
     }
 }
-
-extension Address : CustomStringConvertible {}

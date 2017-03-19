@@ -7,8 +7,9 @@
 //
 
 import Foundation
-import Alamofire
 import SwiftyJSON
+
+internal typealias Parameters = [String : Any]
 
 private func _fetch<Entity>(using jsonData: Data?,
                     apiQuery: String,
@@ -23,7 +24,7 @@ private func _fetch<Entity>(using jsonData: Data?,
         do {
             completion(.success(try map(jsonPath(JSON(data: jsonData)))))
         } catch {
-            completion(.failure(error))
+            completion(.failure(error as! TimetableError))
         }
     } else {
         
@@ -31,23 +32,32 @@ private func _fetch<Entity>(using jsonData: Data?,
             completion(.failure(TimetableError.timetableIsDeallocated))
             return
         }
-        
-        Alamofire
-            .request(baseURL.appendingPathComponent(apiQuery), parameters: parameters)
-            .validate(statusCode: 200 ..< 300)
-            .validate(contentType: ["application/json"])
-            .responseData(queue: dispatchQueue) { response in
-                switch response.result {
-                case .success(let data):
-                    do {
-                        completion(.success(try map(jsonPath(JSON(data: data)))))
-                    } catch {
-                        completion(.failure(error))
-                    }
-                case .failure(let error):
-                    completion(.failure(TimetableError.networkingError(error)))
-                }
+
+        var urlComponents = URLComponents(url: baseURL.appendingPathComponent(apiQuery),
+                                          resolvingAgainstBaseURL: false)!
+
+        urlComponents.queryItems = parameters?.map { parameter in
+            URLQueryItem(name: parameter.key, value: String(describing: parameter.value))
         }
+
+        let dataTask = URLSession.shared
+            .dataTask(with: urlComponents.url!) { (data, response, error) in
+
+                (dispatchQueue ?? .main).async {
+
+                    if let error = error {
+                        completion(.failure(TimetableError.networkingError(error)))
+                    } else {
+                        do {
+                            completion(.success(try map(jsonPath(JSON(data: data!)))))
+                        } catch {
+                            completion(.failure(error as! TimetableError))
+                        }
+                    }
+                }
+            }
+
+        dataTask.resume()
     }
 }
 
@@ -81,7 +91,7 @@ internal func fetch<Entity : JSONRepresentable & TimetableEntity>(
            jsonPath: jsonPath,
            dispatchQueue: dispatchQueue,
            timetable: timetable,
-           map: map) { (result: Result<Entity>) in
+           map: map) { (result: TimetableSDK.Result<Entity>) in
             
             switch result {
             case .success(var value):

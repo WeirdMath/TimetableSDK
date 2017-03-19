@@ -8,9 +8,7 @@
 
 import Foundation
 import PromiseKit
-import enum Alamofire.Result
 import SwiftyJSON
-import DefaultStringConvertible
 
 /// The information about a student group formed in an `AdmissionYear`.
 public final class StudentGroup : JSONRepresentable, TimetableEntity {
@@ -215,6 +213,3 @@ extension StudentGroup: Equatable {
             lhs.divisionAlias   == rhs.divisionAlias
     }
 }
-
-// FIXME: https://github.com/jessesquires/DefaultStringConvertible/issues/9
-// extension StudentGroup: CustomStringConvertible {}

@@ -8,7 +8,6 @@
 
 import Foundation
 import SwiftyJSON
-import DefaultStringConvertible
 
 /// A room. Every `Event` takes place in some room.
 public final class Room : JSONRepresentable, TimetableEntity {

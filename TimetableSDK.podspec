@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "TimetableSDK"
-  s.version      = "2.2.0"
+  s.version      = "3.0.0"
   s.summary      = "Simple SDK for timetable.spbu.ru that works on macOS, iOS and watchOS"
 
   s.description  = <<-DESC
@@ -23,8 +23,6 @@ Pod::Spec.new do |s|
 
   s.source_files  = "Sources/**/*.swift"
 
-  s.dependency "Alamofire", "~> 4.0"
   s.dependency "SwiftyJSON", "~> 3.0"
-  s.dependency "DefaultStringConvertible", "~> 2.0"
   s.dependency "PromiseKit", "~> 4.0"
 end

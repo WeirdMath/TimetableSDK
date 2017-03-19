@@ -8,8 +8,6 @@
 
 import Foundation
 import SwiftyJSON
-import enum Alamofire.Result
-import DefaultStringConvertible
 import PromiseKit
 
 public final class Educator : JSONRepresentable, TimetableEntity {
@@ -117,5 +115,3 @@ extension Educator : Equatable {
                 lhs.id          == rhs.id
     }
 }
-
-extension Educator : CustomStringConvertible {}

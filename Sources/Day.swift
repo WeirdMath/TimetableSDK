@@ -8,7 +8,6 @@
 
 import Foundation
 import SwiftyJSON
-import DefaultStringConvertible
 
 /// The information about a day with `Event`s in it.
 public final class Day : JSONRepresentable, TimetableEntity {
@@ -85,5 +84,3 @@ extension Day: Equatable {
             lhs.events  == rhs.events
     }
 }
-
-extension Day: CustomStringConvertible {}

@@ -9,7 +9,6 @@
 import XCTest
 import Foundation
 import Dispatch
-import DefaultStringConvertible
 import PromiseKit
 @testable import TimetableSDK
 

@@ -1,5 +1,18 @@
 # Change Log
 
+## [3.0.0](https://github.com/WeirdMath/TimetableSDK/tree/3.0.0) (2017-03-19)
+
+- Dropped Alamofire and DefaultStringConvertible dependencies.
+- `Result` type in now implemented as follows:
+
+    ```swift
+    public enum Result<Value> {
+        case success(Value)
+        case failure(TimetableError)
+    }
+    ```
+
+
 ## [2.2.0](https://github.com/WeirdMath/TimetableSDK/tree/2.2.0) (2017-03-08)
 
 **Implemented features:**

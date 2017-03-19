@@ -8,7 +8,6 @@
 
 import Foundation
 import SwiftyJSON
-import DefaultStringConvertible
 
 public final class EventGrouping: JSONRepresentable, TimetableEntity {
     
@@ -57,5 +56,3 @@ extension EventGrouping : Equatable {
             lhs.events  == rhs.events
     }
 }
-
-extension EventGrouping : CustomStringConvertible {}

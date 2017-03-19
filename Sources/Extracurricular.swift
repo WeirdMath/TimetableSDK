@@ -8,7 +8,6 @@
 
 import Foundation
 import SwiftyJSON
-import DefaultStringConvertible
 
 /// The information about various events taking place in the Univeristy.
 public final class Extracurricular : JSONRepresentable, TimetableEntity {
@@ -131,5 +130,3 @@ extension Extracurricular: Equatable {
             lhs.weekMonday                          == rhs.weekMonday
     }
 }
-
-extension Extracurricular: CustomStringConvertible {}

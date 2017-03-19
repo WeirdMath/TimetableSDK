@@ -9,8 +9,6 @@
 import Foundation
 import SwiftyJSON
 import PromiseKit
-import enum Alamofire.Result
-import DefaultStringConvertible
 
 /// The information about a division of the Univeristy.
 public final class Division : JSONRepresentable, TimetableEntity {
@@ -109,5 +107,3 @@ extension Division: Equatable {
             lhs.oid     == rhs.oid
     }
 }
-
-extension Division: CustomStringConvertible {}

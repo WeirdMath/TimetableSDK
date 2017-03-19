@@ -9,7 +9,6 @@
 import PromiseKit
 import Dispatch
 import Foundation
-import enum Alamofire.Result
 
 /// Easy way for each fetching method (e. g. `timetable.fetchDivisions(using:dispatchQueue:completion)`) to
 /// provide a similar method that returns a `Promise`.

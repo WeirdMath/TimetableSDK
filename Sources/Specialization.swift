@@ -7,7 +7,6 @@
 //
 
 import SwiftyJSON
-import DefaultStringConvertible
 
 /// The infromation about a specialization available for a `StudyLevel`.
 public final class Specialization : JSONRepresentable, TimetableEntity {
@@ -57,5 +56,3 @@ extension Specialization: Equatable {
             lhs.admissionYears  == rhs.admissionYears
     }
 }
-
-extension Specialization: CustomStringConvertible {}

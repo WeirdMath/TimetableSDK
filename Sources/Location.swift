@@ -7,8 +7,6 @@
 //
 
 import SwiftyJSON
-import enum Alamofire.Result
-import DefaultStringConvertible
 import PromiseKit
 import Foundation
 
@@ -214,5 +212,3 @@ extension Location: Equatable {
             lhs.longitudeValue              == rhs.longitudeValue
     }
 }
-
-extension Location: CustomStringConvertible {}

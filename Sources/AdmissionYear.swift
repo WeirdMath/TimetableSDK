@@ -7,9 +7,7 @@
 //
 
 import Foundation
-import enum Alamofire.Result
 import SwiftyJSON
-import DefaultStringConvertible
 import PromiseKit
 
 /// The information about an admission year for a particular `Specialization`.
@@ -118,5 +116,3 @@ extension AdmissionYear: Equatable {
             lhs.number          == rhs.number
     }
 }
-
-extension AdmissionYear: CustomStringConvertible {}

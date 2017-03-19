@@ -8,7 +8,6 @@
 
 import Foundation
 import SwiftyJSON
-import DefaultStringConvertible
 
 /// The information about a study level available in a `Division`.
 public final class StudyLevel : JSONRepresentable, TimetableEntity {
@@ -63,5 +62,3 @@ extension StudyLevel: Equatable {
             lhs.specializations == rhs.specializations
     }
 }
-
-extension StudyLevel: CustomStringConvertible {}

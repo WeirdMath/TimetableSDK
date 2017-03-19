@@ -1,6 +1,5 @@
 import XCTest
 import SwiftyJSON
-import DefaultStringConvertible
 @testable import TimetableSDK
 
 class JSONTests: XCTestCase {
