@@ -88,7 +88,7 @@ class WWWFetchingTests: XCTestCase {
         division.fetchStudyLevels().then { _ in
             exp.fulfill()
         }.catch { error in
-                returnedError = error
+            returnedError = error
         }
         
         // Then
@@ -595,6 +595,60 @@ class WWWFetchingTests: XCTestCase {
             XCTAssertNotNil(location.room?.timetable)
             XCTAssertNotNil(location.room?.address?.timetable)
             XCTAssertNil(returnedError)
+        }
+    }
+
+    func testFetchExtracurricularEventsForCurrentWeekFromWWW() {
+
+        // Given
+        let division = Division(name: "Свободные искусства и науки",
+                                alias: "LIAS",
+                                oid: "8bb888f3-2dfa-4bd3-978c-603a14883883")
+
+        division.timetable = sut
+        XCTAssertNil(division.extracurricularEvents)
+        var returnedError: Error?
+
+        // When
+        let exp = expectation(description: "fetching extracurricular events of a division for current week")
+        division.fetchExtracurricularEvents().then { _ in
+            exp.fulfill()
+        }.catch { error in
+            returnedError = error
+        }
+
+        // Then
+
+        waitForExpectations(timeout: 10) { _ in
+
+            XCTAssertNotNil(division.extracurricularEvents)
+            XCTAssertNotNil(division.extracurricularEvents?.timetable)
+            XCTAssertNil(returnedError)
+        }
+    }
+
+    func testFetchExtracurricularEventsForArbitraryWeekFromWWW() {
+
+        // Given
+        let division = Division(name: "Свободные искусства и науки",
+                                alias: "LIAS",
+                                oid: "8bb888f3-2dfa-4bd3-978c-603a14883883")
+
+        division.timetable = sut
+        var returnedEvents: Extracurricular?
+        let day = Date().addingTimeInterval(-60*60*24*7)
+
+        // When
+        let exp = expectation(description: "fetching extracurricular events of a division for arbitrary week")
+        _ = division.fetchExtracurricularEvents(from: day).then { events in
+            returnedEvents = events
+            exp.fulfill()
+        }
+
+        // Then
+        waitForExpectations(timeout: 10) { _ in
+            XCTAssertNotNil(returnedEvents)
+            XCTAssertNotNil(returnedEvents?.timetable)
         }
     }
 }

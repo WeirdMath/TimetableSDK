@@ -637,4 +637,59 @@ class LocalFetchingTests: XCTestCase {
         XCTAssertNotNil(receivedError)
         XCTAssertNil(location.room)
     }
+
+    func testFetchExtracurricularEventsForDivisionFromCoorectJSONData() {
+
+        // Given
+        let jsonData = getTestingResource(fromFile: "LIAS_events", ofType: "json")!
+        let division = Division(name: "Свободные искусства и науки",
+                                alias: "LIAS",
+                                oid: "8bb888f3-2dfa-4bd3-978c-603a14883883")
+        var completionCalled = false
+
+        XCTAssertNil(division.extracurricularEvents)
+
+        // When
+        division.fetchExtracurricularEvents(using: jsonData) { _ in
+            completionCalled = true
+        }
+
+        // Then
+        XCTAssertTrue(completionCalled)
+        XCTAssertNotNil(division.extracurricularEvents)
+
+        // When
+        var events: Extracurricular?
+        division.fetchExtracurricularEvents(forceReload: false) { result in
+
+            if case .success(let _events) = result {
+                events = _events
+            }
+        }
+
+        // Then
+        XCTAssertNotNil(events)
+    }
+
+    func testFetchExtracurricularEventsForDivisionFromIncoorectJSONData() {
+
+        // Given
+        let jsonData = getTestingResource(fromFile: "divisions", ofType: "json")!
+        let division = Division(name: "Свободные искусства и науки",
+                                alias: "LIAS",
+                                oid: "8bb888f3-2dfa-4bd3-978c-603a14883883")
+
+        var receivedError: Error?
+
+        // When
+        division.fetchExtracurricularEvents(using: jsonData) { result in
+            if case .failure(let error) = result {
+                receivedError = error
+            }
+        }
+
+        // Then
+        XCTAssertNotNil(receivedError)
+        XCTAssertNil(division.extracurricularEvents)
+    }
 }

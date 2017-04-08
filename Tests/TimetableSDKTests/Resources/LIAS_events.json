@@ -1,0 +1,153 @@
+{
+    "Alias":
+    "LIAS",
+    "Breadcrumb":
+    [
+        {
+            "ActionName":
+            "Index",
+            "ControllerName":
+            "Home",
+            "DisplayText":
+            "Главная",
+            "HtmlAttributes":
+            null,
+            "IsActive":
+            false,
+            "RouteValues":
+            null
+        },
+        {
+            "ActionName":
+            "Index",
+            "ControllerName":
+            "XtracurEvents",
+            "DisplayText":
+            "Свободные искусства и науки",
+            "HtmlAttributes":
+            null,
+            "IsActive":
+            true,
+            "RouteValues":
+            {
+                "alias":
+                "LIAS"
+            }
+        }
+    ],
+    "Days":
+    [
+        {
+            "Day":
+            "2017-04-03T00:00:00",
+            "DayEvents":
+            [
+                {
+                    "AllDay":
+                    false,
+                    "ContingentUnitsDisplayTest":
+                    "",
+                    "DateWithTimeIntervalString":
+                    "3.04 9:10-10:40",
+                    "DisplayDateAndTimeIntervalString":
+                    "9:10–10:40",
+                    "DivisionAlias":
+                    "LIAS",
+                    "EducatorsDisplayText":
+                    "Шрамко Л. И.",
+                    "End":
+                    "2017-04-03T10:40:00",
+                    "FromDate":
+                    "2017-04-03T00:00:00",
+                    "FromDateString":
+                    "2017-04-03",
+                    "FullDateWithTimeIntervalString":
+                    "3 апреля 9:10–10:40",
+                    "HasAgenda":
+                    false,
+                    "HasEducators":
+                    true,
+                    "HasTheSameTimeAsPreviousItem":
+                    false,
+                    "Id":
+                    567864,
+                    "IsCancelled":
+                    false,
+                    "IsEmpty":
+                    false,
+                    "IsRecurrence":
+                    true,
+                    "IsShowImmediateHidden":
+                    false,
+                    "IsStudy":
+                    false,
+                    "Location":
+                    {
+                        "DisplayName":
+                        "ул. Галерная, д. 58-60, корп. 3, 337",
+                        "HasGeographicCoordinates":
+                        true,
+                        "IsEmpty":
+                        false,
+                        "Latitude":
+                        59.930462,
+                        "LatitudeValue":
+                        "59.930462",
+                        "Longitude":
+                        30.284966,
+                        "LongitudeValue":
+                        "30.284966"
+                    },
+                    "LocationsDisplayText":
+                    "ул. Галерная, д. 58-60, корп. 3, 337",
+                    "OrderIndex":
+                    100500100500,
+                    "RecurrenceIndex":
+                    7,
+                    "ShowImmediate":
+                    false,
+                    "ShowYear":
+                    false,
+                    "Start":
+                    "2017-04-03T09:10:00",
+                    "Subject":
+                    "Английский язык 201-1",
+                    "SubkindDisplayName":
+                    "Иные мероприятия",
+                    "TimeIntervalString":
+                    "9:10–10:40",
+                    "ViewKind":
+                    0,
+                    "WithinTheSameDay":
+                    true,
+                    "Year":
+                    2017
+                }
+            ],
+"DayString":
+"понедельник, 3 апреля"
+}
+],
+"EarlierEvents":
+[],
+"HasEventsToShow":
+true,
+"IsCurrentWeekReferenceAvailable":
+false,
+"IsNextWeekReferenceAvailable":
+true,
+"IsPreviousWeekReferenceAvailable":
+true,
+"NextWeekMonday":
+"2017-04-10",
+"PreviousWeekMonday":
+"2017-03-27",
+"Title":
+"Свободные искусства и науки",
+"ViewName":
+"IndexWeek",
+"WeekDisplayText":
+"3 апреля – 9 апреля",
+"WeekMonday":
+"2017-04-03"
+}
