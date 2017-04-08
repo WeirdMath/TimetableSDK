@@ -41,6 +41,18 @@ class LocalFetchingTests: XCTestCase {
         // Then
         XCTAssertTrue(completionCalled)
         XCTAssertEqual(sut.divisions?.count, 26)
+
+        // When
+        var divisions: [Division]?
+        sut.fetchDivisions(forceReload: false) { result in
+
+            if case .success(let _divisions) = result {
+                divisions = _divisions
+            }
+        }
+
+        // Then
+        XCTAssertNotNil(divisions)
     }
     
     func testFetchDivisionsLocallyFromIncorrectJSONData() {
@@ -80,6 +92,18 @@ class LocalFetchingTests: XCTestCase {
         // Then
         XCTAssertTrue(completionCalled)
         XCTAssertEqual(division.studyLevels?.count, 6)
+
+        // When
+        var studyLevels: [StudyLevel]?
+        division.fetchStudyLevels(forceReload: false) { result in
+
+            if case .success(let _studyLevels) = result {
+                studyLevels = _studyLevels
+            }
+        }
+
+        // Then
+        XCTAssertNotNil(studyLevels)
     }
     
     func testFetchStudyLevelsLocallyFromIncorrectJSONData() {
@@ -124,6 +148,18 @@ class LocalFetchingTests: XCTestCase {
         // Then
         XCTAssertTrue(completionCalled)
         XCTAssertEqual(admissionYear.studentGroups?.count, 1)
+
+        // When
+        var studentGroups: [StudentGroup]?
+        admissionYear.fetchStudentGroups(forceReload: false) { result in
+
+            if case .success(let _studentGroups) = result {
+                studentGroups = _studentGroups
+            }
+        }
+
+        // Then
+        XCTAssertNotNil(studentGroups)
     }
     
     func testFetchStudentGroupsLocallyFromIncorrectJSONData() {
@@ -172,6 +208,18 @@ class LocalFetchingTests: XCTestCase {
         // Then
         XCTAssertNotNil(studentGroup.currentWeek)
         XCTAssertTrue(completionCalled)
+
+        // When
+        var week: Week?
+        studentGroup.fetchCurrentWeek(forceReload: false) { result in
+
+            if case .success(let _week) = result {
+                week = _week
+            }
+        }
+
+        // Then
+        XCTAssertNotNil(week)
     }
     
     func testFetchCurrentWeekLocallyFromIncorrectJSONData() {
@@ -213,6 +261,18 @@ class LocalFetchingTests: XCTestCase {
         // Then
         XCTAssertTrue(completionCalled)
         XCTAssertNotNil(sut.billboard)
+
+        // When
+        var billboard: Extracurricular?
+        sut.fetchBillboard(forceReload: false) { result in
+
+            if case .success(let _billboard) = result {
+                billboard = _billboard
+            }
+        }
+
+        // Then
+        XCTAssertNotNil(billboard)
     }
     
     func testFetchBillboardLocallyFromIncorrectJSONData() {
@@ -249,6 +309,18 @@ class LocalFetchingTests: XCTestCase {
         // Then
         XCTAssertTrue(completionCalled)
         XCTAssertNotNil(sut.science)
+
+        // When
+        var science: Science?
+        sut.fetchScience(forceReload: false) { result in
+
+            if case .success(let _science) = result {
+                science = _science
+            }
+        }
+
+        // Then
+        XCTAssertNotNil(science)
     }
     
     func testFetchScienceLocallyFromIncorrectJSONData() {
@@ -285,6 +357,18 @@ class LocalFetchingTests: XCTestCase {
         // Then
         XCTAssertTrue(completionCalled)
         XCTAssertNotNil(sut.physicalEducation)
+
+        // When
+        var physicalEducation: Extracurricular?
+        sut.fetchPhysicalEducation(forceReload: false) { result in
+
+            if case .success(let _physicalEducation) = result {
+                physicalEducation = _physicalEducation
+            }
+        }
+
+        // Then
+        XCTAssertNotNil(physicalEducation)
     }
     
     func testFetchPELocallyFromIncorrectJSONData() {
@@ -391,6 +475,18 @@ class LocalFetchingTests: XCTestCase {
         // Then
         XCTAssertTrue(completionCalled)
         XCTAssertEqual(sut.addresses?.count, 126)
+
+        // When
+        var addresses: [Address]?
+        sut.fetchAllAddresses(forceReload: false) { result in
+
+            if case .success(let _addresses) = result {
+                addresses = _addresses
+            }
+        }
+
+        // Then
+        XCTAssertNotNil(addresses)
     }
 
     func testFetchAddressesLocallyFromIncorrectJSONData() {
@@ -431,6 +527,18 @@ class LocalFetchingTests: XCTestCase {
         // Then
         XCTAssertTrue(completionCalled)
         XCTAssertEqual(address.rooms?.count, 112)
+
+        // When
+        var rooms: [Room]?
+        address.fetchAllRooms(forceReload: false) { result in
+
+            if case .success(let _rooms) = result {
+                rooms = _rooms
+            }
+        }
+
+        // Then
+        XCTAssertNotNil(rooms)
     }
 
     func testFetchRoomsLocallyFromIncorrectJSONData() {
@@ -487,6 +595,18 @@ class LocalFetchingTests: XCTestCase {
         XCTAssertTrue(completionCalled)
         XCTAssertEqual(location.room?.name, "1510")
         XCTAssertEqual(location.room?.address?.name, "Университетский просп., д. 28")
+
+        // When
+        var room: Room?
+        location.fetchRoom { result in
+
+            if case .success(let _room) = result {
+                room = _room
+            }
+        }
+
+        // Then
+        XCTAssertNotNil(room)
     }
 
     func testFetchRoomForLocationLocallyFromIncorrectJSONData() {
