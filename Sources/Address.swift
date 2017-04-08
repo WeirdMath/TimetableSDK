@@ -91,10 +91,19 @@ public final class Address : JSONRepresentable, TimetableEntity {
     ///                     execute a completion handler on. Otherwise uses the specified queue.
     ///                     If `jsonData` is not `nil`, setting this
     ///                     makes no change as in this case fetching happens syncronously in the current queue.
+    ///   - forceReload:    If `true`, executes the query even if if the `rooms` property is not `nil`.
+    ///                     Othewise returns the contents of the `rooms` property (if it's not `nil`).
+    ///                     Default is `true`.
     ///   - completion:     A closure that is called after a responce is received.
     public func fetchAllRooms(using jsonData: Data? = nil,
                               dispatchQueue: DispatchQueue? = nil,
+                              forceReload: Bool = true,
                               completion: @escaping (Result<[Room]>) -> Void) {
+
+        if !forceReload, let rooms = rooms {
+            completion(.success(rooms))
+            return
+        }
 
         fetch(using: jsonData,
               apiQuery: roomsAPIQuery,
@@ -156,8 +165,17 @@ public final class Address : JSONRepresentable, TimetableEntity {
     /// - Parameter jsonData: If this is not `nil`, then instead of networking uses provided json data as mock
     ///                       data. May be useful for deserializing from a local storage. Default value is `nil`.
     /// - Returns:            A promise.
-    public func fetchAllRooms(using jsonData: Data? = nil) -> Promise<[Room]> {
-        return makePromise({ fetchAllRooms(using: jsonData, completion: $0) })
+    /// Fetches all the rooms available in this address.
+    ///
+    /// - Parameters:
+    ///   - jsonData:    If this is not `nil`, then instead of networking uses provided json data as mock
+    ///                  data. May be useful for deserializing from a local storage. Default value is `nil`.
+    ///   - forceReload: If `true`, executes the query even if if the `rooms` property is not `nil`.
+    ///                  Othewise returns the contents of the `rooms` property (if it's not `nil`).
+    ///                  Default is `true`.
+    /// - Returns:       A promise.
+    public func fetchAllRooms(using jsonData: Data? = nil, forceReload: Bool = true) -> Promise<[Room]> {
+        return makePromise({ fetchAllRooms(using: jsonData, forceReload: forceReload, completion: $0) })
     }
 
     /// Fetches  the rooms available in this address that satisfy the provided `parameters`.

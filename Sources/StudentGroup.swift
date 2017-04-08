@@ -100,10 +100,19 @@ public final class StudentGroup : JSONRepresentable, TimetableEntity {
     ///                     If `jsonData` is not `nil`, setting this
     ///                     makes no change as in this case fetching happens syncronously in the current queue.
     ///                     Default value is `nil`.
+    ///   - forceReload:    If `true`, executes the query even if if the `currentWeek` property is not `nil`.
+    ///                     Othewise returns the contents of the `currentWeek` property (if it's not `nil`).
+    ///                     Default is `true`.
     ///   - completion:     A closure that is called after a responce is received.
     public func fetchCurrentWeek(using jsonData: Data? = nil,
                                  dispatchQueue: DispatchQueue? = nil,
+                                 forceReload: Bool = true,
                                  completion: @escaping (Result<Week>) -> Void) {
+
+        if !forceReload, let currentWeek = currentWeek {
+            completion(.success(currentWeek))
+            return
+        }
         
         fetch(using: jsonData,
               apiQuery: weekAPIQuery,
@@ -121,11 +130,15 @@ public final class StudentGroup : JSONRepresentable, TimetableEntity {
     
     /// Fetches the current week schedule for the student group.
     ///
-    /// - Parameter jsonData: If this is not `nil`, then instead of networking uses provided json data.
+    /// - Parameters:
+    ///   - jsonData:       If this is not `nil`, then instead of networking uses provided json data.
     ///                     May be useful for deserializing from a local storage. Default value is `nil`.
+    ///   - forceReload:    If `true`, executes the query even if if the `currentWeek` property is not `nil`.
+    ///                     Othewise returns the contents of the `currentWeek` property (if it's not `nil`).
+    ///                     Default is `true`.
     /// - Returns: A promise.
-    public func fetchCurrentWeek(using jsonData: Data? = nil) -> Promise<Week> {
-        return makePromise({ fetchCurrentWeek(using: jsonData, completion: $0) })
+    public func fetchCurrentWeek(using jsonData: Data? = nil, forceReload: Bool = true) -> Promise<Week> {
+        return makePromise({ fetchCurrentWeek(using: jsonData, forceReload: forceReload, completion: $0) })
     }
     
     /// Fetches the week that begins with the specified `day` for the student group.

@@ -60,10 +60,19 @@ public final class Division : JSONRepresentable, TimetableEntity {
     ///                     If `jsonData` is not `nil`, setting this
     ///                     makes no change as in this case fetching happens syncronously in the current queue.
     ///                     Default value is `nil`.
+    ///   - forceReload:    If `true`, executes the query even if if the `studyLevels` property is not `nil`.
+    ///                     Othewise returns the contents of the `studyLevels` property (if it's not `nil`).
+    ///                     Default is `true`.
     ///   - completion:     A closure that is called after a responce is received.
     public func fetchStudyLevels(using jsonData: Data? = nil,
                                  dispatchQueue: DispatchQueue? = nil,
+                                 forceReload: Bool = true,
                                  completion: @escaping (Result<[StudyLevel]>) -> Void) {
+
+        if !forceReload, let studyLevels = studyLevels {
+            completion(.success(studyLevels))
+            return
+        }
         
         fetch(using: jsonData,
               apiQuery: studyLevelsAPIQuery,
@@ -80,12 +89,16 @@ public final class Division : JSONRepresentable, TimetableEntity {
     
     /// Fetches the study levels available for the division.
     ///
-    /// - Parameter jsonData: If this is not `nil`, then instead of networking uses provided json data as mock
+    /// - Parameters:
+    ///   - jsonData:       If this is not `nil`, then instead of networking uses provided json data as mock
     ///                     data. May be useful for testing locally. Default value is `nil`.
+    ///   - forceReload:    If `true`, executes the query even if if the `studyLevels` property is not `nil`.
+    ///                     Othewise returns the contents of the `studyLevels` property (if it's not `nil`).
+    ///                     Default is `true`.
     /// - Returns: A promise.
-    public func fetchStudyLevels(using jsonData: Data? = nil) -> Promise<[StudyLevel]> {
+    public func fetchStudyLevels(using jsonData: Data? = nil, forceReload: Bool = true) -> Promise<[StudyLevel]> {
         
-        return makePromise({ fetchStudyLevels(using: jsonData, completion: $0) })
+        return makePromise({ fetchStudyLevels(using: jsonData, forceReload: forceReload, completion: $0) })
     }
 }
 

@@ -68,10 +68,19 @@ public final class AdmissionYear : JSONRepresentable, TimetableEntity {
     ///                     If `jsonData` is not `nil`, setting this
     ///                     makes no change as in this case fetching happens syncronously in the current queue.
     ///                     Default value is `nil`.
+    ///   - forceReload:    If `true`, executes the query even if if the `studentGroups` property is not `nil`.
+    ///                     Othewise returns the contents of the `studentGroups` property (if it's not `nil`).
+    ///                     Default is `true`.
     ///   - completion:     A closure that is called after a responce is received.
     public func fetchStudentGroups(using jsonData: Data? = nil,
                                    dispatchQueue: DispatchQueue? = nil,
+                                   forceReload: Bool = true,
                                    completion: @escaping (Result<[StudentGroup]>) -> Void) {
+
+        if !forceReload, let studentGroups = studentGroups {
+            completion(.success(studentGroups))
+            return
+        }
         
         fetch(using: jsonData,
               apiQuery: studentGroupsAPIQuery,
@@ -91,9 +100,13 @@ public final class AdmissionYear : JSONRepresentable, TimetableEntity {
     /// - Parameters:
     ///   - jsonData:       If this is not `nil`, then instead of networking uses provided json data as mock
     ///                     data. May be useful for testing locally. Default value is `nil`.
+    ///   - forceReload:    If `true`, executes the query even if if the `studentGroups` property is not `nil`.
+    ///                     Othewise returns the contents of the `studentGroups` property (if it's not `nil`).
+    ///                     Default is `true`.
     /// - Returns:          A promise.
-    public func fetchStudentGroups(using jsonData: Data? = nil) -> Promise<[StudentGroup]> {
-        return makePromise({ fetchStudentGroups(using: jsonData, completion: $0) })
+    public func fetchStudentGroups(using jsonData: Data? = nil,
+                                   forceReload: Bool = true) -> Promise<[StudentGroup]> {
+        return makePromise({ fetchStudentGroups(using: jsonData, forceReload: forceReload, completion: $0) })
     }
 }
 

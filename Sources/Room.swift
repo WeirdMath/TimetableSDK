@@ -29,7 +29,7 @@ public final class Room : JSONRepresentable, TimetableEntity {
     public let name: String
     public let seating: Seating
     public let capacity: Int
-    public let additionalInfo: String
+    public let additionalInfo: String?
     public let wantingEquipment: String?
     public let oid: String
 

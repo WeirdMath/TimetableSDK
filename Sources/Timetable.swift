@@ -19,7 +19,7 @@ public final class Timetable {
     /// The url used to send API requests against.
     public var baseURL: URL
     
-    /// Creates a new instance with provided `basURL`.
+    /// Creates a new instance with provided `baseURL`.
     ///
     /// - Parameter baseURL: The url used to send API requests against.
     public init(baseURL: URL) {
@@ -86,10 +86,19 @@ public final class Timetable {
     ///                     If `jsonData` is not `nil`, setting this
     ///                     makes no change as in this case fetching happens syncronously in the current queue.
     ///                     Default value is `nil`.
+    ///   - forceReload:    If `true`, executes the query even if if the `divisions` property is not `nil`.
+    ///                     Othewise returns the contents of the `divisions` property (if it's not `nil`).
+    ///                     Default is `true`.
     ///   - completion:     A closure that is called after a responce is received.
     public func fetchDivisions(using jsonData: Data? = nil,
                                dispatchQueue: DispatchQueue? = nil,
+                               forceReload: Bool = true,
                                completion: @escaping (Result<[Division]>) -> Void) {
+
+        if !forceReload, let divisions = divisions {
+            completion(.success(divisions))
+            return
+        }
         
         fetch(using: jsonData,
               apiQuery: divisionsAPIQuery,
@@ -107,11 +116,15 @@ public final class Timetable {
     /// Fetches the divisions of the University. In case of success saves the divisions into the
     /// `divisions` property.
     ///
-    /// - Parameter jsonData:   If this is not `nil`, then instead of networking uses provided json data as mock
+    /// - Parameters:
+    ///   - jsonData:           If this is not `nil`, then instead of networking uses provided json data as mock
     ///                         data. May be useful for testing locally. Default value is `nil`.
+    ///   - forceReload:        If `true`, executes the query even if if the `divisions` property is not `nil`.
+    ///                         Othewise returns the contents of the `divisions` property (if it's not `nil`).
+    ///                         Default is `true`.
     /// - Returns:              A promise.
-    public func fetchDivisions(using jsonData: Data? = nil) -> Promise<[Division]> {
-        return makePromise({ fetchDivisions(using: jsonData, completion: $0) })
+    public func fetchDivisions(using jsonData: Data? = nil, forceReload: Bool = true) -> Promise<[Division]> {
+        return makePromise({ fetchDivisions(using: jsonData, forceReload: forceReload, completion: $0) })
     }
     
     /// Fetches the billboard. In case of success saves the billboard into the
@@ -125,10 +138,19 @@ public final class Timetable {
     ///                     If `jsonData` is not `nil`, setting this
     ///                     makes no change as in this case fetching happens syncronously in the current queue.
     ///                     Default value is `nil`.
+    ///   - forceReload:    If `true`, executes the query even if if the `billboard` property is not `nil`.
+    ///                     Othewise returns the contents of the `billboard` property (if it's not `nil`).
+    ///                     Default is `true`.
     ///   - completion:     A closure that is called after a responce is received.
     public func fetchBillboard(using jsonData: Data? = nil,
                                dispatchQueue: DispatchQueue? = nil,
+                               forceReload: Bool = true,
                                completion: @escaping (Result<Extracurricular>) -> Void) {
+
+        if !forceReload, let billboard = billboard {
+            completion(.success(billboard))
+            return
+        }
         
         fetch(using: jsonData,
               apiQuery: billboardAPIQuery,
@@ -146,11 +168,15 @@ public final class Timetable {
     /// Fetches the billboard. In case of success saves the billboard into the
     /// `billboard` property.
     ///
-    /// - Parameter jsonData:   If this is not `nil`, then instead of networking uses provided json data as mock
-    ///                         data. May be useful for testing locally. Default value is `nil`.
+    /// - Parameters:
+    ///   - jsonData:       If this is not `nil`, then instead of networking uses provided json data as mock
+    ///                     data. May be useful for testing locally. Default value is `nil`.
+    ///   - forceReload:    If `true`, executes the query even if if the `billboard` property is not `nil`.
+    ///                     Othewise returns the contents of the `billboard` property (if it's not `nil`).
+    ///                     Default is `true`.
     /// - Returns:              A promise.
-    public func fetchBillboard(using jsonData: Data? = nil) -> Promise<Extracurricular> {
-        return makePromise({ fetchBillboard(using: jsonData, completion: $0) })
+    public func fetchBillboard(using jsonData: Data? = nil, forceReload: Bool = true) -> Promise<Extracurricular> {
+        return makePromise({ fetchBillboard(using: jsonData, forceReload: forceReload, completion: $0) })
     }
     
     /// Fetches the billboard with events listed from provided `date`.
@@ -202,10 +228,19 @@ public final class Timetable {
     ///                     If `jsonData` is not `nil`, setting this
     ///                     makes no change as in this case fetching happens syncronously in the current queue.
     ///                     Default value is `nil`.
+    ///   - forceReload:    If `true`, executes the query even if if the `science` property is not `nil`.
+    ///                     Othewise returns the contents of the `science` property (if it's not `nil`).
+    ///                     Default is `true`.
     ///   - completion:     A closure that is called after a responce is received.
     public func fetchScience(using jsonData: Data? = nil,
                              dispatchQueue: DispatchQueue? = nil,
+                             forceReload: Bool = true,
                              completion: @escaping (Result<Science>) -> Void) {
+
+        if !forceReload, let science = science {
+            completion(.success(science))
+            return
+        }
         
         fetch(using: jsonData,
               apiQuery: scienceAPIQuery,
@@ -223,11 +258,15 @@ public final class Timetable {
     /// Fetches science events. In case of success saves them into the
     /// `science` property.
     ///
-    /// - Parameter jsonData:   If this is not `nil`, then instead of networking uses provided json data as mock
-    ///                         data. May be useful for testing locally. Default value is `nil`.
-    /// - Returns:              A promise.
-    public func fetchScience(using jsonData: Data? = nil) -> Promise<Science> {
-        return makePromise({ fetchScience(using: jsonData, completion: $0) })
+    /// - Parameters:
+    ///   - jsonData:       If this is not `nil`, then instead of networking uses provided json data as mock
+    ///                     data. May be useful for testing locally. Default value is `nil`.
+    ///   - forceReload:    If `true`, executes the query even if if the `science` property is not `nil`.
+    ///                     Othewise returns the contents of the `science` property (if it's not `nil`).
+    ///                     Default is `true`.
+    /// - Returns:          A promise.
+    public func fetchScience(using jsonData: Data? = nil, forceReload: Bool = true) -> Promise<Science> {
+        return makePromise({ fetchScience(using: jsonData, forceReload: forceReload, completion: $0) })
     }
     
     /// Fetches science events listed from provided `date`.
@@ -279,10 +318,20 @@ public final class Timetable {
     ///                     If `jsonData` is not `nil`, setting this
     ///                     makes no change as in this case fetching happens syncronously in the current queue.
     ///                     Default value is `nil`.
+    ///   - forceReload:    If `true`, executes the query even if if the `physicalEducation` property is not `nil`.
+    ///                     Othewise returns the contents of the `physicalEducation` property (if it's not `nil`).
+    ///                     Default is `true`.
     ///   - completion:     A closure that is called after a responce is received.
     public func fetchPhysicalEducation(using jsonData: Data? = nil,
                                        dispatchQueue: DispatchQueue? = nil,
+                                       forceReload: Bool = true,
                                        completion: @escaping (Result<Extracurricular>) -> Void) {
+
+        if !forceReload, let physicalEducation = physicalEducation {
+
+            completion(.success(physicalEducation))
+            return
+        }
         
         fetch(using: jsonData,
               apiQuery: physicalEducationAPIQuery,
@@ -300,11 +349,16 @@ public final class Timetable {
     /// Fetches physical training events. In case of success saves them into the
     /// `physicalTraining` property.
     ///
-    /// - Parameter jsonData:   If this is not `nil`, then instead of networking uses provided json data as mock
-    ///                         data. May be useful for testing locally. Default value is `nil`.
+    /// - Parameters:
+    /// - jsonData:         If this is not `nil`, then instead of networking uses provided json data as mock
+    ///                     data. May be useful for testing locally. Default value is `nil`.
+    ///   - forceReload:    If `true`, executes the query even if if the `physicalEducation` property is not `nil`.
+    ///                     Othewise returns the contents of the `physicalEducation` property (if it's not `nil`).
+    ///                     Default is `true`.
     /// - Returns:              A promise.
-    public func fetchPhysicalEducation(using jsonData: Data? = nil) -> Promise<Extracurricular> {
-        return makePromise({ fetchPhysicalEducation(using: jsonData, completion: $0) })
+    public func fetchPhysicalEducation(using jsonData: Data? = nil,
+                                       forceReload: Bool = true) -> Promise<Extracurricular> {
+        return makePromise({ fetchPhysicalEducation(using: jsonData, forceReload: forceReload, completion: $0) })
     }
     
     /// Fetches physical training events listed from provided `date`.
@@ -444,10 +498,19 @@ public final class Timetable {
     ///                     If `jsonData` is not `nil`, setting this
     ///                     makes no change as in this case fetching happens syncronously in the current queue.
     ///                     Default value is `nil`.
+    ///   - forceReload:    If `true`, executes the query even if if the `addresses` property is not `nil`.
+    ///                     Othewise returns the contents of the `addresses` property (if it's not `nil`).
+    ///                     Default is `true`.
     ///   - completion:     A closure that is called after a responce is received.
     public func fetchAllAddresses(using jsonData: Data? = nil,
                                   dispatchQueue: DispatchQueue? = nil,
+                                  forceReload: Bool = true,
                                   completion: @escaping (Result<[Address]>) -> Void) {
+
+        if !forceReload, let addresses = addresses {
+            completion(.success(addresses))
+            return
+        }
 
         fetch(using: jsonData,
               apiQuery: addressesAPIQuery,
@@ -465,11 +528,15 @@ public final class Timetable {
     /// Fetches the addresses of buildings. In case of success saves the divisions into the
     /// `addresses` property.
     ///
-    /// - Parameter jsonData:   If this is not `nil`, then instead of networking uses provided json data as mock
+    /// - Parameters:
+    ///   - jsonData:           If this is not `nil`, then instead of networking uses provided json data as mock
     ///                         data. May be useful for testing locally. Default value is `nil`.
+    ///   - forceReload:        If `true`, executes the query even if if the `addresses` property is not `nil`.
+    ///                         Othewise returns the contents of the `addresses` property (if it's not `nil`).
+    ///                         Default is `true`.
     /// - Returns:              A promise.
-    public func fetchAllAddresses(using jsonData: Data? = nil) -> Promise<[Address]> {
-        return makePromise({ fetchAllAddresses(using: jsonData, completion: $0) })
+    public func fetchAllAddresses(using jsonData: Data? = nil, forceReload: Bool = true) -> Promise<[Address]> {
+        return makePromise({ fetchAllAddresses(using: jsonData, forceReload: forceReload, completion: $0) })
     }
 
     /// Fetches the addresses of buildings that satisfy the provided `parameters`.

@@ -142,10 +142,19 @@ public final class Week : JSONRepresentable, TimetableEntity {
     ///                     If `jsonData` is not `nil`, setting this
     ///                     makes no change as in this case fetching happens syncronously in the current queue.
     ///                     Default value is `nil`.
+    ///   - forceReload:    If `true`, executes the query even if if the `next` property is not `nil`.
+    ///                     Othewise returns the contents of the `next` property (if it's not `nil`).
+    ///                     Default is `true`.
     ///   - completion:     A closure that is called after a responce is received.
     public func fetchNextWeek(using jsonData: Data? = nil,
                               dispatchQueue: DispatchQueue? = nil,
+                              forceReload: Bool = true,
                               completion: @escaping (Result<Week>) -> Void) {
+
+        if !forceReload, let next = next {
+            completion(.success(next))
+            return
+        }
         
         guard let weekAPIQuery = weekAPIQuery else {
             completion(.failure(TimetableError.unknownStudentGroup))
@@ -171,11 +180,15 @@ public final class Week : JSONRepresentable, TimetableEntity {
     
     /// Fetches the week that follows `self`.
     ///
-    /// - Parameter jsonData:   If this is not `nil`, then instead of networking uses provided json data as mock
-    ///                         data. May be useful for testing locally. Default value is `nil`.
-    /// - Returns:              A promise.
-    public func fetchNextWeek(using jsonData: Data? = nil) -> Promise<Week> {
-        return makePromise({ fetchNextWeek(using: jsonData, completion: $0) })
+    /// - Parameters:
+    ///   - jsonData:       If this is not `nil`, then instead of networking uses provided json data as mock
+    ///                     data. May be useful for testing locally. Default value is `nil`.
+    ///   - forceReload:    If `true`, executes the query even if if the `next` property is not `nil`.
+    ///                     Othewise returns the contents of the `next` property (if it's not `nil`).
+    ///                     Default is `true`.
+    /// - Returns:          A promise.
+    public func fetchNextWeek(using jsonData: Data? = nil, forceReload: Bool = true) -> Promise<Week> {
+        return makePromise({ fetchNextWeek(using: jsonData, forceReload: forceReload, completion: $0) })
     }
     
     /// Fetches the week that precedes `self`.
@@ -188,10 +201,19 @@ public final class Week : JSONRepresentable, TimetableEntity {
     ///                     If `jsonData` is not `nil`, setting this
     ///                     makes no change as in this case fetching happens syncronously in the current queue.
     ///                     Default value is `nil`.
+    ///   - forceReload:    If `true`, executes the query even if if the `previous` property is not `nil`.
+    ///                     Othewise returns the contents of the `previous` property (if it's not `nil`).
+    ///                     Default is `true`.
     ///   - completion:     A closure that is called after a responce is received.
     public func fetchPreviousWeek(using jsonData: Data? = nil,
                                   dispatchQueue: DispatchQueue? = nil,
+                                  forceReload: Bool = true,
                                   completion: @escaping (Result<Week>) -> Void) {
+
+        if !forceReload, let previous = previous {
+            completion(.success(previous))
+            return
+        }
         
         guard let weekAPIQuery = weekAPIQuery else {
             completion(.failure(TimetableError.unknownStudentGroup))
@@ -217,11 +239,15 @@ public final class Week : JSONRepresentable, TimetableEntity {
     
     /// Fetches the week that precedes `self`.
     ///
-    /// - Parameter jsonData:   If this is not `nil`, then instead of networking uses provided json data as mock
-    ///                         data. May be useful for testing locally. Default value is `nil`.
-    /// - Returns:              A promise.
-    public func fetchPreviousWeek(using jsonData: Data? = nil) -> Promise<Week> {
-        return makePromise({ fetchPreviousWeek(using: jsonData, completion: $0) })
+    /// - Parameters:
+    ///   - jsonData:       If this is not `nil`, then instead of networking uses provided json data as mock
+    ///                     data. May be useful for testing locally. Default value is `nil`.
+    ///   - forceReload:    If `true`, executes the query even if if the `previous` property is not `nil`.
+    ///                     Othewise returns the contents of the `previous` property (if it's not `nil`).
+    ///                     Default is `true`.
+    /// - Returns:          A promise.
+    public func fetchPreviousWeek(using jsonData: Data? = nil, forceReload: Bool = true) -> Promise<Week> {
+        return makePromise({ fetchPreviousWeek(using: jsonData, forceReload: forceReload, completion: $0) })
     }
     
     private var weekAPIQuery: String? {

@@ -102,10 +102,20 @@ public final class Location : JSONRepresentable, TimetableEntity {
     ///                     If `jsonData` is not `nil`, setting this
     ///                     makes no change as in this case fetching happens syncronously in the current queue.
     ///                     Default value is `nil`.
+    ///   - forceReloadAddresses: This method needs to fetch all the addresses. This is expensive.
+    ///                           See also
+    ///                           `Timetable.fetchAllAddresses(using:dispatchQueue:forceReload:completion:)`.
+    ///                           Default value is `false`.
+    ///   - forceReloadRooms:     For a matching adress this method needs to fetch all the rooms.
+    ///                           This is expensive. See also
+    ///                           `Address.fetchAllRooms(using:dispatchQueue:forceReload:completion:)`.
+    ///                           Default value is `false`.
     ///   - completion:     A closure that is called after a responce is received.
     public func fetchRoom(addressesData: Data? = nil,
                           roomsData: Data? = nil,
                           dispatchQueue: DispatchQueue? = nil,
+                          forceReloadAddresses: Bool = false,
+                          forceReloadRooms: Bool = false,
                           completion: @escaping (Result<Room>) -> Void) {
 
         guard let timetable = timetable else {
@@ -114,7 +124,9 @@ public final class Location : JSONRepresentable, TimetableEntity {
         }
 
         timetable
-            .fetchAllAddresses(using: addressesData, dispatchQueue: dispatchQueue) { result in
+            .fetchAllAddresses(using: addressesData,
+                               dispatchQueue: dispatchQueue,
+                               forceReload: forceReloadAddresses) { result in
 
                 switch result {
                 case .success(let addresses):
@@ -131,7 +143,8 @@ public final class Location : JSONRepresentable, TimetableEntity {
                     let roomPart = selfName.replacingOccurrences(of: addressPart, with: "")
 
                     matchingAddress.fetchAllRooms(using: roomsData,
-                                                  dispatchQueue: dispatchQueue) { result in
+                                                  dispatchQueue: dispatchQueue,
+                                                  forceReload: forceReloadRooms) { result in
 
                         switch result {
                         case .success(let rooms):
@@ -181,9 +194,24 @@ public final class Location : JSONRepresentable, TimetableEntity {
     ///   - roomsData:      If this is not `nil`, then instead of networking uses provided json data for
     ///                     the list of rooms to search in.
     ///                     May be useful for deserializing from a local storage. Default value is `nil`.
+    ///   - forceReloadAddresses: This method needs to fetch all the addresses. This is expensive.
+    ///                           See also
+    ///                           `Timetable.fetchAllAddresses(using:dispatchQueue:forceReload:completion:)`.
+    ///                           Default value is `false`.
+    ///   - forceReloadRooms:     For a matching adress this method needs to fetch all the rooms.
+    ///                           This is expensive. See also
+    ///                           `Address.fetchAllRooms(using:dispatchQueue:forceReload:completion:)`.
+    ///                           Default value is `false`.
     /// - Returns: A promise.
-    public func fetchRoom(addressesData: Data? = nil, roomsData: Data? = nil) -> Promise<Room> {
-        return makePromise { fetchRoom(addressesData: addressesData, roomsData: roomsData, completion: $0) }
+    public func fetchRoom(addressesData: Data? = nil,
+                          roomsData: Data? = nil,
+                          forceReloadAddresses: Bool = false,
+                          forceReloadRooms: Bool = false) -> Promise<Room> {
+        return makePromise { fetchRoom(addressesData: addressesData,
+                                       roomsData: roomsData,
+                                       forceReloadAddresses: forceReloadAddresses,
+                                       forceReloadRooms: forceReloadRooms,
+                                       completion: $0) }
     }
 }
 

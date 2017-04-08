@@ -323,9 +323,13 @@ class WWWFetchingTests: XCTestCase {
             
             XCTAssertNotNil(self.sut.science)
             XCTAssertNotNil(self.sut.science?.timetable)
-            XCTAssertNotNil(self.sut.science?.eventGroupings.first?.timetable)
-            XCTAssertNotNil(self.sut.science?.eventGroupings.first?.events.first?.timetable)
-            XCTAssertNotNil(self.sut.science?.eventGroupings.first?.events.first?.location?.timetable)
+
+            // `eventGroupings` can be empty.
+            if let eventGrouping = self.sut.science?.eventGroupings.first {
+                XCTAssertNotNil(eventGrouping.timetable)
+                XCTAssertNotNil(eventGrouping.events.first?.timetable)
+                XCTAssertNotNil(eventGrouping.events.first?.location?.timetable)
+            }
             XCTAssertNil(returnedError)
         }
     }
