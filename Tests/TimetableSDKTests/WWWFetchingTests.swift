@@ -248,6 +248,8 @@ class WWWFetchingTests: XCTestCase {
             XCTAssertEqual(next?.previous, current)
             XCTAssertEqual(previous?.next, current)
             XCTAssertEqual(previous, current?.previous)
+            XCTAssertEqual(next?.studentGroup, current?.studentGroup)
+            XCTAssertEqual(previous?.studentGroup, current?.studentGroup)
         }
     }
     

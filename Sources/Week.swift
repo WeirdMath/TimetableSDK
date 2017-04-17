@@ -172,6 +172,7 @@ public final class Week : JSONRepresentable, TimetableEntity {
                 if case .success(let value) = result {
                     self?.next = value
                     value.previous = self
+                    value.studentGroup = self?.studentGroup
                 }
                 
                 completion(result)
@@ -231,6 +232,7 @@ public final class Week : JSONRepresentable, TimetableEntity {
                 if case .success(let value) = result {
                     self?.previous = value
                     value.next = self
+                    value.studentGroup = self?.studentGroup
                 }
                 
                 completion(result)
