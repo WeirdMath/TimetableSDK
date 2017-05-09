@@ -33,9 +33,10 @@ public final class Week : JSONRepresentable, TimetableEntity {
     /// using `init(from:)`.
     private var _json: JSON?
     
-    internal static let dateForatter: DateFormatter = {
+    internal static let dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
+        dateFormatter.locale = .posix
         return dateFormatter
     }()
     
@@ -89,9 +90,9 @@ public final class Week : JSONRepresentable, TimetableEntity {
     public init(from json: JSON, bindingTo timetable: Timetable?) throws {
         do {
             previousWeekFirstDay             = try map(json["PreviousWeekMonday"],
-                                                       transformation: Week.dateForatter.date(from:))
+                                                       transformation: Week.dateFormatter.date(from:))
             nextWeekFirstDay                 = try map(json["NextWeekMonday"],
-                                                       transformation: Week.dateForatter.date(from:))
+                                                       transformation: Week.dateFormatter.date(from:))
             isPreviousWeekReferenceAvailable = try map(json["IsPreviousWeekReferenceAvailable"])
             isNextWeekReferenceAvailable     = try map(json["IsNextWeekReferenceAvailable"])
             isCurrentWeekReferenceAvailable  = try map(json["IsCurrentWeekReferenceAvailable"])
@@ -99,7 +100,7 @@ public final class Week : JSONRepresentable, TimetableEntity {
             days                             = try map(json["Days"])
             viewName                         = try map(json["ViewName"])
             firstDay                         = try map(json["WeekMonday"],
-                                                       transformation: Week.dateForatter.date(from:))
+                                                       transformation: Week.dateFormatter.date(from:))
             studentGroupID                   = try map(json["StudentGroupId"])
             studentGroupDisplayName          = try map(json["StudentGroupDisplayName"])
             timetableDisplayName             = try map(json["TimeTableDisplayName"])
@@ -161,7 +162,7 @@ public final class Week : JSONRepresentable, TimetableEntity {
             return
         }
         
-        let dayString = Week.dateForatter.string(from: nextWeekFirstDay)
+        let dayString = Week.dateFormatter.string(from: nextWeekFirstDay)
         
         fetch(using: jsonData,
               apiQuery: weekAPIQuery,
@@ -221,7 +222,7 @@ public final class Week : JSONRepresentable, TimetableEntity {
             return
         }
         
-        let dayString = Week.dateForatter.string(from: previousWeekFirstDay)
+        let dayString = Week.dateFormatter.string(from: previousWeekFirstDay)
         
         fetch(using: jsonData,
               apiQuery: weekAPIQuery,

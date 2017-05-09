@@ -158,7 +158,7 @@ public final class StudentGroup : JSONRepresentable, TimetableEntity {
                           dispatchQueue: DispatchQueue? = nil,
                           completion: @escaping (Result<Week>) -> Void) {
 
-        let dayString = Week.dateForatter.string(from: day)
+        let dayString = Week.dateFormatter.string(from: day)
         
         fetch(using: jsonData,
               apiQuery: weekAPIQuery,

@@ -1,6 +1,10 @@
 # Change Log
 
-## [3.1.1](https://github.com/WeirdMath/TimetableSDK/tree/3.1.0) (2017-04-17)
+## [3.1.2](https://github.com/WeirdMath/TimetableSDK/tree/3.1.2) (2017-05-10)
+
+- Set `DateFormatter`s' `locale` to `"en_US_POSIX"`. This prevents those formatters from returning `nil` when converting a string to `Date`.
+
+## [3.1.1](https://github.com/WeirdMath/TimetableSDK/tree/3.1.1) (2017-04-17)
 
 - Fixed not setting the `studentGroup` property for fetched next and previous weeks
 

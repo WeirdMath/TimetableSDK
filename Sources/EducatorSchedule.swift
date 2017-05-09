@@ -15,6 +15,7 @@ public final class EducatorSchedule : JSONRepresentable, TimetableEntity {
     fileprivate static let dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        dateFormatter.locale = .posix
         return dateFormatter
     }()
     

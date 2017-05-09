@@ -23,18 +23,21 @@ public final class Event : JSONRepresentable, TimetableEntity {
     fileprivate static let defaultDateFormatter: DateFormatter = {
         let defaultDateFormatter = DateFormatter()
         defaultDateFormatter.dateFormat = "yyyy-MM-dd"
+        defaultDateFormatter.locale = .posix
         return defaultDateFormatter
     }()
-    
+
     fileprivate static let fullDateFormatter: DateFormatter = {
         let fullDateFormatter = DateFormatter()
         fullDateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        fullDateFormatter.locale = .posix
         return fullDateFormatter
     }()
-    
+
     fileprivate static let timeFormatter: DateFormatter = {
         let timeFormatter = DateFormatter()
         timeFormatter.dateFormat = "HH:mm:ss"
+        timeFormatter.locale = .posix
         return timeFormatter
     }()
     

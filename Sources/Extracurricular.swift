@@ -23,6 +23,7 @@ public final class Extracurricular : JSONRepresentable, TimetableEntity {
     internal static let dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
+        dateFormatter.locale = .posix
         return dateFormatter
     }()
     

@@ -146,12 +146,14 @@ class JSONTests: XCTestCase {
         
         // Given
         let jsonData = getTestingResource(fromFile: "MATH_studentGroup_10014_events", ofType: "json")!
-        let dateFomatter = DateFormatter()
-        dateFomatter.dateFormat = "yyyy-MM-dd"
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
         let timeFormatter = DateFormatter()
         timeFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
-        let expectedWeek = Week(previousWeekFirstDay: dateFomatter.date(from: "2016-11-14")!,
-                                nextWeekFirstDay: dateFomatter.date(from: "2016-11-28")!,
+        timeFormatter.locale = Locale(identifier: "en_US_POSIX")
+        let expectedWeek = Week(previousWeekFirstDay: dateFormatter.date(from: "2016-11-14")!,
+                                nextWeekFirstDay: dateFormatter.date(from: "2016-11-28")!,
                                 isPreviousWeekReferenceAvailable: true,
                                 isNextWeekReferenceAvailable: true,
                                 isCurrentWeekReferenceAvailable: false,
@@ -220,7 +222,7 @@ class JSONTests: XCTestCase {
                                         ])
             ],
                                 viewName: "Primary",
-                                firstDay: dateFomatter.date(from: "2016-11-21")!,
+                                firstDay: dateFormatter.date(from: "2016-11-21")!,
                                 studentGroupID: 10014,
                                 studentGroupDisplayName: "Группа 351 (14.Б10-мм)",
                                 timetableDisplayName: "Все занятия")
@@ -239,8 +241,10 @@ class JSONTests: XCTestCase {
         let jsonData = getTestingResource(fromFile: "Billboard_events", ofType: "json")!
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
         let timeFormatter = DateFormatter()
         timeFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        timeFormatter.locale = Locale(identifier: "en_US_POSIX")
         let expectedExtracurricular =
             Extracurricular(alias: "Billboard",
                             days: [
@@ -327,8 +331,10 @@ class JSONTests: XCTestCase {
         let jsonData = getTestingResource(fromFile: "Science_events", ofType: "json")!
         let dateFomatter = DateFormatter()
         dateFomatter.dateFormat = "yyyy-MM-dd"
+        dateFomatter.locale = Locale(identifier: "en_US_POSIX")
         let timeFormatter = DateFormatter()
         timeFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        timeFormatter.locale = Locale(identifier: "en_US_POSIX")
         let expectedScience =
             Science(alias: "Science",
                     chosenMonthDisplayText: "Ноябрь 2016",
@@ -435,8 +441,10 @@ class JSONTests: XCTestCase {
         let json = JSON(data: jsonData)
         let dateFomatter = DateFormatter()
         dateFomatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        dateFomatter.locale = Locale(identifier: "en_US_POSIX")
         let timeFormatter = DateFormatter()
         timeFormatter.dateFormat = "HH:mm:ss"
+        timeFormatter.locale = Locale(identifier: "en_US_POSIX")
         let expectedSchedule = EducatorSchedule(autumnTermLinkAvailable: false,
                                                 dateRangeDisplayText: "1 августа 2016 - 1 февраля 2017",
                                                 educatorDisplayText: "Романовский И. В.",
